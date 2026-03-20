@@ -306,6 +306,35 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
 .mcr-val{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-align:right}
 .nodata{text-align:center;padding:24px;color:var(--slate);font-size:12px}
 
+/* ── AUTH ── */
+.role-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;
+  cursor:pointer;transition:all .15s;border:none;font-family:inherit;
+}
+.rb-viewer{background:rgba(255,255,255,.1);color:#94a3b8}
+.rb-viewer:hover{background:rgba(255,255,255,.15);color:#fff}
+.rb-editor{background:rgba(5,150,105,.25);color:#6ee7b7}
+.rb-editor:hover{background:rgba(5,150,105,.35)}
+.read-overlay{
+  position:fixed;inset:0;background:rgba(15,23,42,.55);
+  z-index:999;display:flex;align-items:center;justify-content:center;
+}
+.read-card{
+  background:#fff;border-radius:16px;padding:28px 28px 22px;
+  width:320px;max-width:92vw;box-shadow:var(--sh-lg);text-align:center;
+}
+.read-card h3{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:6px}
+.read-card p{font-size:12px;color:var(--slate);margin-bottom:18px;line-height:1.5}
+.pin-row{display:flex;gap:8px;margin-bottom:14px}
+.pin-row input{
+  flex:1;text-align:center;font-size:22px;font-family:'DM Mono',monospace;
+  letter-spacing:6px;padding:10px;border-radius:8px;
+  border:2px solid var(--border);outline:none;
+}
+.pin-row input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.pin-err{color:var(--red);font-size:11px;font-weight:600;margin-top:-8px;margin-bottom:10px;min-height:16px}
+
 /* PLACA DETAIL MODAL */
 #m-placa .modal{max-width:760px}
 #sb-search::placeholder{color:var(--slate)}
@@ -403,11 +432,16 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
   </div>
   <!-- Desktop actions -->
   <div class="h-act">
-    <div style="display:flex;align-items:center;gap:5px">
-      <div class="sync-dot" id="sync-dot" title="Estado Firebase"></div>
-      <span class="sync-lbl" id="sync-lbl">Conectando…</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:5px">
+        <div class="sync-dot" id="sync-dot" title="Estado Firebase"></div>
+        <span class="sync-lbl" id="sync-lbl">Conectando…</span>
+      </div>
+      <button class="role-badge rb-viewer" id="role-badge" onclick="toggleAuth()" title="Solo lectura — click para ingresar como editor">
+        👁 Solo lectura
+      </button>
     </div>
-    <button class="btn bg-h btn-sm" onclick="showNDM()">＋ Día</button>
+    <button class="btn bg-h btn-sm" onclick="showNDM()" id="btn-nuevo-dia">＋ Día</button>
     <button class="btn bg-h btn-sm" onclick="doBackup()" title="Guardar respaldo local">💾</button>
     <button class="btn bg-h btn-sm" onclick="openM('m-imp')" title="Restaurar desde archivo">📂</button>
     <button class="btn bg-h btn-sm" onclick="doExcel()">⬇ Excel</button>
@@ -541,6 +575,7 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
     <div class="modal-handle"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
@@ -589,6 +624,116 @@ const SISTEMAS = [
   {k:'ESTRUCTURA', t:['ESTRUCTURA','ARREGLO','LLANTA','TROQUE']},
 ];
 function getSist(n){ if(!n)return'OTRO';const u=n.toUpperCase();for(const s of SISTEMAS)if(s.t.some(t=>u.includes(t)))return s.k;return'OTRO' }
+
+
+// ╔══════════════════════════════════════════════╗
+//  AUTH — ROLES CON PIN
+//  Cambia EDITOR_PIN por el PIN que quieras
+// ╚══════════════════════════════════════════════╝
+const EDITOR_PIN    = '1234';          // ← CAMBIA ESTE PIN
+const AUTH_KEY      = 'flota_auth_v1'; // clave en localStorage
+const SESSION_MIN   = 5;               // minutos de inactividad antes de pedir PIN
+const SESSION_MS    = SESSION_MIN * 60 * 1000;
+
+let isEditor = false;
+let _actTimer = null; // timer de inactividad
+
+function checkAuth(){
+  try{
+    const raw = localStorage.getItem(AUTH_KEY);
+    if(!raw) return false;
+    const {pin, lastActivity} = JSON.parse(raw);
+    const inactive = (Date.now() - lastActivity) > SESSION_MS;
+    if(inactive){ localStorage.removeItem(AUTH_KEY); return false; }
+    return pin === EDITOR_PIN;
+  }catch(e){ return false; }
+}
+
+// Llamar en cada acción del editor para renovar el timer
+function touchActivity(){
+  if(!isEditor) return;
+  try{
+    const raw = localStorage.getItem(AUTH_KEY);
+    if(raw){
+      const d = JSON.parse(raw);
+      d.lastActivity = Date.now();
+      localStorage.setItem(AUTH_KEY, JSON.stringify(d));
+    }
+  }catch(e){}
+  // Reset countdown timer
+  clearTimeout(_actTimer);
+  _actTimer = setTimeout(()=>{
+    if(isEditor){
+      // Session expired by inactivity — lock silently
+      isEditor = false;
+      setEditorMode(false);
+      // Show PIN modal so they can continue immediately
+      _pendingAction = null;
+      showPinModal(`Sesión expirada por ${SESSION_MIN} min de inactividad. Ingresa el PIN para continuar.`);
+    }
+  }, SESSION_MS);
+}
+
+function setEditorMode(on){
+  isEditor = on;
+  const badge = document.getElementById('role-badge');
+  if(badge){
+    badge.className = 'role-badge ' + (on ? 'rb-editor' : 'rb-viewer');
+    badge.innerHTML  = on ? '✏️ Editor &nbsp;·&nbsp; Salir' : '👁 Solo lectura &nbsp;·&nbsp; Ingresar';
+    badge.title      = on ? 'Click para cerrar sesión de editor' : 'Click para ingresar como editor';
+  }
+  // Re-render current view to show/hide edit buttons
+  renderSidebar();
+  if(curIdx !== null) renderDay();
+}
+
+function toggleAuth(){
+  if(isEditor){
+    if(confirm('¿Cerrar sesión de editor?')){
+      localStorage.removeItem(AUTH_KEY);
+      isEditor = false;
+      setEditorMode(false);
+      toast('Sesión cerrada — modo consulta','👁');
+    }
+  } else {
+    showPinModal();
+  }
+}
+
+function showPinModal(msg=''){
+  const ov = document.getElementById('auth-overlay');
+  if(ov){
+    ov.style.display='flex';
+    document.getElementById('pin-input').value='';
+    const errEl = document.getElementById('pin-err');
+    errEl.textContent = msg;
+    errEl.style.color = msg ? 'var(--amber)' : 'var(--red)';
+    setTimeout(()=>document.getElementById('pin-input').focus(),100);
+  }
+}
+function hidePinModal(){ const ov=document.getElementById('auth-overlay'); if(ov) ov.style.display='none'; }
+
+function submitPin(){
+  const pin = document.getElementById('pin-input').value.trim();
+  if(pin === EDITOR_PIN){
+    localStorage.setItem(AUTH_KEY, JSON.stringify({pin, lastActivity: Date.now()}));
+    hidePinModal();
+    isEditor = true;
+    setEditorMode(true);
+    touchActivity(); // start inactivity timer
+    toast(`✅ Sesión activa — expira tras ${SESSION_MIN} min sin actividad`,'✏️');
+  } else {
+    document.getElementById('pin-err').textContent = 'PIN incorrecto. Inténtalo de nuevo.';
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-input').focus();
+  }
+}
+
+// Guard: wrap all write operations
+function requireEditor(fn){
+  if(!isEditor){ showPinModal(); return false; }
+  return fn();
+}
 
 // ╔══════════════════════════════════════════════╗
 //  FIREBASE INIT
@@ -726,6 +871,7 @@ function isRestriccion(s){
 }
 
 function save(modIdx){
+  touchActivity(); // renew inactivity timer on every edit
   const i=modIdx!==undefined?modIdx:curIdx;
   if(i!==null&&i!==undefined&&state.days[i]){
     state.days[i].snapshot=calcSnap(state.days[i]);
@@ -833,12 +979,13 @@ function closeM(id){document.getElementById(id).classList.remove('open')}
   const el=document.getElementById(id);
   if(el) el.addEventListener('click',e=>{if(e.target.id===id)closeM(id)});
 });
-function showNDM(){document.getElementById('nd-f').value=today();openM('m-nd')}
+function showNDM(){if(!isEditor){showPinModal();return;}document.getElementById('nd-f').value=today();openM('m-nd')}
 
 // ╔══════════════════════════════════════════════╗
 //  CREAR DÍA
 // ╚══════════════════════════════════════════════╝
 function crearDia(){
+  if(!isEditor){hidePinModal||null;showPinModal();return;}
   const fecha=document.getElementById('nd-f').value;
   const total=parseInt(document.getElementById('nd-t').value)||67;
   const op=parseInt(document.getElementById('nd-op').value)||null;
@@ -985,7 +1132,7 @@ function renderDay(){
       <div class="kpi k-pu" style="position:relative">
         <div class="kpi-lbl">OP</div><div class="kpi-val">${op!=null?op:'—'}</div>
         <div class="kpi-sub">${opTxt}</div>
-        ${isLast?`<button onclick="editOP()" style="position:absolute;top:8px;right:8px;background:none;border:none;cursor:pointer;font-size:12px;color:var(--slate)" title="Editar OP">✏️</button>`:''}
+        ${isLast&&isEditor?`<button onclick="editOP()" style="position:absolute;top:8px;right:8px;background:none;border:none;cursor:pointer;font-size:12px;color:var(--slate)" title="Editar OP">✏️</button>`:''}
       </div>
     </div>
 
@@ -1006,9 +1153,10 @@ function renderDay(){
         <h2 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800">${fmtF(d.fecha)}</h2>
         <p style="font-size:10px;color:var(--slate)">${isLast?'Día activo':'Registro histórico'}</p>
       </div>
-      <div style="display:flex;gap:6px;flex-shrink:0">
+      <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap">
         <button class="btn bo btn-sm" onclick="selectDay(${curIdx},true)" title="Ver informe de este día">📊 Informe</button>
-        ${isLast?`<button class="btn btn-sm" style="color:var(--red);border:1.5px solid var(--red);background:white;font-size:10px" onclick="eliminarDia()">🗑 Eliminar</button>`:''}
+        <button class="btn bo btn-sm" onclick="exportImagen()" title="Exportar como imagen">📸 Imagen</button>
+        ${isLast&&isEditor?`<button class="btn btn-sm" style="color:var(--red);border:1.5px solid var(--red);background:white;font-size:10px" onclick="eliminarDia()">🗑 Eliminar</button>`:''}
       </div>
     </div>
 
@@ -1085,18 +1233,20 @@ function bldTaller(){
         <td class="hide-mob">${esc(p.taller)||'—'}</td>
         <td>${dPill(p.diasEnTaller)}</td>
         <td style="white-space:nowrap">
-          ${isLast
+          ${isLast && isEditor
             ?`<button class="btn bs btn-xs" onclick="retornar(${ri})">↩ <span class="btn-lbl">Retornar</span></button>
                <button class="ibtn" onclick="editVeh(${ri})">✏️</button>
                <button class="ibtn" onclick="delVeh(${ri})">🗑</button>`
-            :`<span style="font-size:10px;color:var(--slate)">🔒</span>`}
+            : isLast
+              ? `<span style="font-size:10px;color:var(--slate)" title="Inicia sesión de editor para editar">🔒</span>`
+              : `<span style="font-size:10px;color:var(--slate)">🔒</span>`}
         </td>
       </tr>`;
     }).join('');
   return`<div class="panel">
     <div class="panel-hd">
       <div class="ptitle">🔧 En taller — ${fmtF(d.fecha)}</div>
-      ${isLast?`<button class="btn bp btn-sm" onclick="showAddVeh()">＋ Agregar</button>`:''}
+      ${isLast&&isEditor?`<button class="btn bp btn-sm" onclick="showAddVeh()">＋ Agregar</button>`:''}
     </div>
     <div id="av-c"></div>
     <div class="twrap">
@@ -1146,10 +1296,11 @@ function vehForm(pre={}){
   </div>`;
 }
 
-function showAddVeh(){document.getElementById('av-c').innerHTML=vehForm();setupAC();document.getElementById('vf-p').focus()}
-function editVeh(i){document.getElementById('av-c').innerHTML=vehForm({...D().placasEnTaller[i],idx:i});setupAC()}
+function showAddVeh(){if(!isEditor){showPinModal();return;}document.getElementById('av-c').innerHTML=vehForm();setupAC();document.getElementById('vf-p').focus()}
+function editVeh(i){if(!isEditor){showPinModal();return;}document.getElementById('av-c').innerHTML=vehForm({...D().placasEnTaller[i],idx:i});setupAC()}
 
 function saveVeh(){
+  if(!isEditor){showPinModal();return;}
   const d=D();
   const placa=document.getElementById('vf-p').value.trim().toUpperCase();
   const fi=document.getElementById('vf-fi').value;
@@ -1165,6 +1316,7 @@ function saveVeh(){
   toast(`${placa} agregada al taller`,'🔧');
 }
 function updVeh(idx){
+  if(!isEditor){showPinModal();return;}
   const d=D(),p=d.placasEnTaller[idx];
   p.placa=document.getElementById('vf-p').value.trim().toUpperCase();
   p.fechaIngreso=document.getElementById('vf-fi').value;
@@ -1176,11 +1328,13 @@ function updVeh(idx){
   toast(`${p.placa} actualizada`,'✏️');
 }
 function delVeh(idx){
+  if(!isEditor){showPinModal();return;}
   if(!confirm('¿Eliminar?'))return;
   D().placasEnTaller.splice(idx,1);
   save(curIdx);renderDay();switchTab('t');
 }
 function retornar(idx){
+  if(!isEditor){showPinModal();return;}
   const d=D(),p=d.placasEnTaller[idx];
   const rep=prompt(`✅ Retorno de ${p.placa}\nReparación realizada:`,p.novedad||'');
   if(rep===null)return;
@@ -1202,12 +1356,12 @@ function bldRet(){
       <td class="hide-mob" style="color:var(--slate)">${fmtF(r.fechaIngreso)}</td>
       <td>${esc(r.reparacion)||'—'}</td>
       <td class="hide-mob">${esc(r.taller)||'—'}</td>
-      <td><span class="badge b-op">✅</span>${isLast?`<button class="ibtn" onclick="delRet(${i})">🗑</button>`:''}</td>
+      <td><span class="badge b-op">✅</span>${isLast&&isEditor?`<button class="ibtn" onclick="delRet(${i})">🗑</button>`:''}</td>
     </tr>`).join('');
   return`<div class="panel">
     <div class="panel-hd">
       <div class="ptitle">✅ Retornados — ${fmtF(d.fecha)}</div>
-      ${isLast?`<button class="btn bs btn-sm" onclick="showAddRet()">＋ Agregar</button>`:''}
+      ${isLast&&isEditor?`<button class="btn bs btn-sm" onclick="showAddRet()">＋ Agregar</button>`:''}
     </div>
     <div id="ar-c"></div>
     <div class="twrap">
@@ -1218,7 +1372,7 @@ function bldRet(){
     </div>
   </div>`;
 }
-function showAddRet(){
+function showAddRet(){if(!isEditor){showPinModal();return;}
   const d=D();
   document.getElementById('ar-c').innerHTML=`
     <div class="iform on">
@@ -1244,6 +1398,7 @@ function showAddRet(){
   setupAC();
 }
 function saveRet(){
+  if(!isEditor){showPinModal();return;}
   const d=D();const placa=document.getElementById('ar-p').value.trim().toUpperCase();
   if(!placa){alert('Ingresa la placa');return}
   d.retornados.push({placa,fechaIngreso:document.getElementById('ar-fi').value,
@@ -1252,7 +1407,7 @@ function saveRet(){
   save(curIdx);renderDay();switchTab('r');
   toast(`Retorno de ${placa} registrado`,'✅');
 }
-function delRet(i){D().retornados.splice(i,1);save(curIdx);renderDay();switchTab('r')}
+function delRet(i){if(!isEditor){showPinModal();return;}D().retornados.splice(i,1);save(curIdx);renderDay();switchTab('r')}
 
 // ╔══════════════════════════════════════════════╗
 //  TAB PENDIENTES
@@ -1264,12 +1419,12 @@ function bldPend(){
     :d.pendientes.map((p,i)=>`<tr>
       <td><span class="placa">${p.placa}</span></td>
       <td>${esc(p.obs)||'—'}</td>
-      <td>${isLast?`<button class="ibtn" onclick="delPend(${i})">🗑</button>`:''}</td>
+      <td>${isLast&&isEditor?`<button class="ibtn" onclick="delPend(${i})">🗑</button>`:''}</td>
     </tr>`).join('');
   return`<div class="panel">
     <div class="panel-hd">
       <div class="ptitle">📌 Pendientes — ${fmtF(d.fecha)}</div>
-      ${isLast?`<button class="btn bo btn-sm" onclick="showAddPend()">＋ Agregar</button>`:''}
+      ${isLast&&isEditor?`<button class="btn bo btn-sm" onclick="showAddPend()">＋ Agregar</button>`:''}
     </div>
     <div id="ap-c"></div>
     <div class="twrap">
@@ -1280,7 +1435,7 @@ function bldPend(){
     </div>
   </div>`;
 }
-function showAddPend(){
+function showAddPend(){if(!isEditor){showPinModal();return;}
   document.getElementById('ap-c').innerHTML=`
     <div class="iform on">
       <div class="fg g2" style="margin-bottom:8px">
@@ -1300,15 +1455,17 @@ function showAddPend(){
   setupAC();
 }
 function savePend(){
+  if(!isEditor){showPinModal();return;}
   const placa=document.getElementById('ap-p').value.trim().toUpperCase();
   if(!placa){alert('Ingresa la placa');return}
   D().pendientes.push({placa,obs:document.getElementById('ap-ob').value.trim()});
   save(curIdx);renderDay();switchTab('p');
   toast('Pendiente guardado','📌');
 }
-function delPend(i){D().pendientes.splice(i,1);save(curIdx);renderDay();switchTab('p')}
+function delPend(i){if(!isEditor){showPinModal();return;}D().pendientes.splice(i,1);save(curIdx);renderDay();switchTab('p')}
 
 function eliminarDia(){
+  if(!isEditor){showPinModal();return;}
   const d=D();
   if(!confirm(`¿Eliminar el día ${fmtF(d.fecha)}?`))return;
   const fecha=d.fecha;
@@ -1322,6 +1479,7 @@ function eliminarDia(){
   toast('Día eliminado','🗑');
 }
 function editOP(){
+  if(!isEditor){showPinModal();return;}
   const d=D();
   const v=prompt('Tripulación operativa (OP):',d.op!=null?d.op:'');
   if(v===null)return;
@@ -1650,6 +1808,7 @@ function doBackup(){
 }
 
 function doImport(e){
+  if(!isEditor){toast('Solo editores pueden restaurar','🔒');return;}
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=ev=>{
@@ -1699,6 +1858,129 @@ function doImport(e){
   e.target.value='';
 }
 
+
+// ╔══════════════════════════════════════════════╗
+//  EXPORTAR IMAGEN DEL DÍA
+// ╚══════════════════════════════════════════════╝
+async function exportImagen(){
+  const d = D(); if(!d) return;
+  toast('Generando imagen…','📸');
+
+  // Build a clean printable div
+  const info = getDispInfo(d);
+  const activos = d.placasEnTaller.filter(p=>!p.retornado);
+  const enN = activos.filter(p=>!isRestriccion(p.status)).length;
+  const restriccionCount = activos.filter(p=>isRestriccion(p.status)).length;
+  const disp = d.total - enN;
+  const pct = (disp/d.total*100).toFixed(1);
+
+  const tallerRows = activos.map(p=>`
+    <tr>
+      <td style="font-family:monospace;font-weight:700;color:#1e3a5f;background:#dbeafe;padding:6px 8px;border-radius:4px">${p.placa}</td>
+      <td style="padding:6px 8px;color:#666">${fmtF(p.fechaIngreso)}</td>
+      <td style="padding:6px 8px">${esc(p.novedad)||'—'}</td>
+      <td style="padding:6px 8px">
+        ${p.status&&p.status.includes('BLOQUEADO')?'⛔ BLOQUEADO':
+          p.status&&p.status.includes('RESTRICCI')?'🟣 RESTRICCIÓN':
+          '🔴 INOPERATIVO'}
+      </td>
+      <td style="padding:6px 8px;color:#666">${esc(p.taller)||'—'}</td>
+      <td style="padding:6px 8px;font-weight:700;color:${p.diasEnTaller>=10?'#dc2626':'#d97706'}">${p.diasEnTaller}d</td>
+    </tr>`).join('');
+
+  const retRows = d.retornados.length===0
+    ? '<tr><td colspan="4" style="padding:8px;color:#888;text-align:center">Ninguno retornó</td></tr>'
+    : d.retornados.map(r=>`
+    <tr>
+      <td style="font-family:monospace;font-weight:700;color:#1e3a5f;background:#dbeafe;padding:6px 8px;border-radius:4px">${r.placa}</td>
+      <td style="padding:6px 8px;color:#666">${fmtF(r.fechaIngreso)}</td>
+      <td style="padding:6px 8px">${esc(r.reparacion)||'—'}</td>
+      <td style="padding:6px 8px;color:#059669;font-weight:700">${fmtF(r.fechaEntrega)}</td>
+    </tr>`).join('');
+
+  const print_div = document.createElement('div');
+  print_div.style.cssText = 'position:fixed;left:-9999px;top:0;width:900px;background:#fff;padding:28px;font-family:DM Sans,Arial,sans-serif;font-size:13px;color:#0f172a';
+  print_div.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #0f1e3d">
+      <div>
+        <div style="font-size:22px;font-weight:900;color:#0f1e3d">🚛 Flota UC Girardota</div>
+        <div style="font-size:13px;color:#64748b;margin-top:2px">Disponibilidad del día · ${fmtF(d.fecha)}</div>
+      </div>
+      <div style="text-align:right;font-size:11px;color:#94a3b8">Generado: ${fmtF(today())}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px">
+      <div style="background:#eff6ff;border-radius:10px;padding:12px;border-top:3px solid #2563eb">
+        <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Flota total</div>
+        <div style="font-size:28px;font-weight:900;color:#0f172a;font-family:monospace">${d.total}</div>
+      </div>
+      <div style="background:#ecfdf5;border-radius:10px;padding:12px;border-top:3px solid #059669">
+        <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Disponibles</div>
+        <div style="font-size:28px;font-weight:900;color:#059669;font-family:monospace">${disp}</div>
+        <div style="font-size:11px;color:#64748b">${pct}% operativo</div>
+      </div>
+      <div style="background:#fff7ed;border-radius:10px;padding:12px;border-top:3px solid #ea580c">
+        <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">En taller</div>
+        <div style="font-size:28px;font-weight:900;color:#ea580c;font-family:monospace">${enN}</div>
+        ${restriccionCount>0?`<div style="font-size:10px;color:#7c3aed">+${restriccionCount} restricción</div>`:''}
+      </div>
+      <div style="background:#fffbeb;border-radius:10px;padding:12px;border-top:3px solid #d97706">
+        <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Retornados</div>
+        <div style="font-size:28px;font-weight:900;color:#d97706;font-family:monospace">${d.retornados.length}</div>
+      </div>
+      <div style="background:#f5f3ff;border-radius:10px;padding:12px;border-top:3px solid #7c3aed">
+        <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">OP Tripulación</div>
+        <div style="font-size:28px;font-weight:900;color:#7c3aed;font-family:monospace">${d.op!=null?d.op:'—'}</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:18px">
+      <div style="font-size:12px;font-weight:800;color:#0f1e3d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🔧 Placas en taller (${activos.length})</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead><tr style="background:#0f1e3d;color:#fff">
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Placa</th>
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Ingreso</th>
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Novedad</th>
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Status</th>
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Taller</th>
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Días</th>
+        </tr></thead>
+        <tbody>${tallerRows}</tbody>
+      </table>
+    </div>
+
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#0f1e3d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">✅ Retornados hoy (${d.retornados.length})</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead><tr style="background:#059669;color:#fff">
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Placa</th>
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Ingreso</th>
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Reparación</th>
+          <th style="padding:7px 8px;text-align:left;font-size:10px">Fecha retorno</th>
+        </tr></thead>
+        <tbody>${retRows}</tbody>
+      </table>
+    </div>
+  `;
+  document.body.appendChild(print_div);
+
+  try{
+    const canvas = await html2canvas(print_div, {
+      scale: 2, useCORS: true, backgroundColor: '#fff',
+      width: 900, windowWidth: 900
+    });
+    const link = document.createElement('a');
+    link.download = `FLOTA_${fmtF(d.fecha).replace(/\//g,'-')}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    toast('Imagen guardada 📸','✅');
+  }catch(e){
+    console.error(e);
+    toast('Error al generar imagen','❌');
+  }finally{
+    document.body.removeChild(print_div);
+  }
+}
 // ╔══════════════════════════════════════════════╗
 //  EXCEL EXPORT
 // ╚══════════════════════════════════════════════╝
@@ -1739,6 +2021,9 @@ function doExcel(){
 // ╔══════════════════════════════════════════════╗
 //  INIT
 // ╚══════════════════════════════════════════════╝
+// Check if user has a valid editor session
+isEditor = checkAuth();
+setEditorMode(isEditor);
 renderSidebar();
 if(state.days.length)selectDay(state.days.length-1);
 initFirebase();
@@ -1787,6 +2072,27 @@ window.addEventListener('resize', updateMobNav);
     </div>
     <div class="modal-ft">
       <button class="btn bo" onclick="closeM('m-placa')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- AUTH: PIN MODAL -->
+<div id="auth-overlay" class="read-overlay" style="display:none" onclick="if(event.target===this)hidePinModal()">
+  <div class="read-card">
+    <div style="font-size:36px;margin-bottom:8px">🔐</div>
+    <h3>Acceso de editor</h3>
+    <p>Ingresa el PIN para poder agregar, editar o eliminar registros.<br>Sin PIN puedes consultar todo normalmente.</p>
+    <div class="pin-row">
+      <input id="pin-input" type="password" inputmode="numeric" maxlength="10"
+        placeholder="••••"
+        onkeydown="if(event.key==='Enter')submitPin()"
+        style="font-size:24px;letter-spacing:8px"/>
+    </div>
+    <div class="pin-err" id="pin-err"></div>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button class="btn bo" onclick="hidePinModal()">Cancelar</button>
+      <button class="btn bp" onclick="submitPin()">Ingresar</button>
     </div>
   </div>
 </div>
