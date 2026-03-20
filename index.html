@@ -399,6 +399,41 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
   .btn-lbl{display:none}
 }
 
+/* Hide sidebar on gestión page */
+.pg-gest-active aside { display: none !important; }
+.pg-gest-active .app { grid-template-columns: 1fr !important; }
+
+
+/* ══════ CALENDARIO ══════ */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+.cal-hdr{text-align:center;font-size:10px;font-weight:700;color:var(--slate);padding:4px;text-transform:uppercase}
+.cal-day{border-radius:8px;padding:6px 4px;text-align:center;min-height:54px;cursor:pointer;transition:all .15s;border:1.5px solid transparent;position:relative}
+.cal-day:hover{transform:scale(1.04);box-shadow:var(--sh)}
+.cal-day.cd-empty{background:transparent;cursor:default}
+.cal-day.cd-green{background:var(--green-lt);border-color:var(--green)}
+.cal-day.cd-amber{background:var(--amber-lt);border-color:var(--amber)}
+.cal-day.cd-red{background:var(--red-lt);border-color:var(--red)}
+.cal-day.cd-today{box-shadow:0 0 0 2.5px var(--blue)}
+.cal-dn{font-size:12px;font-weight:700;color:var(--text)}
+.cal-pct{font-size:11px;font-weight:800;font-family:'DM Mono',monospace}
+.cal-meta{width:6px;height:6px;border-radius:50%;margin:2px auto 0}
+.cal-month-nav{display:flex;align-items:center;gap:10px}
+.cal-legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+.cal-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--slate)}
+.cal-leg-dot{width:10px;height:10px;border-radius:3px}
+
+/* ══════ COSTOS ══════ */
+.cos-input-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:16px;box-shadow:var(--sh)}
+.big-kpi{text-align:center;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:18px;box-shadow:var(--sh)}
+.big-kpi-val{font-size:32px;font-weight:900;font-family:'DM Mono',monospace;line-height:1.1}
+.big-kpi-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--slate);margin-bottom:4px}
+.big-kpi-sub{font-size:11px;color:var(--slate);margin-top:4px}
+.taller-rank{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.taller-rank:last-child{border-bottom:none}
+
+/* ══════ PDF BUTTON ══════ */
+.pdf-btn{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.pdf-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(220,38,38,.4)}
 @media(max-width:420px){
   .fg.g4{grid-template-columns:1fr}
   .fg.g3{grid-template-columns:1fr}
@@ -407,6 +442,64 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
   .kgrid.k5{grid-template-columns:1fr 1fr}
   header{padding:0 12px}
   .h-title{font-size:12px}
+}
+/* ══════════════════════ DASHBOARD / GESTIÓN ══════════════════════ */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.dash-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:18px;box-shadow:var(--sh)}
+.dash-card-full{grid-column:span 2}
+.dash-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--slate);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+/* Chart bars */
+.bar-chart{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:grid;grid-template-columns:120px 1fr 44px;align-items:center;gap:10px}
+.bar-lbl{font-size:11px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{height:16px;background:var(--border);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;transition:width .6s ease}
+.bar-val{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;text-align:right}
+/* Trend line */
+.trend-svg{width:100%;overflow:visible}
+/* Vehicle card */
+.veh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.veh-card{background:var(--bg);border-radius:10px;border:2px solid var(--border);padding:12px;text-align:center;transition:all .2s;cursor:pointer}
+.veh-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--sh)}
+.veh-card.vc-ok{border-color:var(--green)}
+.veh-card.vc-warn{border-color:var(--amber)}
+.veh-card.vc-bad{border-color:var(--red)}
+.veh-car{font-size:28px;display:block;margin-bottom:4px;line-height:1}
+.veh-placa{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;color:var(--navy)}
+.veh-dias{font-size:11px;font-weight:700;margin-top:2px}
+.veh-sist{font-size:9px;color:var(--slate);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Alert item */
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;margin-bottom:8px}
+.alert-item.a-red{background:var(--red-lt);border-left:3px solid var(--red)}
+.alert-item.a-amber{background:var(--amber-lt);border-left:3px solid var(--amber)}
+.alert-item.a-green{background:var(--green-lt);border-left:3px solid var(--green)}
+.alert-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.alert-txt{flex:1}
+.alert-title{font-size:12px;font-weight:700;margin-bottom:2px}
+.alert-sub{font-size:11px;color:var(--text2);line-height:1.4}
+/* Plan de acción */
+.plan-item{background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:12px;margin-bottom:8px}
+.plan-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.plan-mes{font-size:11px;font-weight:700;color:var(--blue);font-family:'DM Mono',monospace}
+.plan-falla{font-size:12px;font-weight:700;color:var(--text)}
+.plan-accion{font-size:11px;color:var(--text2);line-height:1.5;border-left:2px solid var(--blue);padding-left:8px;margin-top:4px}
+.plan-badge{font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;background:var(--green-lt);color:var(--green);white-space:nowrap}
+/* Month selector */
+.month-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px}
+.mtab{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--card);color:var(--slate);transition:all .15s}
+.mtab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+/* Comparativo */
+.comp-row{display:grid;grid-template-columns:100px 1fr 1fr;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px}
+.comp-row:last-child{border-bottom:none}
+.comp-lbl{font-weight:600;color:var(--text2)}
+.comp-val{font-family:'DM Mono',monospace;font-weight:700;text-align:center}
+.comp-arrow-up{color:var(--green)}
+.comp-arrow-dn{color:var(--red)}
+@media(max-width:768px){
+  .dash-grid{grid-template-columns:1fr}
+  .dash-card-full{grid-column:span 1}
+  .bar-row{grid-template-columns:80px 1fr 36px}
+  .veh-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
 }
 </style>
 </head>
@@ -429,6 +522,9 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
   <div class="h-nav">
     <button class="nbtn on" id="nav-r" onclick="setPage('reg')">📋 Registro</button>
     <button class="nbtn" id="nav-a" onclick="setPage('an')">📊 Informe</button>
+    <button class="nbtn" id="nav-g" onclick="setPage('gest')">🚨 Gestión</button>
+    <button class="nbtn" id="nav-cal" onclick="setPage('cal')">📅 Calendario</button>
+    <button class="nbtn" id="nav-cos" onclick="setPage('cos')">💰 Costos</button>
   </div>
   <!-- Desktop actions -->
   <div class="h-act">
@@ -442,6 +538,10 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
       </button>
     </div>
     <button class="btn bg-h btn-sm" onclick="showNDM()" id="btn-nuevo-dia">＋ Día</button>
+    <button class="btn bg-h btn-sm" onclick="enviarAlertasAhora()" title="Verificar y enviar alertas por correo" id="btn-alert" style="position:relative">
+      📧 <span id="alert-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border-radius:50%;width:14px;height:14px;font-size:8px;font-weight:800;line-height:14px;text-align:center"></span>
+    </button>
+    <button class="btn bg-h btn-sm" onclick="openM('m-email-cfg')" title="Configurar notificaciones">⚙️📧</button>
     <button class="btn bg-h btn-sm" onclick="doBackup()" title="Guardar respaldo local">💾</button>
     <button class="btn bg-h btn-sm" onclick="openM('m-imp')" title="Restaurar desde archivo">📂</button>
     <button class="btn bg-h btn-sm" onclick="doExcel()">⬇ Excel</button>
@@ -478,6 +578,21 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
   <div class="pg" id="pg-an">
     <div id="an-view"></div>
   </div>
+
+  <!-- GESTIÓN -->
+  <div class="pg" id="pg-gest">
+    <div id="gest-view"></div>
+  </div>
+
+  <!-- CALENDARIO -->
+  <div class="pg" id="pg-cal">
+    <div id="cal-view"></div>
+  </div>
+
+  <!-- COSTOS -->
+  <div class="pg" id="pg-cos">
+    <div id="cos-view"></div>
+  </div>
 </div>
 
 <!-- MOBILE BOTTOM NAV -->
@@ -493,6 +608,15 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
   </button>
   <button class="mob-nav-btn" id="mn-an" onclick="setPage('an')">
     <span class="mn-icon">📊</span>Informe
+  </button>
+  <button class="mob-nav-btn" id="mn-gest" onclick="setPage('gest')">
+    <span class="mn-icon">🚨</span>Gestión
+  </button>
+  <button class="mob-nav-btn" id="mn-cal" onclick="setPage('cal')">
+    <span class="mn-icon">📅</span>Calendario
+  </button>
+  <button class="mob-nav-btn" id="mn-cos" onclick="setPage('cos')">
+    <span class="mn-icon">💰</span>Costos
   </button>
   <button class="mob-nav-btn" id="mn-more" onclick="openM('m-more')">
     <span class="mn-icon">⋯</span>Más
@@ -575,6 +699,8 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
     <div class="modal-handle"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -647,6 +773,26 @@ function getSist(novedad, sistema){
 //  Cambia EDITOR_PIN por el PIN que quieras
 // ╚══════════════════════════════════════════════╝
 const EDITOR_PIN    = '1234';          // ← CAMBIA ESTE PIN
+
+// ╔══════════════════════════════════════════════╗
+//  EMAILJS — NOTIFICACIONES POR CORREO
+//  1. Crea cuenta en emailjs.com (gratis)
+//  2. Conecta tu Gmail como servicio
+//  3. Crea el template con las variables del código
+//  4. Reemplaza los valores de abajo
+// ╚══════════════════════════════════════════════╝
+const EMAIL_CFG = {
+  publicKey:  'JkzXt8TMr--AXQsiM', // ← Account → Public Key
+  serviceId:  'service_dfb29wb',    // ← Email Services → Service ID
+  templateId: 'template_ovdhmr3',   // ← Email Templates → Template ID
+  destEmail:  'correo@empresa.com', // ← Correo que recibirá las alertas
+  appUrl:     window.location.href, // URL de la app (se llena automático)
+  enabled:    true,                 // ← Activado
+};
+// Días en taller para disparar alerta
+const ALERT_DIAS = 5;
+// Clave para recordar qué alertas ya se enviaron hoy (evita duplicados)
+const ALERT_SENT_KEY = 'flota_alerts_sent';
 const AUTH_KEY      = 'flota_auth_v1'; // clave en localStorage
 const SESSION_MIN   = 5;               // minutos de inactividad antes de pedir PIN
 const SESSION_MS    = SESSION_MIN * 60 * 1000;
@@ -869,7 +1015,7 @@ function loadLocal(){
   }
   return{days:[]};
 }
-function saveLocal(){ localStorage.setItem(SK,JSON.stringify(state)) }
+function saveLocal(){ localStorage.setItem(SK,JSON.stringify(state)); setTimeout(checkAlertBadge,100); }
 
 let state = loadLocal();
 let curIdx = null;
@@ -944,13 +1090,22 @@ function toast(msg,e='✅'){
 // ╚══════════════════════════════════════════════╝
 function setPage(p){
   curPage=p;
-  document.getElementById('pg-reg').classList.toggle('on',p==='reg');
-  document.getElementById('pg-an').classList.toggle('on',p==='an');
-  document.getElementById('nav-r')?.classList.toggle('on',p==='reg');
-  document.getElementById('nav-a')?.classList.toggle('on',p==='an');
-  document.getElementById('mn-reg')?.classList.toggle('on',p==='reg');
-  document.getElementById('mn-an')?.classList.toggle('on',p==='an');
+  ['reg','an','gest','cal','cos'].forEach(x=>{
+    document.getElementById('pg-'+x)?.classList.toggle('on',p===x);
+  });
+  ['r','a','g','cal','cos'].forEach((x,i)=>{
+    const ids=['nav-r','nav-a','nav-g','nav-cal','nav-cos'];
+    document.getElementById(ids[i])?.classList.toggle('on',p===['reg','an','gest','cal','cos'][i]);
+  });
+  ['mn-reg','mn-an','mn-gest','mn-cal','mn-cos'].forEach((id,i)=>{
+    document.getElementById(id)?.classList.toggle('on',p===['reg','an','gest','cal','cos'][i]);
+  });
+  // Hide sidebar for full-width pages
+  document.body.classList.toggle('pg-gest-active', p==='gest'||p==='cal'||p==='cos');
   if(p==='an')renderAn();
+  if(p==='gest'){window._gestFiltroMes=null;window._gestFiltroAnio=null;renderGest(null,null);}
+  if(p==='cal')renderCal();
+  if(p==='cos')renderCos();
 }
 
 // ╔══════════════════════════════════════════════╗
@@ -990,9 +1145,26 @@ function renderDrawer(){
 // ╔══════════════════════════════════════════════╗
 //  MODALS
 // ╚══════════════════════════════════════════════╝
-function openM(id){document.getElementById(id).classList.add('open')}
+function openM(id){
+  document.getElementById(id)?.classList.add('open');
+  if(id==='m-email-cfg'){
+    setTimeout(()=>{
+      // Cargar valores reales en los inputs
+      const dest = document.getElementById('ecfg-dest');
+      const pk   = document.getElementById('ecfg-pk');
+      const sid  = document.getElementById('ecfg-sid');
+      const tid  = document.getElementById('ecfg-tid');
+      if(dest) dest.value = EMAIL_CFG.destEmail  !== 'correo@empresa.com' ? EMAIL_CFG.destEmail  : '';
+      if(pk)   pk.value   = EMAIL_CFG.publicKey  !== 'TU_PUBLIC_KEY'      ? EMAIL_CFG.publicKey  : '';
+      if(sid)  sid.value  = EMAIL_CFG.serviceId  !== 'TU_SERVICE_ID'      ? EMAIL_CFG.serviceId  : '';
+      if(tid)  tid.value  = EMAIL_CFG.templateId !== 'TU_TEMPLATE_ID'     ? EMAIL_CFG.templateId : '';
+      updateEmailCfgStatus();
+      updateEmailPreview();
+    }, 50);
+  }
+}
 function closeM(id){document.getElementById(id).classList.remove('open')}
-['m-nd','m-imp','m-more','m-placa'].forEach(id=>{
+['m-nd','m-imp','m-more','m-placa','m-plan','m-email-cfg'].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener('click',e=>{if(e.target.id===id)closeM(id)});
 });
@@ -1032,6 +1204,25 @@ function crearDia(){
 // ╔══════════════════════════════════════════════╗
 //  SIDEBAR
 // ╚══════════════════════════════════════════════╝
+
+function checkAlertBadge(){
+  if(!state.days.length) return;
+  const lastDay = state.days[state.days.length-1];
+  const activos = lastDay.placasEnTaller.filter(p=>!p.retornado&&!isRestriccion(p.status));
+  const pending = activos.filter(p=>p.diasEnTaller>=ALERT_DIAS);
+  const badge = document.getElementById('alert-badge');
+  if(!badge) return;
+  // Hide if already sent today
+  const sentToday = getSentAlerts();
+  const alreadySent = !!sentToday[`batch_${today()}`];
+  if(pending.length>0 && !alreadySent){
+    badge.style.display='block';
+    badge.textContent=pending.length;
+    badge.title=`${pending.length} vehículo${pending.length>1?'s':''} con +${ALERT_DIAS} días en taller`;
+  } else {
+    badge.style.display='none';
+  }
+}
 function renderSidebar(filter=''){
   const el=document.getElementById('day-list');
   document.getElementById('sb-cnt').textContent=state.days.length+'d';
@@ -1078,19 +1269,25 @@ function selectDay(idx, goToReport=false){
   curIdx=idx;
   renderSidebar();
   if(goToReport || curPage==='an'){
-    // Filter informe to this specific day
+    // Ir al informe filtrado por este día
     setPage('an');
     setTimeout(()=>{
       const sel=document.getElementById('an-t');
       if(sel){
         sel.value='dia';
         updateFUI();
-        // Set the select to this day
         const vSel=document.getElementById('an-v');
         if(vSel) vSel.value=state.days[idx].fecha;
         runAn();
       }
     },50);
+  } else if(curPage==='gest'){
+    // En gestión: ir al registro del día seleccionado
+    setPage('reg');
+    document.getElementById('welcome').style.display='none';
+    document.getElementById('day-view').style.display='block';
+    renderDay();
+    document.getElementById('pg-reg').scrollTop=0;
   } else {
     document.getElementById('welcome').style.display='none';
     document.getElementById('day-view').style.display='block';
@@ -1909,6 +2106,1299 @@ function runAn(){
     </div>`;
 }
 
+
+// ╔══════════════════════════════════════════════╗
+//  GESTIÓN — DASHBOARD COMPLETO
+// ╚══════════════════════════════════════════════╝
+
+// Estado para planes de acción (guardados en localStorage)
+const PLANES_KEY = 'flota_planes_v1';
+function loadPlanes(){ try{ return JSON.parse(localStorage.getItem(PLANES_KEY)||'[]') }catch{ return[] } }
+function savePlanes(pl){ localStorage.setItem(PLANES_KEY, JSON.stringify(pl)) }
+let planes = loadPlanes();
+
+function renderGest(filtroMes=null, filtroAnio=null){
+  // Use stored filter if not passed
+  if(filtroMes===null && filtroAnio===null){
+    filtroMes = window._gestFiltroMes || null;
+    filtroAnio = window._gestFiltroAnio || null;
+  } else {
+    window._gestFiltroMes = filtroMes;
+    window._gestFiltroAnio = filtroAnio;
+  }
+  if(!state.days.length){
+    document.getElementById('gest-view').innerHTML=`<div class="nodata" style="padding:80px"><div style="font-size:40px">📭</div><p>Sin datos aún</p></div>`;
+    return;
+  }
+
+  // ── Calcular métricas globales ──
+  const meses = {};
+  state.days.forEach(d=>{
+    const m = d.fecha.slice(0,7);
+    if(!meses[m]) meses[m]={key:m, dias:[], label:''};
+    meses[m].dias.push(d);
+  });
+  Object.values(meses).forEach(m=>{
+    const [y,mo] = m.key.split('-');
+    const nombres = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    m.label = nombres[+mo]+' '+y;
+  });
+  const mesList = Object.values(meses).sort((a,b)=>a.key.localeCompare(b.key));
+  // Determine which month/year to show based on filter
+  let mesActual, mesAnterior;
+  if(filtroMes){
+    // Specific month selected
+    mesActual = mesList.find(m=>m.key===filtroMes) || mesList[mesList.length-1];
+    const idx2 = mesList.indexOf(mesActual);
+    mesAnterior = idx2 > 0 ? mesList[idx2-1] : null;
+  } else if(filtroAnio){
+    // Year selected: aggregate all months of that year
+    const yearMonths = mesList.filter(m=>m.key.startsWith(filtroAnio));
+    const allDays = yearMonths.flatMap(m=>m.dias);
+    if(allDays.length){
+      mesActual = {key:filtroAnio, label:filtroAnio, dias:allDays};
+      const prevYear = String(+filtroAnio-1);
+      const prevMonths = mesList.filter(m=>m.key.startsWith(prevYear));
+      const prevDays = prevMonths.flatMap(m=>m.dias);
+      mesAnterior = prevDays.length ? {key:prevYear, label:prevYear, dias:prevDays} : null;
+    } else {
+      mesActual = mesList[mesList.length-1];
+      mesAnterior = mesList.length>1 ? mesList[mesList.length-2] : null;
+    }
+  } else {
+    mesActual = mesList[mesList.length-1];
+    mesAnterior = mesList.length>1 ? mesList[mesList.length-2] : null;
+  }
+
+  function mesStats(m){
+    const info = m.dias.map(d=>getDispInfo(d));
+    const avgPct = info.reduce((a,i)=>a+i.pct,0)/info.length;
+    const avgTaller = info.reduce((a,i)=>a+i.enTaller,0)/info.length;
+    const diasMeta = info.filter(i=>i.enTaller<=META_TALLER).length;
+    const sistemas = {};
+    m.dias.forEach(d=>d.placasEnTaller.forEach(p=>{
+      const s=getSist(p.novedad,p.sistema); sistemas[s]=(sistemas[s]||0)+1;
+    }));
+    const topSist = Object.entries(sistemas).sort((a,b)=>b[1]-a[1]);
+    const placasDias = {};
+    m.dias.forEach(d=>d.placasEnTaller.forEach(p=>{
+      placasDias[p.placa]=(placasDias[p.placa]||0)+p.diasEnTaller;
+    }));
+    const topPlacas = Object.entries(placasDias).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const totalRetornados = m.dias.reduce((a,d)=>a+d.retornados.length,0);
+    return {avgPct,avgTaller,diasMeta,topSist,topPlacas,totalRetornados,totalDias:m.dias.length};
+  }
+
+  // ── Alertas activas ──
+  const lastDay = state.days[state.days.length-1];
+  const alertas = [];
+  const enTallerActivos = lastDay.placasEnTaller.filter(p=>!p.retornado);
+
+  enTallerActivos.forEach(p=>{
+    if(p.diasEnTaller>=10 && !isRestriccion(p.status)){
+      alertas.push({nivel:'red', icon:'🚨', titulo:`${p.placa} lleva ${p.diasEnTaller} días en taller`, sub:`${p.novedad||'Sin novedad'} · ${p.taller||'Sin taller'} · Ingresó ${fmtF(p.fechaIngreso)}`});
+    } else if(p.diasEnTaller>=5 && !isRestriccion(p.status)){
+      alertas.push({nivel:'amber', icon:'⚠️', titulo:`${p.placa} lleva ${p.diasEnTaller} días en taller`, sub:`${p.novedad||'Sin novedad'} · ${p.taller||'Sin taller'}`});
+    }
+  });
+  if(enTallerActivos.filter(p=>!isRestriccion(p.status)).length > META_TALLER){
+    const sobre = enTallerActivos.filter(p=>!isRestriccion(p.status)).length - META_TALLER;
+    alertas.unshift({nivel:'red', icon:'🎯', titulo:`Meta incumplida: ${sobre} vehículo${sobre>1?'s':''} sobre el límite de ${META_TALLER}`, sub:`Hoy hay ${enTallerActivos.filter(p=>!isRestriccion(p.status)).length} vehículos inoperativos en taller`});
+  }
+  // Sistema más recurrente este mes
+  const stActual = mesStats(mesActual);
+  if(stActual.topSist.length>0 && stActual.topSist[0][1]>=3){
+    alertas.push({nivel:'amber', icon:'⚙️', titulo:`Sistema más afectado: ${stActual.topSist[0][0]}`, sub:`${stActual.topSist[0][1]} ingresos este mes · Considera un mantenimiento preventivo`});
+  }
+  if(stActual.avgPct < 88){
+    alertas.push({nivel:'red', icon:'📉', titulo:`Disponibilidad bajo el 88% este mes`, sub:`Promedio: ${stActual.avgPct.toFixed(1)}% · Meta sugerida: ≥90%`});
+  } else if(stActual.avgPct >= 92){
+    alertas.push({nivel:'green', icon:'🌟', titulo:`Excelente disponibilidad este mes`, sub:`Promedio: ${stActual.avgPct.toFixed(1)}% · Por encima de la meta ≥90%`});
+  }
+  if(!alertas.length) alertas.push({nivel:'green',icon:'✅',titulo:'Todo en orden',sub:'No hay alertas activas en este momento'});
+
+  // ── Trend data para gráfica SVG ──
+  const trendData = mesList.map(m=>({label:m.label, pct:mesStats(m).avgPct.toFixed(1), mes:m.key}));
+  const minPct = Math.min(...trendData.map(t=>+t.pct))-5;
+  const maxPct = Math.max(...trendData.map(t=>+t.pct))+5;
+  const svgW=500, svgH=120, padL=30, padR=10, padT=10, padB=30;
+  const xStep = trendData.length>1 ? (svgW-padL-padR)/(trendData.length-1) : 0;
+  const yScale = v => padT + (svgH-padT-padB) * (1-(v-minPct)/(maxPct-minPct));
+  const points = trendData.map((t,i)=>`${padL+i*xStep},${yScale(+t.pct)}`).join(' ');
+  const areaPoints = `${padL},${svgH-padB} ` + trendData.map((t,i)=>`${padL+i*xStep},${yScale(+t.pct)}`).join(' ') + ` ${padL+(trendData.length-1)*xStep},${svgH-padB}`;
+
+  // ── Planes de acción HTML ──
+  function renderPlanes(){
+    if(!planes.length) return `<div class="nodata"><p>Sin planes de acción registrados aún.<br>Agrega el primero con el botón de arriba.</p></div>`;
+    return planes.map((pl,i)=>`
+      <div class="plan-item">
+        <div class="plan-header">
+          <div>
+            <div class="plan-mes">${pl.mes||'—'}</div>
+            <div class="plan-falla">⚙️ Falla: ${esc(pl.falla)}</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="plan-badge">${pl.estado||'Completado'}</span>
+            ${isEditor?`<button class="ibtn" onclick="deletePlan(${i})">🗑</button>`:''}
+          </div>
+        </div>
+        <div class="plan-accion">📋 ${esc(pl.accion)}</div>
+        ${pl.resultado?`<div style="font-size:11px;color:var(--green);margin-top:6px;font-weight:600">✅ Resultado: ${esc(pl.resultado)}</div>`:''}
+      </div>`).join('');
+  }
+
+  const stA = stActual;
+  const maxSist = stA.topSist[0]?.[1]||1;
+  const maxPlaca = stA.topPlacas[0]?.[1]||1;
+
+  // Comparativo mes anterior
+  let compHTML = '<div class="nodata"><p>Solo hay un mes de datos</p></div>';
+  if(mesAnterior){
+    const stP = mesStats(mesAnterior);
+    const rows = [
+      {lbl:'% Disponibilidad', a:stA.avgPct.toFixed(1)+'%', p:stP.avgPct.toFixed(1)+'%', better: stA.avgPct >= stP.avgPct},
+      {lbl:'Prom. en taller',  a:stA.avgTaller.toFixed(1), p:stP.avgTaller.toFixed(1), better: stA.avgTaller <= stP.avgTaller},
+      {lbl:'Días en meta',     a:stA.diasMeta+'/'+stA.totalDias, p:stP.diasMeta+'/'+stP.totalDias, better: stA.diasMeta >= stP.diasMeta},
+      {lbl:'Retornados',       a:stA.totalRetornados, p:stP.totalRetornados, better: true},
+    ];
+    compHTML = `
+      <div class="comp-row" style="font-weight:700;font-size:10px;color:var(--slate);text-transform:uppercase">
+        <div>Métrica</div><div style="text-align:center">${mesActual.label}</div><div style="text-align:center">${mesAnterior.label}</div>
+      </div>
+      ${rows.map(r=>`
+        <div class="comp-row">
+          <div class="comp-lbl">${r.lbl}</div>
+          <div class="comp-val" style="color:${r.better?'var(--green)':'var(--red)'}">${r.a} ${r.better?'▲':'▼'}</div>
+          <div class="comp-val" style="color:var(--slate)">${r.p}</div>
+        </div>`).join('')}`;
+  }
+
+  // Build year/month tabs
+  const anios = [...new Set(mesList.map(m=>m.key.slice(0,4)))].sort((a,b)=>b.localeCompare(a));
+  const mesesDelAnio = filtroAnio
+    ? mesList.filter(m=>m.key.startsWith(filtroAnio)).reverse()
+    : mesList.filter(m=>m.key.startsWith((filtroMes||mesActual.key).slice(0,4))).reverse();
+
+  const anioActivo = filtroAnio || (filtroMes ? filtroMes.slice(0,4) : mesActual.key.slice(0,4));
+  const nomMeses = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  const anioTabs = anios.map(a=>
+    `<button class="mtab ${a===filtroAnio?'on':''}"
+      onclick="renderGest(null,'${a}')" style="font-size:12px;padding:5px 14px">
+      ${a}
+    </button>`
+  ).join('');
+
+  const mesTabs = mesesDelAnio.map(m=>{
+    const [y,mo]=m.key.split('-');
+    const isActive = filtroMes===m.key;
+    return`<button class="mtab ${isActive?'on':''}" onclick="renderGest('${m.key}',null)" style="font-size:11px">
+      ${nomMeses[+mo]}
+    </button>`;
+  }).join('');
+
+  const periodoLabel = filtroAnio
+    ? filtroAnio
+    : filtroMes
+      ? mesActual.label
+      : mesActual.label + ' (actual)';
+
+  document.getElementById('gest-view').innerHTML = `
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div>
+          <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">🚨 Gestión y Alertas</h2>
+          <p style="font-size:11px;color:var(--slate)">UC Girardota · Período: <strong>${periodoLabel}</strong></p>
+        </div>
+        <button class="btn bo btn-sm" onclick="window._gestFiltroMes=null;window._gestFiltroAnio=null;renderGest(null,null)">↺ Mes actual</button>
+      </div>
+      <!-- AÑOS -->
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;align-items:center">
+        <span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-right:4px">Año</span>
+        ${anioTabs}
+      </div>
+      <!-- MESES del año activo -->
+      <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-right:4px">Mes</span>
+        ${mesTabs}
+        ${filtroAnio?`<span style="font-size:10px;color:var(--slate);margin-left:4px">← todos los meses del año</span>`:''}
+      </div>
+    </div>
+
+    <!-- ALERTAS ACTIVAS -->
+    <div class="dash-card" style="margin-bottom:16px">
+      <div class="dash-title">🔔 Alertas activas — ${fmtF(lastDay.fecha)}</div>
+      ${alertas.map(a=>`
+        <div class="alert-item a-${a.nivel}">
+          <span class="alert-icon">${a.icon}</span>
+          <div class="alert-txt">
+            <div class="alert-title">${a.titulo}</div>
+            <div class="alert-sub">${a.sub}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <!-- VEHÍCULOS EN TALLER VISUAL -->
+    <div class="dash-card" style="margin-bottom:16px">
+      <div class="dash-title">🚗 Vehículos en taller ahora
+        <span style="font-size:10px;font-weight:400;color:var(--slate);margin-left:4px">clic para ver historial</span>
+      </div>
+      <div class="veh-grid">
+        ${enTallerActivos.length===0
+          ? '<div class="nodata"><p>✅ Todos los vehículos disponibles</p></div>'
+          : enTallerActivos.map(p=>{
+              const cls = p.diasEnTaller>=10?'vc-bad':p.diasEnTaller>=5?'vc-warn':'vc-ok';
+              const emoji = isRestriccion(p.status)?'🟡':p.diasEnTaller>=10?'🔴':p.diasEnTaller>=5?'🟠':'🟢';
+              return`<div class="veh-card ${cls}" onclick="showPlacaDetail('${p.placa}')">
+                <span class="veh-car">🚛</span>
+                <div>${emoji}</div>
+                <div class="veh-placa">${p.placa}</div>
+                <div class="veh-dias" style="color:${p.diasEnTaller>=10?'var(--red)':p.diasEnTaller>=5?'var(--amber)':'var(--green)'}">${p.diasEnTaller}d</div>
+                <div class="veh-sist">${getSist(p.novedad,p.sistema)}</div>
+              </div>`;
+            }).join('')}
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <!-- TENDENCIA MENSUAL -->
+      <div class="dash-card">
+        <div class="dash-title">📈 Tendencia de disponibilidad</div>
+        ${trendData.length<2
+          ? '<div class="nodata"><p>Se necesitan al menos 2 meses</p></div>'
+          : `<svg class="trend-svg" viewBox="0 0 ${svgW} ${svgH}" style="width:100%;height:auto">
+              <defs>
+                <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2563eb" stop-opacity=".25"/>
+                  <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <!-- Grid lines -->
+              ${[0,.25,.5,.75,1].map(f=>{
+                const y=padT+(svgH-padT-padB)*f;
+                const v=(maxPct-f*(maxPct-minPct)).toFixed(0);
+                return`<line x1="${padL}" y1="${y}" x2="${svgW-padR}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>
+                       <text x="${padL-4}" y="${y+4}" font-size="9" fill="#94a3b8" text-anchor="end">${v}%</text>`;
+              }).join('')}
+              <!-- Area -->
+              <polygon points="${areaPoints}" fill="url(#tg)"/>
+              <!-- Line -->
+              <polyline points="${points}" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <!-- Dots + labels -->
+              ${trendData.map((t,i)=>{
+                const x=padL+i*xStep, y=yScale(+t.pct);
+                const clr=+t.pct>=90?'#059669':+t.pct>=85?'#d97706':'#dc2626';
+                return`<circle cx="${x}" cy="${y}" r="5" fill="${clr}" stroke="#fff" stroke-width="2"/>
+                       <text x="${x}" y="${svgH-padB+14}" font-size="9" fill="#64748b" text-anchor="middle">${t.label}</text>
+                       <text x="${x}" y="${y-9}" font-size="9" fill="${clr}" text-anchor="middle" font-weight="700">${t.pct}%</text>`;
+              }).join('')}
+            </svg>`}
+      </div>
+
+      <!-- COMPARATIVO MES ANTERIOR -->
+      <div class="dash-card">
+        <div class="dash-title">📊 Comparativo mensual</div>
+        ${compHTML}
+      </div>
+
+      <!-- SISTEMAS MÁS AFECTADOS este mes -->
+      <div class="dash-card">
+        <div class="dash-title">⚙️ Sistemas afectados — ${mesActual.label}</div>
+        <div class="bar-chart">
+          ${stA.topSist.slice(0,7).map(([s,n])=>`
+            <div class="bar-row">
+              <span class="bar-lbl">${s}</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxSist*100)}%;background:var(--orange)"></div></div>
+              <span class="bar-val" style="color:var(--orange)">${n}</span>
+            </div>`).join('')||'<div class="nodata"><p>Sin datos</p></div>'}
+        </div>
+      </div>
+
+      <!-- TOP PLACAS más días en taller -->
+      <div class="dash-card">
+        <div class="dash-title">🚛 Top placas — ${mesActual.label}
+          <span style="font-size:10px;font-weight:400;color:var(--blue);cursor:pointer" onclick="showPlacaDetail('${stA.topPlacas[0]?.[0]||''}')">ver historial →</span>
+        </div>
+        <div class="bar-chart">
+          ${stA.topPlacas.map(([p,d],i)=>{
+            const colors=['#2563eb','#7c3aed','#059669','#d97706','#dc2626','#0891b2','#64748b','#1d4ed8'];
+            return`<div class="bar-row" onclick="showPlacaDetail('${p}')" style="cursor:pointer">
+              <span class="placa" style="font-size:10px">${p}</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${Math.round(d/maxPlaca*100)}%;background:${colors[i%colors.length]}"></div></div>
+              <span class="bar-val" style="color:${colors[i%colors.length]}">${d}d</span>
+            </div>`;
+          }).join('')||'<div class="nodata"><p>Sin datos</p></div>'}
+        </div>
+      </div>
+
+      <!-- PLANES DE ACCIÓN -->
+      <div class="dash-card dash-card-full">
+        <div class="dash-title" style="justify-content:space-between">
+          <span>📋 Planes de acción</span>
+          ${isEditor?`<button class="btn bp btn-sm" onclick="showAddPlan()">＋ Agregar plan</button>`:''}
+        </div>
+        <div id="planes-list">${renderPlanesHTML()}</div>
+      </div>
+    </div>`;
+}
+
+function renderPlanesHTML(){
+  if(!planes.length) return `<div class="nodata"><p>Sin planes de acción registrados.<br>${isEditor?'Agrega el primero con el botón de arriba.':'Solo los editores pueden agregar planes.'}</p></div>`;
+  return planes.slice().reverse().map((pl,ri)=>{
+    const i = planes.length-1-ri;
+    const fotosHTML = pl.fotos&&pl.fotos.length
+      ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+          ${pl.fotos.map((b64,fi)=>`
+            <img src="${b64}"
+              style="width:64px;height:64px;object-fit:cover;border-radius:7px;border:2px solid var(--border);cursor:pointer;transition:transform .15s"
+              onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform=''"
+              onclick="viewPlanFotoSaved(${i},${fi})" title="Ver foto ${fi+1}"/>`).join('')}
+        </div>`
+      : '';
+    return`<div class="plan-item">
+      <div class="plan-header">
+        <div>
+          <div class="plan-mes">${pl.mes||'—'}</div>
+          <div class="plan-falla" style="margin-top:2px">⚙️ ${esc(pl.falla)}</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          ${pl.fotos&&pl.fotos.length?`<span style="font-size:10px;color:var(--slate)">📸 ${pl.fotos.length}</span>`:''}
+          <span class="plan-badge" style="background:${pl.estado==='En proceso'?'var(--amber-lt)':'var(--green-lt)'};color:${pl.estado==='En proceso'?'var(--amber)':'var(--green)'}">${pl.estado||'Completado'}</span>
+          ${isEditor?`<button class="ibtn" onclick="deletePlan(${i})">🗑</button>`:''}
+        </div>
+      </div>
+      <div class="plan-accion">📋 ${esc(pl.accion)}</div>
+      ${pl.resultado?`<div style="font-size:11px;color:var(--green);margin-top:6px;font-weight:600">✅ Resultado: ${esc(pl.resultado)}</div>`:''}
+      ${fotosHTML}
+    </div>`;
+  }).join('');
+}
+
+function viewPlanFotoSaved(planIdx, fotoIdx){
+  const fotos = planes[planIdx]?.fotos || [];
+  if(!fotos.length) return;
+  const ov = document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;cursor:pointer';
+  let cur = fotoIdx;
+  const render = ()=>{
+    ov.innerHTML=`
+      <div style="position:relative">
+        <img src="${fotos[cur]}" style="max-width:90vw;max-height:80vh;border-radius:10px;box-shadow:0 0 40px rgba(0,0,0,.5);display:block"/>
+        ${fotos.length>1?`
+          <button onclick="event.stopPropagation();cur=(cur-1+${fotos.length})%${fotos.length};render_cur()" style="position:absolute;left:-44px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;font-size:22px;cursor:pointer;border-radius:50%;width:36px;height:36px">‹</button>
+          <button onclick="event.stopPropagation();cur=(cur+1)%${fotos.length};render_cur()" style="position:absolute;right:-44px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;font-size:22px;cursor:pointer;border-radius:50%;width:36px;height:36px">›</button>
+        `:''}
+      </div>
+      <div style="color:rgba(255,255,255,.6);font-size:11px">Foto ${cur+1} de ${fotos.length} · Click para cerrar</div>
+      <button style="position:absolute;top:16px;right:20px;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:22px;cursor:pointer;border-radius:50%;width:36px;height:36px" onclick="event.stopPropagation();document.body.removeChild(ov)">✕</button>`;
+  };
+  // Can't use render() directly inside template, use global reference
+  window._fotGallery = {fotos, ov};
+  ov.innerHTML=''; // initial
+  const img = document.createElement('img');
+  img.src = fotos[cur];
+  img.style.cssText='max-width:90vw;max-height:80vh;border-radius:10px;box-shadow:0 0 40px rgba(0,0,0,.5)';
+  const closeBtn = document.createElement('button');
+  closeBtn.innerHTML='✕';
+  closeBtn.style.cssText='position:absolute;top:16px;right:20px;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:22px;cursor:pointer;border-radius:50%;width:36px;height:36px';
+  closeBtn.onclick = e=>{e.stopPropagation();document.body.removeChild(ov)};
+  const counter = document.createElement('div');
+  counter.style.cssText='color:rgba(255,255,255,.6);font-size:11px;margin-top:8px';
+  counter.textContent=`Foto ${cur+1} de ${fotos.length} · Click en fondo para cerrar`;
+  const wrap = document.createElement('div');
+  wrap.style.cssText='position:relative;display:flex;flex-direction:column;align-items:center;gap:8px';
+  wrap.appendChild(img);
+  if(fotos.length>1){
+    const prev=document.createElement('button');
+    prev.innerHTML='‹';
+    prev.style.cssText='position:absolute;left:-50px;top:40%;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:26px;cursor:pointer;border-radius:50%;width:40px;height:40px';
+    prev.onclick=e=>{e.stopPropagation();cur=(cur-1+fotos.length)%fotos.length;img.src=fotos[cur];counter.textContent=`Foto ${cur+1} de ${fotos.length} · Click en fondo para cerrar`};
+    const next=document.createElement('button');
+    next.innerHTML='›';
+    next.style.cssText='position:absolute;right:-50px;top:40%;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:26px;cursor:pointer;border-radius:50%;width:40px;height:40px';
+    next.onclick=e=>{e.stopPropagation();cur=(cur+1)%fotos.length;img.src=fotos[cur];counter.textContent=`Foto ${cur+1} de ${fotos.length} · Click en fondo para cerrar`};
+    wrap.appendChild(prev);
+    wrap.appendChild(next);
+  }
+  ov.appendChild(wrap);
+  ov.appendChild(counter);
+  ov.appendChild(closeBtn);
+  ov.onclick = ()=>document.body.removeChild(ov);
+  document.body.appendChild(ov);
+}
+
+function showAddPlan(){
+  if(!isEditor){showPinModal();return;}
+  const meses = [...new Set(state.days.map(d=>d.fecha.slice(0,7)))].reverse();
+  const nombres = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const mesOpts = meses.map(m=>{const[y,mo]=m.split('-');return`<option value="${m}">${nombres[+mo]} ${y}</option>`}).join('');
+  openM('m-plan');
+  document.getElementById('plan-mes-sel').innerHTML = mesOpts;
+}
+
+function savePlan(){
+  if(!isEditor){showPinModal();return;}
+  const mes = document.getElementById('plan-mes-sel').value;
+  const falla = document.getElementById('plan-falla').value.trim();
+  const accion = document.getElementById('plan-accion').value.trim();
+  const resultado = document.getElementById('plan-resultado').value.trim();
+  const estado = document.getElementById('plan-estado').value;
+  if(!falla||!accion){alert('Completa la falla y la acción');return;}
+  const nombres=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const [y,mo]=mes.split('-');
+  planes.push({mes:nombres[+mo]+' '+y, mesKey:mes, falla, accion, resultado, estado, fotos:[..._planFotos]});
+  savePlanes(planes);
+  clearFotosPreview();
+  closeM('m-plan');
+  const el=document.getElementById('planes-list');
+  if(el)el.innerHTML=renderPlanesHTML();
+  toast('Plan de acción guardado','📋');
+}
+
+function deletePlan(i){
+  if(!isEditor){showPinModal();return;}
+  if(!confirm('¿Eliminar este plan?'))return;
+  planes.splice(i,1);
+  savePlanes(planes);
+  const el=document.getElementById('planes-list');
+  if(el)el.innerHTML=renderPlanesHTML();
+  toast('Plan eliminado','🗑');
+}
+
+// ╔══════════════════════════════════════════════╗
+//  FOTOS — preview, compress, base64
+// ╚══════════════════════════════════════════════╝
+let _planFotos = []; // array of base64 strings for current plan being edited
+
+function previewFotos(e){
+  const files = Array.from(e.target.files).slice(0,5);
+  const preview = document.getElementById('fotos-preview');
+  // Process each file
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = ev => {
+      // Compress via canvas
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 800; // max dimension px
+        let {width:w, height:h} = img;
+        if(w>MAX||h>MAX){ const r=Math.min(MAX/w,MAX/h); w=Math.round(w*r); h=Math.round(h*r); }
+        const canvas = document.createElement('canvas');
+        canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        const b64 = canvas.toDataURL('image/jpeg', 0.75);
+        if(_planFotos.length < 5){
+          _planFotos.push(b64);
+          renderFotosPreview();
+        }
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = ''; // reset input so same file can be re-selected
+}
+
+function renderFotosPreview(){
+  const el = document.getElementById('fotos-preview');
+  if(!el) return;
+  el.innerHTML = _planFotos.map((b64,i)=>`
+    <div style="position:relative;display:inline-block">
+      <img src="${b64}" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid var(--border);cursor:pointer"
+        onclick="viewFoto(${i})" title="Click para ampliar"/>
+      <button onclick="removeFoto(${i})" style="position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>`).join('');
+}
+
+function removeFoto(i){
+  _planFotos.splice(i,1);
+  renderFotosPreview();
+}
+
+function clearFotosPreview(){
+  _planFotos = [];
+  const el = document.getElementById('fotos-preview');
+  if(el) el.innerHTML = '';
+}
+
+function viewFoto(i){
+  // Show full-size in an overlay
+  const ov = document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:pointer';
+  ov.innerHTML=`<img src="${_planFotos[i]}" style="max-width:92vw;max-height:92vh;border-radius:8px;box-shadow:0 0 40px rgba(0,0,0,.5)"/>
+    <button style="position:absolute;top:16px;right:20px;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:22px;cursor:pointer;border-radius:50%;width:36px;height:36px">✕</button>`;
+  ov.onclick = ()=>document.body.removeChild(ov);
+  document.body.appendChild(ov);
+}
+
+function viewPlanFoto(b64){
+  // View a saved foto from a plan (not in edit mode)
+  const tmp = [b64];
+  const orig = _planFotos;
+  _planFotos = tmp;
+  viewFoto(0);
+  _planFotos = orig;
+}
+
+// ╔══════════════════════════════════════════════╗
+//  CALENDARIO DE DISPONIBILIDAD
+// ╚══════════════════════════════════════════════╝
+let _calYear  = new Date().getFullYear();
+let _calMonth = new Date().getMonth(); // 0-indexed
+
+function renderCal(){
+  const el = document.getElementById('cal-view');
+  if(!state.days.length){
+    el.innerHTML='<div class="nodata" style="padding:80px"><div style="font-size:40px">📅</div><p>Sin datos aún</p></div>';
+    return;
+  }
+
+  // Build lookup: fecha→day
+  const dayMap = {};
+  state.days.forEach(d=>{ dayMap[d.fecha]=d; });
+
+  // Available years
+  const years = [...new Set(state.days.map(d=>+d.fecha.slice(0,4)))].sort((a,b)=>b-a);
+  if(!years.includes(_calYear)) _calYear = years[0];
+
+  const nomMeses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const diasSem  = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+
+  // Month stats for sparklines in year view
+  function buildMonthHtml(year, month){
+    const firstDay = new Date(year, month, 1);
+    const lastDay  = new Date(year, month+1, 0);
+    const startDow = (firstDay.getDay()+6)%7; // 0=Mon
+    const todayStr = today();
+
+    let cells = '';
+    // Empty cells before 1st
+    for(let i=0;i<startDow;i++) cells+=`<div class="cal-day cd-empty"></div>`;
+
+    for(let d=1;d<=lastDay.getDate();d++){
+      const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const dayData = dayMap[dateStr];
+      const isToday = dateStr===todayStr;
+      if(dayData){
+        const info = getDispInfo(dayData);
+        const cls  = info.pct>=90?'cd-green':info.pct>=85?'cd-amber':'cd-red';
+        const col  = info.pct>=90?'var(--green)':info.pct>=85?'var(--amber)':'var(--red)';
+        const metaOk = info.enTaller<=META_TALLER;
+        // Color based on BOTH: pct AND meta
+        const dayBg = !metaOk ? '#fef2f2' : info.pct>=90 ? '#ecfdf5' : info.pct>=85 ? '#fffbeb' : '#fff7ed';
+        const dayBorder = !metaOk ? '#dc2626' : info.pct>=90 ? '#059669' : info.pct>=85 ? '#d97706' : '#ea580c';
+        cells+=`<div class="cal-day${isToday?' cd-today':''}" 
+          style="background:${dayBg};border-color:${dayBorder};border-width:2px;border-style:solid"
+          onclick="calDayClick('${dateStr}')" 
+          title="${dateStr}: ${info.pct}% disp · ${info.enTaller} en taller${!metaOk?' ⚠️ SOBRE META':''}">
+          <div class="cal-dn">${d}</div>
+          <div class="cal-pct" style="color:${col}">${info.pct}%</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:3px;margin-top:2px">
+            <span style="font-size:9px;font-family:monospace;font-weight:700;color:${!metaOk?'var(--red)':'var(--slate)'}">${info.enTaller}🚛</span>
+            ${!metaOk?`<span style="font-size:8px;color:var(--red);font-weight:700">⚠️</span>`:`<span style="font-size:8px;color:var(--green)">✓</span>`}
+          </div>
+        </div>`;
+      } else {
+        cells+=`<div class="cal-day" style="background:var(--bg);opacity:.4${isToday?';box-shadow:0 0 0 2px var(--blue)':''}" title="${dateStr}: sin registro">
+          <div class="cal-dn" style="color:var(--slate)">${d}</div>
+        </div>`;
+      }
+    }
+
+    // Month stats
+    const monthDays = state.days.filter(d=>d.fecha.startsWith(`${year}-${String(month+1).padStart(2,'0')}`));
+    const avgPct  = monthDays.length ? (monthDays.reduce((a,d)=>a+getDispInfo(d).pct,0)/monthDays.length).toFixed(1) : null;
+    const diasMeta= monthDays.filter(d=>getDispInfo(d).enTaller<=META_TALLER).length;
+    const minPct  = monthDays.length ? Math.min(...monthDays.map(d=>getDispInfo(d).pct)) : null;
+
+    return {cells, avgPct, diasMeta, minPct, total:monthDays.length};
+  }
+
+  // Year overview: show all 12 months as mini calendars
+  const yearOpts = years.map(y=>`<button class="mtab ${y===_calYear?'on':''}" onclick="_calYear=${y};_calMonth=-1;renderCal()">${y}</button>`).join('');
+
+  // Check if showing single month or full year
+  const showSingleMonth = _calMonth >= 0;
+
+  let mainContent = '';
+
+  if(showSingleMonth){
+    const {cells, avgPct, diasMeta, minPct, total} = buildMonthHtml(_calYear, _calMonth);
+    const col = avgPct>=90?'var(--green)':avgPct>=85?'var(--amber)':'var(--red)';
+    mainContent = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div class="cal-month-nav">
+          <button class="btn bo btn-sm" onclick="calPrevMonth()">‹</button>
+          <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;min-width:160px;text-align:center">${nomMeses[_calMonth]} ${_calYear}</h3>
+          <button class="btn bo btn-sm" onclick="calNextMonth()">›</button>
+        </div>
+        <button class="btn bo btn-sm" onclick="_calMonth=-1;renderCal()">📅 Ver año completo</button>
+      </div>
+      <!-- Stats bar -->
+      ${avgPct!==null?`
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+        <div class="kpi k-gr"><div class="kpi-lbl">Disp. promedio</div><div class="kpi-val" style="color:${col}">${avgPct}%</div></div>
+        <div class="kpi k-am"><div class="kpi-lbl">Días en meta</div><div class="kpi-val">${diasMeta}/${total}</div></div>
+        <div class="kpi k-or"><div class="kpi-lbl">Peor día</div><div class="kpi-val" style="color:var(--red)">${minPct}%</div></div>
+        <div class="kpi k-bl"><div class="kpi-lbl">Días registrados</div><div class="kpi-val">${total}</div></div>
+      </div>`:''}
+      <!-- Calendar grid -->
+      <div style="background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:14px;box-shadow:var(--sh)">
+        <div class="cal-grid">
+          ${diasSem.map(d=>`<div class="cal-hdr">${d}</div>`).join('')}
+          ${cells}
+        </div>
+        <div class="cal-legend">
+          <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#ecfdf5;border:2px solid #059669"></div>≥90% · en meta</div>
+          <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#fffbeb;border:2px solid #d97706"></div>85-89% · en meta</div>
+          <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#fef2f2;border:2px solid #dc2626"></div>⚠️ Sobre meta (>4 taller)</div>
+          <div class="cal-leg-item"><span style="font-size:10px;font-family:monospace;font-weight:700">3🚛</span> = vehículos en taller ese día</div>
+        </div>
+      </div>`;
+  } else {
+    // Full year: 12 mini-month grids
+    let monthCards = '';
+    for(let m=0;m<12;m++){
+      const {cells, avgPct, diasMeta, total} = buildMonthHtml(_calYear, m);
+      const col = !avgPct?'var(--slate)':+avgPct>=90?'var(--green)':+avgPct>=85?'var(--amber)':'var(--red)';
+      monthCards += `
+        <div style="background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:12px;box-shadow:var(--sh);cursor:pointer" onclick="_calMonth=${m};renderCal()">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700">${nomMeses[m]}</div>
+            ${avgPct?`<span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:800;color:${col}">${avgPct}%</span>`:'<span style="font-size:10px;color:var(--slate)">sin datos</span>'}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">
+            ${diasSem.map(d=>`<div style="text-align:center;font-size:7px;font-weight:700;color:var(--slate)">${d[0]}</div>`).join('')}
+            ${cells.replace(/cal-day/g,'cal-day-mini').replace(/onclick="calDayClick[^"]*"/g,'').replace(/title="[^"]*"/g,'')
+              .replace(/cal-day-mini cd-green/g,'cd-green-m').replace(/cal-day-mini cd-amber/g,'cd-amber-m').replace(/cal-day-mini cd-red/g,'cd-red-m').replace(/cal-day-mini cd-today/g,'').replace(/cal-day-mini/g,'')
+              .replace(/<div class="cal-dn">[^<]*<\/div>/g,'').replace(/<div class="cal-pct"[^>]*>[^<]*<\/div>/g,'').replace(/<div class="cal-meta"[^>]*><\/div>/g,'')
+              .replace(/cd-green-m/g,'style="background:var(--green);width:100%;aspect-ratio:1;border-radius:2px"').replace(/cd-amber-m/g,'style="background:var(--amber);width:100%;aspect-ratio:1;border-radius:2px"').replace(/cd-red-m/g,'style="background:var(--red);width:100%;aspect-ratio:1;border-radius:2px"')
+              .replace(/<div style=""[^>]*>/g,'<div style="background:var(--border);width:100%;aspect-ratio:1;border-radius:2px">')}
+          </div>
+          ${total?`<div style="font-size:9px;color:var(--slate);margin-top:6px">${diasMeta}/${total} días en meta</div>`:''}
+        </div>`;
+    }
+    mainContent = `
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px">
+        ${monthCards}
+      </div>`;
+  }
+
+  el.innerHTML = `
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div>
+          <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">📅 Calendario de Disponibilidad</h2>
+          <p style="font-size:11px;color:var(--slate)">UC Girardota · Haz clic en un día para ver el detalle</p>
+        </div>
+        <button class="pdf-btn" onclick="generarPDF()">📄 Generar informe PDF</button>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
+        <span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;margin-right:4px">Año</span>
+        ${yearOpts}
+      </div>
+    </div>
+    ${mainContent}`;
+}
+
+function calDayClick(fecha){
+  const idx = state.days.findIndex(d=>d.fecha===fecha);
+  if(idx>=0) selectDay(idx);
+}
+function calPrevMonth(){
+  _calMonth--;
+  if(_calMonth<0){_calMonth=11;_calYear--;}
+  renderCal();
+}
+function calNextMonth(){
+  _calMonth++;
+  if(_calMonth>11){_calMonth=0;_calYear++;}
+  renderCal();
+}
+
+// ╔══════════════════════════════════════════════╗
+//  MÓDULO DE COSTOS
+// ╚══════════════════════════════════════════════╝
+const COS_KEY = 'flota_costos_v1';
+
+function loadCostos(){
+  try{ return JSON.parse(localStorage.getItem(COS_KEY)||'{"costoXdia":500000,"ingresos":[]}') }
+  catch{ return {costoXdia:500000, ingresos:[]} }
+}
+function saveCostos(c){ localStorage.setItem(COS_KEY, JSON.stringify(c)) }
+let cosState = loadCostos();
+
+function renderCos(){
+  const el = document.getElementById('cos-view');
+  if(!el) return;
+
+  // Rebuild ingresos from state.days if not stored
+  // Each placa entry in taller = one ingreso event
+  // We enrich cosState.ingresos with matching data from state
+  const costoXdia = cosState.costoXdia || 500000;
+
+  // Build cost registry from all days
+  // Group by placa+fechaIngreso = unique event
+  const eventMap = {};
+  state.days.forEach(d=>{
+    d.placasEnTaller.forEach(p=>{
+      const key = p.placa+'|'+p.fechaIngreso;
+      if(!eventMap[key]){
+        eventMap[key]={
+          placa:p.placa, fechaIngreso:p.fechaIngreso,
+          novedad:p.novedad, sistema:getSist(p.novedad,p.sistema),
+          taller:p.taller, maxDias:0, retornado:false,
+          fechaEntrega:null, reparacion:null
+        };
+      }
+      if(p.diasEnTaller > eventMap[key].maxDias) eventMap[key].maxDias=p.diasEnTaller;
+      if(p.retornado) eventMap[key].retornado=true;
+    });
+    d.retornados.forEach(r=>{
+      const key = r.placa+'|'+r.fechaIngreso;
+      if(eventMap[key]){
+        eventMap[key].retornado=true;
+        eventMap[key].fechaEntrega=r.fechaEntrega;
+        eventMap[key].reparacion=r.reparacion;
+      }
+    });
+  });
+  const eventos = Object.values(eventMap).sort((a,b)=>b.fechaIngreso.localeCompare(a.fechaIngreso));
+
+  // Look up manual costs from cosState
+  const manualCostos = {};
+  (cosState.ingresos||[]).forEach(c=>{ manualCostos[c.placa+'|'+c.fechaIngreso]=c; });
+
+  // Compute per-event cost
+  const eventosConCosto = eventos.map(ev=>{
+    const manual = manualCostos[ev.placa+'|'+ev.fechaIngreso];
+    const costoRep = manual?.costoReparacion || 0;
+    const costoInac = ev.maxDias * costoXdia;
+    return {...ev, costoRep, costoInac, costoTotal: costoRep+costoInac};
+  });
+
+  // Aggregates
+  const totalInac = eventosConCosto.reduce((a,e)=>a+e.costoInac, 0);
+  const totalRep  = eventosConCosto.reduce((a,e)=>a+e.costoRep, 0);
+  const totalDias = eventosConCosto.reduce((a,e)=>a+e.maxDias, 0);
+  const totalCost = totalInac + totalRep;
+
+  // By taller
+  const tallerMap = {};
+  eventosConCosto.forEach(ev=>{
+    const t = ev.taller||'Sin taller';
+    if(!tallerMap[t]) tallerMap[t]={nombre:t,ingresos:0,dias:0,costoRep:0,costoInac:0};
+    tallerMap[t].ingresos++;
+    tallerMap[t].dias+=ev.maxDias;
+    tallerMap[t].costoRep+=ev.costoRep;
+    tallerMap[t].costoInac+=ev.costoInac;
+  });
+  const talleres = Object.values(tallerMap).sort((a,b)=>b.costoRep-a.costoRep);
+
+  // By sistema
+  const sistMap = {};
+  eventosConCosto.forEach(ev=>{
+    const s=ev.sistema||'OTRO';
+    if(!sistMap[s]) sistMap[s]={nombre:s,ingresos:0,dias:0,costo:0};
+    sistMap[s].ingresos++;sistMap[s].dias+=ev.maxDias;sistMap[s].costo+=ev.costoTotal;
+  });
+  const sistemas = Object.values(sistMap).sort((a,b)=>b.dias-a.dias).slice(0,6);
+  const maxSisDias = sistemas[0]?.dias||1;
+
+  function fmt(n){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(n) }
+
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">💰 Módulo de Costos</h2>
+        <p style="font-size:11px;color:var(--slate)">UC Girardota · Análisis financiero de flota</p>
+      </div>
+      <button class="pdf-btn" onclick="generarPDF()">📄 Generar PDF</button>
+    </div>
+
+    <!-- Config costo por día -->
+    <div class="cos-input-row">
+      <div>
+        <label>💵 Costo de inactividad por día/vehículo</label>
+        <input type="number" id="cos-xdia" value="${costoXdia}" min="0" inputmode="numeric"
+          oninput="cosState.costoXdia=+this.value||0;saveCostos(cosState);renderCos()"
+          style="font-size:16px;font-weight:700;font-family:'DM Mono',monospace"/>
+        <div style="font-size:10px;color:var(--slate);margin-top:3px">COP por vehículo inactivo por día</div>
+      </div>
+      <div>
+        <label>📊 Total ingresos al taller</label>
+        <div style="font-size:28px;font-weight:900;font-family:'DM Mono',monospace;color:var(--orange);margin-top:6px">${eventos.length}</div>
+        <div style="font-size:10px;color:var(--slate)">${totalDias} días acumulados en taller</div>
+      </div>
+      <div>
+        <label>📅 Período analizado</label>
+        <div style="font-size:14px;font-weight:700;color:var(--navy);margin-top:6px">
+          ${state.days.length?fmtF(state.days[0].fecha)+' → '+fmtF(state.days[state.days.length-1].fecha):'Sin datos'}
+        </div>
+        <div style="font-size:10px;color:var(--slate)">${state.days.length} días registrados</div>
+      </div>
+    </div>
+
+    <!-- KPIs de costo -->
+    <div class="kgrid k4" style="margin-bottom:16px">
+      <div class="big-kpi" style="border-top:3px solid var(--red)">
+        <div class="big-kpi-lbl">Costo por inactividad</div>
+        <div class="big-kpi-val" style="color:var(--red);font-size:22px">${fmt(totalInac)}</div>
+        <div class="big-kpi-sub">${totalDias} días × ${fmt(costoXdia)}/día</div>
+      </div>
+      <div class="big-kpi" style="border-top:3px solid var(--orange)">
+        <div class="big-kpi-lbl">Costo de reparaciones</div>
+        <div class="big-kpi-val" style="color:var(--orange);font-size:22px">${fmt(totalRep)}</div>
+        <div class="big-kpi-sub">Ingresado manualmente</div>
+      </div>
+      <div class="big-kpi" style="border-top:3px solid var(--purple)">
+        <div class="big-kpi-lbl">Costo total estimado</div>
+        <div class="big-kpi-val" style="color:var(--purple);font-size:22px">${fmt(totalCost)}</div>
+        <div class="big-kpi-sub">Inactividad + reparaciones</div>
+      </div>
+      <div class="big-kpi" style="border-top:3px solid var(--amber)">
+        <div class="big-kpi-lbl">Costo promedio por evento</div>
+        <div class="big-kpi-val" style="color:var(--amber);font-size:22px">${eventos.length?fmt(Math.round(totalCost/eventos.length)):fmt(0)}</div>
+        <div class="big-kpi-sub">Por ingreso al taller</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+      <!-- Ranking talleres -->
+      <div class="dash-card">
+        <div class="dash-title">🏭 Costo por taller</div>
+        ${talleres.slice(0,6).map((t,i)=>{
+          const maxC = talleres[0].costoRep||1;
+          return`<div class="taller-rank">
+            <div class="rpos ${i<3?'rg'+(i+1):''}">${i+1}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:11px;font-weight:700">${esc(t.nombre)}</div>
+              <div style="font-size:10px;color:var(--slate)">${t.ingresos} ingresos · ${t.dias} días</div>
+              <div style="height:4px;background:var(--border);border-radius:99px;margin-top:3px;overflow:hidden">
+                <div style="height:100%;background:var(--orange);border-radius:99px;width:${t.costoRep?Math.round(t.costoRep/maxC*100):20}%"></div>
+              </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--orange)">${fmt(t.costoRep)}</div>
+              <div style="font-size:9px;color:var(--slate)">rep.</div>
+            </div>
+          </div>`;
+        }).join('') || '<div class="nodata"><p>Ingresa costos de reparación en la tabla</p></div>'}
+      </div>
+
+      <!-- Sistemas por días perdidos -->
+      <div class="dash-card">
+        <div class="dash-title">⚙️ Días perdidos por sistema</div>
+        <div class="bar-chart">
+          ${sistemas.map(s=>`
+            <div class="bar-row">
+              <span class="bar-lbl" style="font-size:10px">${s.nombre}</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.dias/maxSisDias*100)}%;background:var(--red)"></div></div>
+              <span class="bar-val" style="color:var(--red)">${s.dias}d</span>
+            </div>`).join('')||'<div class="nodata"><p>Sin datos</p></div>'}
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla detalle con costo por reparación editable -->
+    <div class="dash-card">
+      <div class="dash-title">📋 Detalle de ingresos — ingresa el costo de cada reparación</div>
+      <div class="twrap" style="max-height:420px;overflow-y:auto">
+        <table>
+          <thead><tr>
+            <th>Placa</th><th>Ingreso</th><th>Novedad</th><th>Sistema</th>
+            <th>Taller</th><th>Días</th>
+            <th>Costo rep. (COP)</th>
+            <th>Inactividad</th><th>Total</th>
+          </tr></thead>
+          <tbody>
+            ${eventosConCosto.slice(0,50).map(ev=>`<tr>
+              <td><span class="placa">${ev.placa}</span></td>
+              <td style="font-size:10px;color:var(--slate);white-space:nowrap">${fmtF(ev.fechaIngreso)}</td>
+              <td style="font-size:11px;max-width:140px">${esc(ev.novedad)||'—'}</td>
+              <td style="font-size:10px;color:var(--blue);font-weight:600">${ev.sistema}</td>
+              <td style="font-size:11px">${esc(ev.taller)||'—'}</td>
+              <td><span class="dp ${ev.maxDias>=10?'hi':''}">${ev.maxDias}d</span></td>
+              <td>
+                ${isEditor?`<input type="number" min="0" placeholder="0"
+                  value="${ev.costoRep||''}"
+                  style="width:110px;font-size:11px;padding:4px 6px;font-family:'DM Mono',monospace"
+                  onchange="setCostoRep('${ev.placa}','${ev.fechaIngreso}',+this.value)"
+                />`:`<span style="font-family:'DM Mono',monospace;font-size:11px">${ev.costoRep?fmt(ev.costoRep):'—'}</span>`}
+              </td>
+              <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)">${fmt(ev.costoInac)}</td>
+              <td style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--purple)">${fmt(ev.costoTotal)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      ${eventosConCosto.length>50?`<div style="font-size:11px;color:var(--slate);padding:8px 14px">Mostrando 50 de ${eventosConCosto.length} eventos</div>`:''}
+    </div>`;
+}
+
+function setCostoRep(placa, fechaIngreso, costo){
+  if(!isEditor){showPinModal();return;}
+  if(!cosState.ingresos) cosState.ingresos=[];
+  const key = placa+'|'+fechaIngreso;
+  const existing = cosState.ingresos.find(c=>c.placa===placa&&c.fechaIngreso===fechaIngreso);
+  if(existing){ existing.costoReparacion=costo; }
+  else { cosState.ingresos.push({placa,fechaIngreso,costoReparacion:costo}); }
+  saveCostos(cosState);
+  // Re-render quietly (don't scroll)
+  renderCos();
+}
+
+// ╔══════════════════════════════════════════════╗
+//  GENERADOR DE INFORME PDF EJECUTIVO
+// ╚══════════════════════════════════════════════╝
+async function generarPDF(){
+  if(!state.days.length){toast('Sin datos para el informe','⚠️');return;}
+  toast('Generando PDF ejecutivo…','📄');
+
+  // Determine period
+  let days = state.days;
+  const now = new Date();
+  const mesKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const mesActualDays = days.filter(d=>d.fecha.startsWith(mesKey));
+  if(mesActualDays.length) days = mesActualDays;
+
+  const firstDate = days[0].fecha;
+  const lastDate  = days[days.length-1].fecha;
+  const nomMeses  = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const [y,mo] = mesKey.split('-');
+  const periodoLabel = `${nomMeses[+mo]} ${y}`;
+
+  // Stats
+  const infoList = days.map(d=>getDispInfo(d));
+  const avgPct   = (infoList.reduce((a,i)=>a+i.pct,0)/infoList.length).toFixed(1);
+  const diasMeta = infoList.filter(i=>i.enTaller<=META_TALLER).length;
+  const pctMeta  = Math.round(diasMeta/infoList.length*100);
+  const avgTaller= (infoList.reduce((a,i)=>a+i.enTaller,0)/infoList.length).toFixed(1);
+  const lastDay  = days[days.length-1];
+  const lastInfo = getDispInfo(lastDay);
+
+  // Top sistemas
+  const sm={};
+  days.forEach(d=>d.placasEnTaller.forEach(p=>{const s=getSist(p.novedad,p.sistema);sm[s]=(sm[s]||0)+1;}));
+  const topSist = Object.entries(sm).sort((a,b)=>b[1]-a[1]).slice(0,5);
+
+  // Top placas
+  const pm={};
+  days.forEach(d=>d.placasEnTaller.forEach(p=>{pm[p.placa]=(pm[p.placa]||0)+p.diasEnTaller;}));
+  const topPlacas = Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);
+
+  // Planes del período
+  const planesMes = planes.filter(pl=>pl.mesKey===mesKey||!pl.mesKey);
+
+  // Build printable HTML
+  const costoXdia = cosState.costoXdia||500000;
+  const totalDiasTaller = days.reduce((a,d)=>a+d.placasEnTaller.reduce((b,p)=>b+p.diasEnTaller,0),0);
+  const costoInac = totalDiasTaller * costoXdia;
+  function fmtCOP(n){return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(n);}
+
+  const colorDisp = +avgPct>=90?'#059669':+avgPct>=85?'#d97706':'#dc2626';
+  const colorMeta = pctMeta>=80?'#059669':pctMeta>=60?'#d97706':'#dc2626';
+
+  const div = document.createElement('div');
+  div.style.cssText='position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:Arial,sans-serif;font-size:12px;color:#0f172a;padding:32px';
+  div.innerHTML = `
+  <!-- PORTADA / HEADER -->
+  <div style="background:#0f1e3d;color:#fff;padding:24px 28px;border-radius:12px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-size:24px;font-weight:900;margin-bottom:4px">🚛 Flota UC Girardota</div>
+      <div style="font-size:14px;color:#94a3b8">Informe Ejecutivo de Disponibilidad</div>
+      <div style="font-size:16px;font-weight:700;color:#60a5fa;margin-top:6px">${periodoLabel}</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;color:#94a3b8">Generado el</div>
+      <div style="font-size:13px;font-weight:700">${fmtF(today())}</div>
+      <div style="font-size:11px;color:#94a3b8;margin-top:4px">${days.length} días analizados</div>
+    </div>
+  </div>
+
+  <!-- KPIs EJECUTIVOS -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+    <div style="background:#ecfdf5;border-radius:10px;padding:14px;border-top:3px solid #059669;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Disponibilidad promedio</div>
+      <div style="font-size:32px;font-weight:900;color:${colorDisp};font-family:monospace">${avgPct}%</div>
+      <div style="font-size:10px;color:#64748b">Meta: ≥90%</div>
+    </div>
+    <div style="background:#eff6ff;border-radius:10px;padding:14px;border-top:3px solid #2563eb;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Días en meta (≤${META_TALLER} taller)</div>
+      <div style="font-size:32px;font-weight:900;color:${colorMeta};font-family:monospace">${pctMeta}%</div>
+      <div style="font-size:10px;color:#64748b">${diasMeta}/${days.length} días</div>
+    </div>
+    <div style="background:#fff7ed;border-radius:10px;padding:14px;border-top:3px solid #ea580c;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Promedio en taller</div>
+      <div style="font-size:32px;font-weight:900;color:#ea580c;font-family:monospace">${avgTaller}</div>
+      <div style="font-size:10px;color:#64748b">vehículos/día</div>
+    </div>
+    <div style="background:#fef2f2;border-radius:10px;padding:14px;border-top:3px solid #dc2626;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Costo de inactividad</div>
+      <div style="font-size:18px;font-weight:900;color:#dc2626;font-family:monospace;margin-top:4px">${fmtCOP(costoInac)}</div>
+      <div style="font-size:10px;color:#64748b">${totalDiasTaller} días × ${fmtCOP(costoXdia)}</div>
+    </div>
+  </div>
+
+  <!-- ESTADO ACTUAL -->
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:18px">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:10px">📋 Estado actual — ${fmtF(lastDay.fecha)}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:11px;font-weight:700;margin-bottom:6px;color:#0f172a">Vehículos en taller (${lastDay.placasEnTaller.filter(p=>!p.retornado).length}):</div>
+        ${lastDay.placasEnTaller.filter(p=>!p.retornado).map(p=>`
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:11px">
+            <span style="font-weight:700;font-family:monospace;background:#dbeafe;padding:1px 5px;border-radius:3px">${p.placa}</span>
+            <span style="color:#64748b">${p.novedad||'—'}</span>
+            <span style="font-weight:700;color:${p.diasEnTaller>=10?'#dc2626':'#d97706'}">${p.diasEnTaller}d</span>
+          </div>`).join('')||'<div style="color:#059669;font-size:11px">✅ Sin vehículos en taller</div>'}
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;margin-bottom:6px;color:#0f172a">Retornados hoy (${lastDay.retornados.length}):</div>
+        ${lastDay.retornados.map(r=>`
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:11px">
+            <span style="font-weight:700;font-family:monospace;background:#dcfce7;padding:1px 5px;border-radius:3px">${r.placa}</span>
+            <span style="color:#64748b;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.reparacion||'—'}</span>
+          </div>`).join('')||'<div style="color:#64748b;font-size:11px">Ninguno retornó hoy</div>'}
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP SISTEMAS Y PLACAS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px">⚙️ Sistemas más afectados</div>
+      ${topSist.map(([s,n],i)=>`
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9">
+          <div style="width:18px;height:18px;border-radius:50%;background:${i===0?'#f59e0b':i===1?'#94a3b8':'#b45309'};color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center">${i+1}</div>
+          <div style="flex:1;font-size:11px;font-weight:600">${s}</div>
+          <div style="font-family:monospace;font-size:11px;font-weight:800;color:#ea580c">${n}</div>
+        </div>`).join('')}
+    </div>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px">🚛 Placas con más días en taller</div>
+      ${topPlacas.map(([p,d],i)=>`
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9">
+          <div style="width:18px;height:18px;border-radius:50%;background:${i===0?'#f59e0b':i===1?'#94a3b8':'#b45309'};color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center">${i+1}</div>
+          <div style="flex:1;font-family:monospace;font-size:11px;font-weight:700;background:#dbeafe;padding:1px 6px;border-radius:3px;display:inline-block">${p}</div>
+          <div style="font-family:monospace;font-size:11px;font-weight:800;color:${d>=10?'#dc2626':'#d97706'}">${d}d</div>
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- PLANES DE ACCIÓN -->
+  ${planesMes.length?`
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:18px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px">📋 Planes de acción</div>
+    ${planesMes.map(pl=>`
+      <div style="padding:8px 10px;background:#fff;border-radius:8px;border-left:3px solid ${pl.estado==='En proceso'?'#d97706':'#059669'};margin-bottom:6px">
+        <div style="font-size:11px;font-weight:700">⚙️ ${esc(pl.falla)}</div>
+        <div style="font-size:10px;color:#475569;margin-top:3px">📋 ${esc(pl.accion)}</div>
+        ${pl.resultado?`<div style="font-size:10px;color:#059669;margin-top:3px;font-weight:600">✅ ${esc(pl.resultado)}</div>`:''}
+        <div style="font-size:9px;color:#94a3b8;margin-top:3px">${pl.estado} · ${pl.mes}</div>
+      </div>`).join('')}
+  </div>`:''}
+
+  <!-- FOOTER -->
+  <div style="border-top:2px solid #e2e8f0;padding-top:12px;display:flex;justify-content:space-between;align-items:center">
+    <div style="font-size:10px;color:#94a3b8">Flota UC Girardota · Control de disponibilidad</div>
+    <div style="font-size:10px;color:#94a3b8">Generado automáticamente · ${fmtF(today())}</div>
+  </div>`;
+
+  document.body.appendChild(div);
+
+  try {
+    const canvas = await html2canvas(div, {scale:2, useCORS:true, backgroundColor:'#fff', width:794, windowWidth:794});
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    const {jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+    const pdfW = pdf.internal.pageSize.getWidth();
+    const pdfH = pdf.internal.pageSize.getHeight();
+    const imgH = (canvas.height * pdfW) / canvas.width;
+    let y = 0;
+    while(y < imgH){
+      if(y>0) pdf.addPage();
+      pdf.addImage(imgData,'JPEG',0,-y,pdfW,imgH);
+      y += pdfH;
+    }
+    pdf.save(`INFORME_FLOTA_UC_${periodoLabel.replace(' ','_')}.pdf`);
+    toast('PDF descargado ✅','📄');
+  } catch(e){
+    console.error(e);
+    toast('Error generando PDF','❌');
+  } finally {
+    document.body.removeChild(div);
+  }
+}
+
+// ╔══════════════════════════════════════════════╗
+//  SISTEMA DE NOTIFICACIONES POR CORREO
+// ╚══════════════════════════════════════════════╝
+
+function initEmailJS(){
+  if(!EMAIL_CFG.enabled || EMAIL_CFG.publicKey==='TU_PUBLIC_KEY') return;
+  try{ emailjs.init({publicKey: EMAIL_CFG.publicKey}); }
+  catch(e){ console.warn('EmailJS init error:', e); }
+}
+
+// Obtener alertas ya enviadas hoy (para no duplicar)
+function getSentAlerts(){
+  try{
+    const raw = localStorage.getItem(ALERT_SENT_KEY);
+    if(!raw) return {};
+    const {date, sent} = JSON.parse(raw);
+    if(date !== today()) return {}; // reset daily
+    return sent;
+  }catch{ return {}; }
+}
+function markAlertSent(key){
+  const sent = getSentAlerts();
+  sent[key] = true;
+  localStorage.setItem(ALERT_SENT_KEY, JSON.stringify({date:today(), sent}));
+}
+
+// Enviar UN solo correo con TABLA de todos los vehículos en alerta
+async function checkAndSendAlerts(dayData){
+  if(!dayData) return 0;
+  if(!EMAIL_CFG.enabled || EMAIL_CFG.publicKey==='TU_PUBLIC_KEY'){
+    console.log('[Email simulado] checkAndSendAlerts');
+    return 0;
+  }
+  const info = getDispInfo(dayData);
+  const activos = dayData.placasEnTaller.filter(p=>!p.retornado && !isRestriccion(p.status));
+  const enAlerta = activos.filter(p=>p.diasEnTaller >= ALERT_DIAS);
+  if(!enAlerta.length) return 0;
+
+  // Batch key — one send per day
+  const batchKey = `batch_${today()}`;
+  const sent = getSentAlerts();
+  if(sent[batchKey]){
+    console.log('Alerta batch ya enviada hoy');
+    return 0;
+  }
+
+  // Build HTML table for email body
+  const filas = enAlerta.map(p=>`
+    <tr>
+      <td style="padding:8px 12px;font-weight:700;font-family:monospace;background:#dbeafe;border-radius:4px">${p.placa}</td>
+      <td style="padding:8px 12px;color:#475569">${p.novedad||'Sin novedad'}</td>
+      <td style="padding:8px 12px;color:#475569">${p.taller||'Sin taller'}</td>
+      <td style="padding:8px 12px;color:#475569">${fmtF(p.fechaIngreso)}</td>
+      <td style="padding:8px 12px;font-weight:800;font-family:monospace;color:${p.diasEnTaller>=10?'#dc2626':'#d97706'}">${p.diasEnTaller} días</td>
+    </tr>`).join('');
+
+  const tablaHTML = `
+    <table style="width:100%;border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif">
+      <thead>
+        <tr style="background:#0f1e3d;color:#fff">
+          <th style="padding:10px 12px;text-align:left">Placa</th>
+          <th style="padding:10px 12px;text-align:left">Novedad</th>
+          <th style="padding:10px 12px;text-align:left">Taller</th>
+          <th style="padding:10px 12px;text-align:left">Ingreso</th>
+          <th style="padding:10px 12px;text-align:left">Días</th>
+        </tr>
+      </thead>
+      <tbody>${filas}</tbody>
+    </table>`;
+
+  const asunto = `🚨 Alerta Flota UC Girardota — ${enAlerta.length} vehículo${enAlerta.length>1?'s':''} con +${ALERT_DIAS} días en taller (${fmtF(today())})`;
+  const resumen = `${enAlerta.length} vehículo${enAlerta.length>1?'s':''} llevan más de ${ALERT_DIAS} días en taller. Disponibilidad del día: ${info.pct}% (${info.disp}/${dayData.total} vehículos).`;
+
+  try{
+    // Build full HTML email body (using concat to avoid nested template issues)
+    const n = enAlerta.length;
+    const appUrl = EMAIL_CFG.appUrl || window.location.href;
+    const emailHTML = '<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;background:#f8fafc;padding:20px">'
+      + '<div style="background:#0f1e3d;border-radius:12px 12px 0 0;padding:24px;text-align:center">'
+      + '<div style="font-size:32px;margin-bottom:8px">🚛</div>'
+      + '<div style="color:#fff;font-size:20px;font-weight:900">Flota UC Girardota</div>'
+      + '<div style="color:#94a3b8;font-size:13px;margin-top:4px">Sistema de Control de Disponibilidad</div>'
+      + '</div>'
+      + '<div style="background:#fef2f2;border-left:4px solid #dc2626;padding:16px 20px">'
+      + '<div style="color:#dc2626;font-size:15px;font-weight:700;margin-bottom:6px">'
+      + '⚠️ ' + n + ' vehículo' + (n>1?'s':'') + ' con más de ' + ALERT_DIAS + ' días en taller'
+      + '</div>'
+      + '<div style="color:#475569;font-size:13px">' + resumen + '</div>'
+      + '<div style="color:#94a3b8;font-size:12px;margin-top:6px">📅 Fecha del reporte: ' + fmtF(today()) + '</div>'
+      + '</div>'
+      + '<div style="background:#fff;padding:20px;border:1px solid #e2e8f0">'
+      + '<div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px">📋 Detalle de vehículos en alerta</div>'
+      + tablaHTML
+      + '</div>'
+      + '<div style="background:#f1f5f9;border-radius:0 0 12px 12px;padding:16px 20px;text-align:center">'
+      + '<a href="' + appUrl + '" style="display:inline-block;background:#2563eb;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Ver en la app →</a>'
+      + '<div style="color:#94a3b8;font-size:11px;margin-top:12px">Sistema de Control de Flota · UC Girardota</div>'
+      + '</div></div>';
+
+    await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, {
+      to_email:    EMAIL_CFG.destEmail,
+      subject:     asunto,
+      asunto:      asunto,
+      message_html:emailHTML,
+      message:     emailHTML,
+      from_name:   'Flota UC Girardota',
+      reply_to:    EMAIL_CFG.destEmail,
+    });
+    markAlertSent(batchKey);
+    // Clear badge immediately
+    const badge = document.getElementById('alert-badge');
+    if(badge) badge.style.display='none';
+    console.log('✅ Email batch enviado');
+    return enAlerta.length;
+  }catch(e){
+    console.error('EmailJS error:', e);
+    return 0;
+  }
+}
+
+// Keep for test button compatibility
+async function sendAlertEmail(placa, dias, novedad, taller, fechaIngreso, pct){
+  if(!EMAIL_CFG.enabled) return false;
+  const tablaHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif"><thead><tr style="background:#0f1e3d;color:#fff"><th style="padding:10px 12px;text-align:left">Placa</th><th style="padding:10px 12px;text-align:left">Novedad</th><th style="padding:10px 12px;text-align:left">Taller</th><th style="padding:10px 12px;text-align:left">Ingreso</th><th style="padding:10px 12px;text-align:left">Días</th></tr></thead><tbody><tr><td style="padding:8px 12px;font-weight:700;font-family:monospace;background:#dbeafe">${placa}</td><td style="padding:8px 12px;color:#475569">${novedad||'Sin novedad'}</td><td style="padding:8px 12px;color:#475569">${taller||'Sin taller'}</td><td style="padding:8px 12px;color:#475569">${fmtF(fechaIngreso)}</td><td style="padding:8px 12px;font-weight:800;color:#d97706">${dias} días</td></tr></tbody></table>`;
+  try{
+    await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, {
+      to_email:'CORREO_PRUEBA', asunto:'🧪 Prueba — Sistema Flota UC Girardota',
+      fecha_alerta:fmtF(today()), resumen:'Este es un correo de prueba del sistema.',
+      tabla_html:tablaHTML, total_alerta:1, disponibilidad:pct,
+      app_url:window.location.href, cantidad:1, dias_limite:ALERT_DIAS,
+    });
+    return true;
+  }catch(e){ console.error(e); return false; }
+}
+
+// Botón manual para probar/enviar alertas ahora
+async function enviarAlertasAhora(){
+  if(!state.days.length){ toast('Sin datos','⚠️'); return; }
+  const lastDay = state.days[state.days.length-1];
+
+  if(!EMAIL_CFG.enabled || EMAIL_CFG.publicKey==='TU_PUBLIC_KEY'){
+    openM('m-email-cfg'); return;
+  }
+
+  const activos = lastDay.placasEnTaller.filter(p=>!p.retornado&&!isRestriccion(p.status));
+  const enAlerta = activos.filter(p=>p.diasEnTaller>=ALERT_DIAS);
+  if(!enAlerta.length){
+    toast(`✅ Sin alertas — ningún vehículo lleva +${ALERT_DIAS} días`,'✅');
+    return;
+  }
+
+  // Check if already sent today
+  const batchKey = `batch_${today()}`;
+  const sentToday = getSentAlerts();
+  if(sentToday[batchKey]){
+    toast('Ya se envió el reporte de hoy. Se enviará de nuevo mañana.','ℹ️');
+    return;
+  }
+
+  toast(`Enviando reporte de ${enAlerta.length} vehículos…`,'📧');
+  const sent = await checkAndSendAlerts(lastDay);
+  if(sent > 0){
+    toast(`📨 Reporte enviado — ${sent} vehículo${sent>1?'s':''} en alerta`,'✅');
+    checkAlertBadge(); // update badge
+  } else {
+    toast('Error al enviar — revisa la configuración','❌');
+  }
+}
 // ╔══════════════════════════════════════════════╗
 //  BACKUP / RESTORE
 // ╚══════════════════════════════════════════════╝
@@ -2135,11 +3625,132 @@ function doExcel(){
 //  INIT
 // ╚══════════════════════════════════════════════╝
 // Check if user has a valid editor session
+
+// ── Email config modal JS ──
+const EMAIL_CFG_KEY = 'flota_email_cfg_v1';
+
+function loadEmailCfg(){
+  try{
+    const raw = localStorage.getItem(EMAIL_CFG_KEY);
+    if(!raw) return;
+    const cfg = JSON.parse(raw);
+    if(cfg.publicKey)  EMAIL_CFG.publicKey  = cfg.publicKey;
+    if(cfg.serviceId)  EMAIL_CFG.serviceId  = cfg.serviceId;
+    if(cfg.templateId) EMAIL_CFG.templateId = cfg.templateId;
+    if(cfg.destEmail)  EMAIL_CFG.destEmail  = cfg.destEmail;
+    EMAIL_CFG.enabled = !!(cfg.publicKey && cfg.publicKey !== 'TU_PUBLIC_KEY');
+  }catch(e){}
+}
+
+function saveEmailCfg(){
+  const pk  = document.getElementById('ecfg-pk')?.value.trim();
+  const sid = document.getElementById('ecfg-sid')?.value.trim();
+  const tid = document.getElementById('ecfg-tid')?.value.trim();
+  const dest= document.getElementById('ecfg-dest')?.value.trim();
+  if(!pk||!sid||!tid||!dest){ alert('Completa todos los campos'); return; }
+  EMAIL_CFG.publicKey=pk; EMAIL_CFG.serviceId=sid;
+  EMAIL_CFG.templateId=tid; EMAIL_CFG.destEmail=dest;
+  EMAIL_CFG.enabled=true;
+  localStorage.setItem(EMAIL_CFG_KEY, JSON.stringify({publicKey:pk,serviceId:sid,templateId:tid,destEmail:dest}));
+  initEmailJS();
+  updateEmailCfgStatus();
+  toast('Configuración guardada','📧');
+}
+
+function updateEmailCfgStatus(){
+  const pk  = document.getElementById('ecfg-pk')?.value.trim();
+  const sid = document.getElementById('ecfg-sid')?.value.trim();
+  const tid = document.getElementById('ecfg-tid')?.value.trim();
+  const dest= document.getElementById('ecfg-dest')?.value.trim();
+  const box = document.getElementById('email-status-box');
+  const txt = document.getElementById('email-status-txt');
+  if(!box||!txt) return;
+  const ok = !!(pk&&sid&&tid&&dest);
+  box.style.background=ok?'var(--green-lt)':'var(--amber-lt)';
+  box.style.color=ok?'var(--green)':'var(--amber)';
+  txt.textContent=ok?'✅ Listo para enviar alertas':'⚙️ Completa todos los campos para activar';
+  updateEmailPreview();
+}
+
+function updateEmailPreview(){
+  const el=document.getElementById('email-preview-list');
+  if(!el||!state.days.length) return;
+  const lastDay=state.days[state.days.length-1];
+  const activos=lastDay.placasEnTaller.filter(p=>!p.retornado&&!isRestriccion(p.status)&&p.diasEnTaller>=ALERT_DIAS);
+  if(!activos.length){
+    el.innerHTML=`<span style="color:var(--green)">✅ Ningún vehículo supera ${ALERT_DIAS} días actualmente</span>`;
+    return;
+  }
+  el.innerHTML=activos.map(p=>`
+    <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <span class="placa">${p.placa}</span>
+      <span style="color:var(--slate);font-size:11px">${p.novedad||'—'}</span>
+      <span style="color:var(--red);font-weight:700;font-family:monospace">${p.diasEnTaller}d</span>
+    </div>`).join('');
+}
+
+async function testEmailCfg(){
+  // Save first (updates EMAIL_CFG object)
+  const pk  = document.getElementById('ecfg-pk')?.value.trim();
+  const sid = document.getElementById('ecfg-sid')?.value.trim();
+  const tid = document.getElementById('ecfg-tid')?.value.trim();
+  const dest= document.getElementById('ecfg-dest')?.value.trim();
+  if(!pk||!sid||!tid||!dest){ alert('Completa todos los campos antes de probar'); return; }
+  
+  // Update config and re-init EmailJS with the NEW key
+  EMAIL_CFG.publicKey=pk; EMAIL_CFG.serviceId=sid;
+  EMAIL_CFG.templateId=tid; EMAIL_CFG.destEmail=dest;
+  EMAIL_CFG.enabled=true;
+  
+  try { emailjs.init({ publicKey: pk }); } catch(e) {}
+  
+  toast('Enviando correo de prueba…','📧');
+  // ... resto del código del try/catch que ya tienes
+  // Build a mock table for test
+  const mockTabla = `<table style="width:100%;border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif"><thead><tr style="background:#0f1e3d;color:#fff"><th style="padding:10px 12px;text-align:left">Placa</th><th style="padding:10px 12px;text-align:left">Novedad</th><th style="padding:10px 12px;text-align:left">Taller</th><th style="padding:10px 12px;text-align:left">Ingreso</th><th style="padding:10px 12px;text-align:left">Días</th></tr></thead><tbody><tr><td style="padding:8px 12px;font-weight:700;font-family:monospace;background:#dbeafe">TMV000</td><td style="padding:8px 12px;color:#475569">Correo de prueba — sistema OK</td><td style="padding:8px 12px;color:#475569">ELECTROCLUTCH</td><td style="padding:8px 12px;color:#475569">${fmtF(today())}</td><td style="padding:8px 12px;font-weight:800;color:#d97706">5 días</td></tr></tbody></table>`;
+  try{
+    const testHTML = '<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;background:#f8fafc;padding:20px">'
+      + '<div style="background:#0f1e3d;border-radius:12px 12px 0 0;padding:24px;text-align:center">'
+      + '<div style="font-size:32px;margin-bottom:8px">🚛</div>'
+      + '<div style="color:#fff;font-size:20px;font-weight:900">Flota UC Girardota</div>'
+      + '<div style="color:#94a3b8;font-size:13px;margin-top:4px">Prueba de configuración</div>'
+      + '</div>'
+      + '<div style="background:#ecfdf5;border-left:4px solid #059669;padding:16px 20px">'
+      + '<div style="color:#059669;font-size:15px;font-weight:700;margin-bottom:6px">✅ Sistema configurado correctamente</div>'
+      + '<div style="color:#475569;font-size:13px">Correo de prueba. Las alertas se envían cuando un vehículo supera ' + ALERT_DIAS + ' días en taller.</div>'
+      + '<div style="color:#94a3b8;font-size:12px;margin-top:6px">📅 Enviado el: ' + fmtF(today()) + '</div>'
+      + '</div>'
+      + '<div style="background:#fff;padding:20px;border:1px solid #e2e8f0">' + mockTabla + '</div>'
+      + '<div style="background:#f1f5f9;border-radius:0 0 12px 12px;padding:16px 20px;text-align:center">'
+      + '<a href="' + window.location.href + '" style="display:inline-block;background:#2563eb;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Ver en la app →</a>'
+      + '<div style="color:#94a3b8;font-size:11px;margin-top:12px">Sistema de Control de Flota · UC Girardota</div>'
+      + '</div></div>';
+    await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, {
+      to_email:    EMAIL_CFG.destEmail,
+      subject:     '🧪 Prueba — Sistema Flota UC Girardota OK',
+      asunto:      '🧪 Prueba — Sistema Flota UC Girardota OK',
+      message_html:testHTML,
+      message:     testHTML,
+      from_name:   'Flota UC Girardota',
+      reply_to:    EMAIL_CFG.destEmail,
+    });
+    toast('✅ Correo de prueba enviado — revisa tu bandeja','📨');
+  }catch(e){
+    console.error(e);
+    toast('❌ Error — revisa las claves en emailjs.com','⚠️');
+  }
+}
+
 isEditor = checkAuth();
 setEditorMode(isEditor);
+loadEmailCfg();
 renderSidebar();
 if(state.days.length)selectDay(state.days.length-1);
 initFirebase();
+document.getElementById('ecfg-dias').value = ALERT_DIAS;
+initEmailJS();
+// Check alerts on load for current day
+setTimeout(()=>{ if(state.days.length) checkAlertBadge(); }, 2000);
 // Show mobile nav only on small screens
 function updateMobNav(){
   const nav=document.getElementById('mob-nav');
@@ -2206,6 +3817,129 @@ window.addEventListener('resize', updateMobNav);
     <div style="display:flex;gap:8px;justify-content:center">
       <button class="btn bo" onclick="hidePinModal()">Cancelar</button>
       <button class="btn bp" onclick="submitPin()">Ingresar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL: PLAN DE ACCIÓN -->
+<div class="overlay" id="m-plan">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-handle"></div>
+    <h3>📋 Nuevo plan de acción</h3>
+    <div class="fg g2" style="margin-bottom:10px">
+      <div><label>Mes</label>
+        <select id="plan-mes-sel"></select>
+      </div>
+      <div><label>Estado</label>
+        <select id="plan-estado">
+          <option value="Completado">✅ Completado</option>
+          <option value="En proceso">⏳ En proceso</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg" style="margin-bottom:10px">
+      <div><label>Falla o problema identificado</label>
+        <input id="plan-falla" placeholder="Ej: Alta frecuencia de fallas en frenos…"/>
+      </div>
+    </div>
+    <div class="fg" style="margin-bottom:10px">
+      <div><label>Acción realizada o a realizar</label>
+        <textarea id="plan-accion" rows="3" placeholder="Ej: Se contactó a Frenos Nutibara para revisión preventiva…"
+          style="width:100%;padding:8px 9px;border-radius:6px;border:1.5px solid var(--border);font-family:inherit;font-size:12px;resize:vertical;outline:none"></textarea>
+      </div>
+    </div>
+    <div class="fg" style="margin-bottom:10px">
+      <div><label>Resultado obtenido (opcional)</label>
+        <input id="plan-resultado" placeholder="Ej: Se redujeron las fallas de frenos en un 70%…"/>
+      </div>
+    </div>
+    <!-- EVIDENCIAS FOTOGRÁFICAS -->
+    <div style="margin-bottom:10px">
+      <label style="display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:.3px">
+        📸 Evidencias fotográficas (opcional — máx. 5 fotos)
+      </label>
+      <div style="border:2px dashed var(--border);border-radius:8px;padding:12px;background:var(--bg);text-align:center">
+        <input type="file" id="plan-fotos" accept="image/*" multiple style="display:none" onchange="previewFotos(event)"/>
+        <button class="btn bo btn-sm" onclick="document.getElementById('plan-fotos').click()">
+          📷 Seleccionar fotos
+        </button>
+        <p style="font-size:10px;color:var(--slate);margin-top:6px">JPG, PNG · Se comprimen automáticamente</p>
+      </div>
+      <div id="fotos-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn bo" onclick="closeM('m-plan');clearFotosPreview()">Cancelar</button>
+      <button class="btn bp" onclick="savePlan()">Guardar plan</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL: CONFIGURACIÓN EMAIL -->
+<div class="overlay" id="m-email-cfg">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-handle"></div>
+    <h3>📧 Configuración de alertas por correo</h3>
+
+    <!-- Status indicator -->
+    <div id="email-status-box" style="padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:12px;font-weight:600;background:var(--amber-lt);color:var(--amber);display:flex;align-items:center;gap:8px">
+      <span style="font-size:16px">⚙️</span>
+      <span id="email-status-txt">Sin configurar — completa los campos para activar</span>
+    </div>
+
+    <div class="fg" style="margin-bottom:10px">
+      <div><label>📬 Correo que recibirá las alertas</label>
+        <input id="ecfg-dest" type="email" placeholder="supervisor@empresa.com"
+          value="${EMAIL_CFG.destEmail!=='correo@empresa.com'?EMAIL_CFG.destEmail:''}"
+          oninput="updateEmailCfgStatus()"/>
+      </div>
+    </div>
+    <div class="fg g3" style="margin-bottom:10px">
+      <div><label>Public Key</label>
+        <input id="ecfg-pk" type="password" placeholder="Tu Public Key de EmailJS"
+          value="${EMAIL_CFG.publicKey!=='TU_PUBLIC_KEY'?EMAIL_CFG.publicKey:''}"
+          oninput="updateEmailCfgStatus()"/>
+      </div>
+      <div><label>Service ID</label>
+        <input id="ecfg-sid" placeholder="service_xxxxxxx"
+          value="${EMAIL_CFG.serviceId!=='TU_SERVICE_ID'?EMAIL_CFG.serviceId:''}"
+          oninput="updateEmailCfgStatus()"/>
+      </div>
+      <div><label>Template ID</label>
+        <input id="ecfg-tid" placeholder="template_xxxxxxx"
+          value="${EMAIL_CFG.templateId!=='TU_TEMPLATE_ID'?EMAIL_CFG.templateId:''}"
+          oninput="updateEmailCfgStatus()"/>
+      </div>
+    </div>
+    <div class="fg g2" style="margin-bottom:14px">
+      <div><label>⏰ Alertar cuando un vehículo lleva más de X días</label>
+        <input id="ecfg-dias" type="number" min="1" max="30"  inputmode="numeric"/>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:flex-end">
+        <button class="btn bp" onclick="saveEmailCfg()" style="width:100%">💾 Guardar configuración</button>
+      </div>
+    </div>
+
+    <!-- Alerts preview -->
+    <div style="background:var(--bg);border-radius:8px;border:1px solid var(--border);padding:12px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--slate);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">
+        🔍 Vehículos que recibirían alerta AHORA
+      </div>
+      <div id="email-preview-list" style="font-size:12px"></div>
+    </div>
+
+    <div style="font-size:11px;color:var(--slate);background:var(--blue-lt);padding:10px 12px;border-radius:8px;margin-bottom:10px">
+      <strong>¿Cómo obtener las claves?</strong><br>
+      1. Ve a <a href="https://www.emailjs.com" target="_blank" style="color:var(--blue)">emailjs.com</a> → crea cuenta gratis<br>
+      2. Email Services → Add Service → Gmail → conecta tu correo<br>
+      3. Email Templates → crea template con las variables del manual<br>
+      4. Account → copia Public Key
+    </div>
+
+    <div class="modal-ft">
+      <button class="btn bo" onclick="closeM('m-email-cfg')">Cerrar</button>
+      <button class="btn bp" onclick="testEmailCfg()">🧪 Enviar correo de prueba</button>
     </div>
   </div>
 </div>
