@@ -609,21 +609,37 @@ const PLACAS = ['EYX466','GUQ633','GUQ642','GUQ646','GUR182','LCN251','LCO252','
 
 const META_TALLER = 4;
 
-const SISTEMAS = [
-  {k:'FRENOS',     t:['FRENO','CAMPANA','SECADORA','VALVULA','PARQUEO','BANDA','ABS']},
-  {k:'EMBRAGUE',   t:['EMBRAGUE','GUAYA','CLUTCH']},
-  {k:'MOTOR',      t:['MOTOR','POTENCIA','ENCENDIDO','ARRANQUE','INYECCION','CIGÜ','TURBO']},
-  {k:'CARPA',      t:['CARPA','FURGON','CARROCERIA','VIDRIO','CORTINA']},
-  {k:'DIFERENCIAL',t:['DIFERENCIAL','RETENEDOR']},
-  {k:'DIRECCIÓN',  t:['DIRECCION','DIRECCI','ALINEAC']},
-  {k:'AIRE/COMP',  t:['COMPRESOR','MANGUERA','SUSPENSION','NEUMATICO']},
-  {k:'ELÉCTRICO',  t:['ELECTRICO','SENSOR','ALERTA','ESCANER','CAMARA','LLAVE']},
-  {k:'SAFETY',     t:['SAFETY','BLOQUEO','BLOQUEADO']},
-  {k:'TRANSMISIÓN',t:['TRANSMISION','CAJA','DESFORZAM']},
-  {k:'ACEITE',     t:['ACEITE','FUGA DE AC']},
-  {k:'ESTRUCTURA', t:['ESTRUCTURA','ARREGLO','LLANTA','TROQUE']},
+// Lista oficial de sistemas — se elige manualmente al ingresar placa
+const SISTEMAS_LIST = [
+  'MOTOR','FRENOS','EMBRAGUE','TRANSMISIÓN','DIFERENCIAL',
+  'DIRECCIÓN','SUSPENSIÓN','ELÉCTRICO','CARROCERÍA','SAFETY/BLOQUEADO',
+  'AIRE/COMPRESOR','ACEITE/FUGAS','LLANTAS','VIDRIOS/CARPA','OTRO'
 ];
-function getSist(n){ if(!n)return'OTRO';const u=n.toUpperCase();for(const s of SISTEMAS)if(s.t.some(t=>u.includes(t)))return s.k;return'OTRO' }
+// Fallback auto-detect para datos históricos sin sistema guardado
+const SISTEMAS_AUTO = [
+  {k:'MOTOR',          t:['MOTOR','POTENCIA','ENCENDIDO','ARRANQUE','INYECCION','TURBO','LLAVE']},
+  {k:'FRENOS',         t:['FRENO','CAMPANA','SECADORA','VALVULA','PARQUEO','BANDA','ABS']},
+  {k:'EMBRAGUE',       t:['EMBRAGUE','GUAYA','CLUTCH']},
+  {k:'TRANSMISIÓN',    t:['TRANSMISION','CAJA','DESFORZAM']},
+  {k:'DIFERENCIAL',    t:['DIFERENCIAL','RETENEDOR']},
+  {k:'DIRECCIÓN',      t:['DIRECCION','DIRECCI','ALINEAC','TROQUE']},
+  {k:'SUSPENSIÓN',     t:['SUSPENSION','NEUMATICO','MANGUERA']},
+  {k:'ELÉCTRICO',      t:['ELECTRICO','SENSOR','ALERTA','ESCANER','CAMARA']},
+  {k:'CARROCERÍA',     t:['CARROCERIA','ARREGLO','ESTRUCTURA','FURGON','CARPA','CORTINA']},
+  {k:'SAFETY/BLOQUEADO',t:['SAFETY','BLOQUEO','BLOQUEADO']},
+  {k:'AIRE/COMPRESOR', t:['COMPRESOR','AIRE']},
+  {k:'ACEITE/FUGAS',   t:['ACEITE','FUGA']},
+  {k:'LLANTAS',        t:['LLANTA']},
+  {k:'VIDRIOS/CARPA',  t:['VIDRIO','CARPA','FURGON']},
+];
+// Obtener sistema: usa campo guardado si existe, si no auto-detecta
+function getSist(novedad, sistema){
+  if(sistema && sistema !== 'OTRO' && sistema.trim()) return sistema.trim();
+  if(!novedad) return 'OTRO';
+  const u = novedad.toUpperCase();
+  for(const s of SISTEMAS_AUTO) if(s.t.some(t=>u.includes(t))) return s.k;
+  return 'OTRO';
+}
 
 
 // ╔══════════════════════════════════════════════╗
@@ -888,6 +904,7 @@ state.days.forEach(d=>{
   if(!d.snapshot){d.snapshot=calcSnap(d);_ns=true;}
   if(!Array.isArray(d.retornados)){d.retornados=[];_ns=true;}
   if(!Array.isArray(d.pendientes)){d.pendientes=[];_ns=true;}
+  if(!Array.isArray(d.novedadesConductores)){d.novedadesConductores=[];_ns=true;}
   if(d.op===undefined){d.op=null;_ns=true;}
 });
 if(_ns)saveLocal();
@@ -1000,7 +1017,7 @@ function crearDia(){
       .map(p=>({...p,diasEnTaller:dias(p.fechaIngreso,fecha),retornado:false}));
   }
 
-  const newDay={fecha,total,op,placasEnTaller,retornados:[],pendientes:[]};
+  const newDay={fecha,total,op,placasEnTaller,retornados:[],pendientes:[],novedadesConductores:[]};
   newDay.snapshot=calcSnap(newDay);
   state.days.push(newDay);
   state.days.sort((a,b)=>a.fecha.localeCompare(b.fecha));
@@ -1163,6 +1180,7 @@ function renderDay(){
     <div class="tabs">
       <button class="tab on" id="tab-t" onclick="switchTab('t')">🔧 Taller (${enN})${restriccionCount>0?` · 🟣 Restricción (${restriccionCount})`:''}</button>
       <button class="tab" id="tab-r" onclick="switchTab('r')">✅ Retornados (${d.retornados.length})</button>
+      <button class="tab" id="tab-n" onclick="switchTab('n')">🗣 Conductores (${(d.novedadesConductores||[]).length})</button>
       <button class="tab" id="tab-p" onclick="switchTab('p')">📌 Pendientes (${d.pendientes.length})</button>
     </div>
     <div id="tc"></div>`;
@@ -1172,10 +1190,11 @@ function renderDay(){
 let aTab='t';
 function switchTab(t){
   aTab=t;
-  ['t','r','p'].forEach(x=>document.getElementById('tab-'+x)?.classList.toggle('on',x===t));
+  ['t','r','n','p'].forEach(x=>document.getElementById('tab-'+x)?.classList.toggle('on',x===t));
   const tc=document.getElementById('tc');
   if(t==='t')tc.innerHTML=bldTaller();
   if(t==='r')tc.innerHTML=bldRet();
+  if(t==='n')tc.innerHTML=bldConductores();
   if(t==='p')tc.innerHTML=bldPend();
   setupAC();
 }
@@ -1228,7 +1247,7 @@ function bldTaller(){
       return`<tr>
         <td><span class="placa">${p.placa}</span></td>
         <td class="hide-mob" style="color:var(--slate)">${fmtF(p.fechaIngreso)}</td>
-        <td style="max-width:160px">${esc(p.novedad)||'—'}</td>
+        <td style="max-width:160px">${esc(p.novedad)||'—'}<br><span style="font-size:9px;color:var(--blue);font-weight:600">${getSist(p.novedad,p.sistema)}</span></td>
         <td class="hide-mob">${bdg(p.status)}</td>
         <td class="hide-mob">${esc(p.taller)||'—'}</td>
         <td>${dPill(p.diasEnTaller)}</td>
@@ -1282,9 +1301,13 @@ function vehForm(pre={}){
       </div>
       <div><label>Taller</label><input id="vf-tl" placeholder="ELECTROCLUTCH, CD…" value="${esc(pre.taller||'')}"/></div>
     </div>
-    <div class="fg" style="margin-bottom:8px">
+    <div class="fg g2" style="margin-bottom:8px">
       <div><label>Novedad / Falla</label>
         <input id="vf-nv" placeholder="Pérdida de potencia, frenos…" value="${esc(pre.novedad||'')}"/>
+      </div>
+      <div><label>Sistema afectado</label>
+        <input id="vf-si" placeholder="Ej: Motor, Frenos, Carrocería…"
+          value="${esc(pre.sistema||'')}" oninput="this.value=this.value.toUpperCase()"/>
       </div>
     </div>
     <div class="frow">
@@ -1309,6 +1332,7 @@ function saveVeh(){
   if(!fi){alert('Selecciona la fecha de ingreso');return}
   d.placasEnTaller.push({placa,fechaIngreso:fi,
     novedad:document.getElementById('vf-nv').value.trim(),
+    sistema:document.getElementById('vf-si').value.trim(),
     status:document.getElementById('vf-st').value,
     taller:document.getElementById('vf-tl').value.trim(),
     diasEnTaller:dias(fi,d.fecha),retornado:false});
@@ -1323,6 +1347,7 @@ function updVeh(idx){
   p.status=document.getElementById('vf-st').value;
   p.taller=document.getElementById('vf-tl').value.trim();
   p.novedad=document.getElementById('vf-nv').value.trim();
+  p.sistema=document.getElementById('vf-si').value.trim();
   p.diasEnTaller=dias(p.fechaIngreso,d.fecha);
   save(curIdx);renderDay();switchTab('t');
   toast(`${p.placa} actualizada`,'✏️');
@@ -1463,6 +1488,94 @@ function savePend(){
   toast('Pendiente guardado','📌');
 }
 function delPend(i){if(!isEditor){showPinModal();return;}D().pendientes.splice(i,1);save(curIdx);renderDay();switchTab('p')}
+// ╔══════════════════════════════════════════════╗
+//  TAB NOVEDADES DE CONDUCTORES
+// ╚══════════════════════════════════════════════╝
+function bldConductores(){
+  const d=D();
+  if(!d.novedadesConductores) d.novedadesConductores=[];
+  const isLast=curIdx===state.days.length-1;
+  const items=d.novedadesConductores;
+
+  const rows=items.length===0
+    ?`<tr><td colspan="4"><div class="nodata"><div style="font-size:28px">🗣</div><p>Sin novedades de conductores para este día</p></div></td></tr>`
+    :items.map((n,i)=>`<tr>
+      <td><span class="placa">${n.placa||'—'}</span></td>
+      <td style="color:var(--slate);font-size:11px;white-space:nowrap">${fmtF(n.fecha)||fmtF(d.fecha)}</td>
+      <td style="max-width:320px">${esc(n.novedad)||'—'}</td>
+      <td>${isLast&&isEditor?`<button class="ibtn" onclick="delConductorNov(${i})">🗑</button>`:''}</td>
+    </tr>`).join('');
+
+  return`<div class="panel">
+    <div class="panel-hd">
+      <div class="ptitle">🗣 Novedades de conductores — ${fmtF(d.fecha)}</div>
+      ${isLast&&isEditor?`<button class="btn bp btn-sm" onclick="showAddConductorNov()">＋ Agregar</button>`:''}
+    </div>
+    <div id="cn-c"></div>
+    <div style="padding:10px 14px 6px;background:var(--blue-lt);border-bottom:1px solid var(--border)">
+      <p style="font-size:11px;color:var(--text2)">📋 Registro de novedades reportadas en la reunión mañanera por los conductores.</p>
+    </div>
+    <div class="twrap">
+      <table>
+        <thead><tr><th>Placa</th><th>Fecha</th><th>Novedad reportada</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function showAddConductorNov(){
+  if(!isEditor){showPinModal();return;}
+  const d=D();
+  document.getElementById('cn-c').innerHTML=`
+    <div class="iform on">
+      <div style="font-size:10px;font-weight:700;color:var(--blue);margin-bottom:8px">➕ NUEVA NOVEDAD DE CONDUCTOR</div>
+      <div class="fg g3" style="margin-bottom:9px">
+        <div><label>Placa del vehículo</label>
+          <div class="acw">
+            <input id="cn-p" class="aci-inp" data-al="cn-ac" placeholder="Buscar placa…"
+              autocomplete="off" oninput="this.value=this.value.toUpperCase()"/>
+            <div class="acl" id="cn-ac"></div>
+          </div>
+        </div>
+        <div><label>Fecha</label>
+          <input type="date" id="cn-f" value="${d.fecha}"/>
+        </div>
+        <div style="grid-column:span 1"></div>
+      </div>
+      <div class="fg" style="margin-bottom:9px">
+        <div><label>Novedad reportada por el conductor</label>
+          <input id="cn-n" placeholder="Describe la novedad que reportó el conductor…"/>
+        </div>
+      </div>
+      <div class="frow">
+        <button class="btn bo btn-sm" onclick="document.getElementById('cn-c').innerHTML=''">Cancelar</button>
+        <button class="btn bp btn-sm" onclick="saveConductorNov()">Guardar</button>
+      </div>
+    </div>`;
+  setupAC();
+}
+
+function saveConductorNov(){
+  if(!isEditor){showPinModal();return;}
+  const d=D();
+  if(!d.novedadesConductores) d.novedadesConductores=[];
+  const placa=document.getElementById('cn-p').value.trim().toUpperCase();
+  const fecha=document.getElementById('cn-f').value;
+  const novedad=document.getElementById('cn-n').value.trim();
+  if(!novedad){alert('Ingresa la novedad');return;}
+  d.novedadesConductores.push({placa,fecha,novedad});
+  save(curIdx);renderDay();switchTab('n');
+  toast('Novedad de conductor guardada','🗣');
+}
+
+function delConductorNov(i){
+  if(!isEditor){showPinModal();return;}
+  if(!confirm('¿Eliminar esta novedad?'))return;
+  D().novedadesConductores.splice(i,1);
+  save(curIdx);renderDay();switchTab('n');
+}
+
 
 function eliminarDia(){
   if(!isEditor){showPinModal();return;}
@@ -1689,7 +1802,7 @@ function runAn(){
   const topP=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);const maxPD=topP[0]?.[1]||1;
 
   const sm={};
-  days.forEach(d=>d.placasEnTaller.forEach(p=>{const s=getSist(p.novedad);sm[s]=(sm[s]||0)+1}));
+  days.forEach(d=>d.placasEnTaller.forEach(p=>{const s=getSist(p.novedad,p.sistema);sm[s]=(sm[s]||0)+1}));
   const topS=Object.entries(sm).sort((a,b)=>b[1]-a[1]).slice(0,7);const maxS=topS[0]?.[1]||1;
 
   const nv={};
