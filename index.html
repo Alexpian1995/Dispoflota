@@ -1995,8 +1995,13 @@ function runAn(){
   const diasOPgt=dwOP.filter(i=>i.op>i.disp).length;
 
   const pm={};
-  days.forEach(d=>d.placasEnTaller.forEach(p=>{pm[p.placa]=(pm[p.placa]||0)+p.diasEnTaller}));
-  const topP=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);const maxPD=topP[0]?.[1]||1;
+  days.forEach(d=>d.placasEnTaller.forEach(p=>{
+    const key=p.placa+'|'+p.fechaIngreso;
+    if(!pm[key]||p.diasEnTaller>pm[key].dias) pm[key]={placa:p.placa,dias:p.diasEnTaller};
+  }));
+  const pmFinal={};
+  Object.values(pm).forEach(({placa,dias})=>{ pmFinal[placa]=(pmFinal[placa]||0)+dias; });
+  const topP=Object.entries(pmFinal).sort((a,b)=>b[1]-a[1]).slice(0,5);const maxPD=topP[0]?.[1]||1;
 
   const sm={};
   days.forEach(d=>d.placasEnTaller.forEach(p=>{const s=getSist(p.novedad,p.sistema);sm[s]=(sm[s]||0)+1}));
@@ -2181,9 +2186,15 @@ function renderGest(filtroMes=null, filtroAnio=null){
     }));
     const topSist = Object.entries(sistemas).sort((a,b)=>b[1]-a[1]);
     const placasDias = {};
+    const placaEventos = {};
     m.dias.forEach(d=>d.placasEnTaller.forEach(p=>{
-      placasDias[p.placa]=(placasDias[p.placa]||0)+p.diasEnTaller;
+      const key=p.placa+'|'+p.fechaIngreso;
+      if(!placaEventos[key]||p.diasEnTaller>placaEventos[key]) placaEventos[key]=p.diasEnTaller;
     }));
+    Object.entries(placaEventos).forEach(([key,dias])=>{
+      const placa=key.split('|')[0];
+      placasDias[placa]=(placasDias[placa]||0)+dias;
+    });
     const topPlacas = Object.entries(placasDias).sort((a,b)=>b[1]-a[1]).slice(0,8);
     const totalRetornados = m.dias.reduce((a,d)=>a+d.retornados.length,0);
     return {avgPct,avgTaller,diasMeta,topSist,topPlacas,totalRetornados,totalDias:m.dias.length};
