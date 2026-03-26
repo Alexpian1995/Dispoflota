@@ -782,8 +782,8 @@ const EDITOR_PIN    = '1234';          // ← CAMBIA ESTE PIN
 //  4. Reemplaza los valores de abajo
 // ╚══════════════════════════════════════════════╝
 const EMAIL_CFG = {
-  publicKey:  'JkzXt8TMr--AXQsiM', // ← Account → Public Key
-  serviceId:  'service_dfb29wb',    // ← Email Services → Service ID
+  publicKey:  'k9zybAl5CzQJt7wAq', // ← Account → Public Key
+  serviceId:  'service_4qxf68s',    // ← Email Services → Service ID
   templateId: 'template_ovdhmr3',   // ← Email Templates → Template ID
   destEmail:  'correo@empresa.com', // ← Correo que recibirá las alertas
   appUrl:     window.location.href, // URL de la app (se llena automático)
@@ -1031,6 +1031,7 @@ function calcSnap(d){
 function isRestriccion(s){
   return s&&s.toUpperCase().includes('RESTRICCI');
 }
+function esDomingo(fecha){ if(!fecha)return false; const dt=new Date(fecha+'T12:00:00'); return dt.getDay()===0; }
 
 function save(modIdx){
   touchActivity(); // renew inactivity timer on every edit
@@ -1147,21 +1148,7 @@ function renderDrawer(){
 // ╚══════════════════════════════════════════════╝
 function openM(id){
   document.getElementById(id)?.classList.add('open');
-  if(id==='m-email-cfg'){
-    setTimeout(()=>{
-      // Cargar valores reales en los inputs
-      const dest = document.getElementById('ecfg-dest');
-      const pk   = document.getElementById('ecfg-pk');
-      const sid  = document.getElementById('ecfg-sid');
-      const tid  = document.getElementById('ecfg-tid');
-      if(dest) dest.value = EMAIL_CFG.destEmail  !== 'correo@empresa.com' ? EMAIL_CFG.destEmail  : '';
-      if(pk)   pk.value   = EMAIL_CFG.publicKey  !== 'TU_PUBLIC_KEY'      ? EMAIL_CFG.publicKey  : '';
-      if(sid)  sid.value  = EMAIL_CFG.serviceId  !== 'TU_SERVICE_ID'      ? EMAIL_CFG.serviceId  : '';
-      if(tid)  tid.value  = EMAIL_CFG.templateId !== 'TU_TEMPLATE_ID'     ? EMAIL_CFG.templateId : '';
-      updateEmailCfgStatus();
-      updateEmailPreview();
-    }, 50);
-  }
+  if(id==='m-email-cfg') setTimeout(()=>{updateEmailCfgStatus();updateEmailPreview();},50);
 }
 function closeM(id){document.getElementById(id).classList.remove('open')}
 ['m-nd','m-imp','m-more','m-placa','m-plan','m-email-cfg'].forEach(id=>{
@@ -1246,7 +1233,7 @@ function renderSidebar(filter=''){
     return`<div class="di ${i===curIdx?'on':''}" onclick="selectDay(${i})">
       <div style="min-width:0;flex:1">
         <div class="di-lbl">${fmtF(d.fecha)}</div>
-        <div class="di-meta">${info.disp}/${d.total} disp · ${info.enTaller} taller${d.op!=null?' · OP '+d.op:''}</div>
+        <div class="di-meta">${esDomingo(d.fecha)?'🔵 Rutina dom. · ':''} ${info.disp}/${d.total} disp · ${info.enTaller} taller${d.op!=null?' · OP '+d.op:''}</div>
       </div>
       <div class="di-right">
         <span class="pct-pill ${pcCls(info.pct)}">${info.pct}%</span>
@@ -1317,6 +1304,15 @@ function renderDay(){
     :`<span style="color:var(--slate);font-size:10px">Sin registro</span>`;
   const metaC=enN<=META_TALLER?'var(--green)':enN<=META_TALLER+2?'var(--amber)':'var(--red)';
 
+  const isDom = esDomingo(d.fecha);
+  const domBanner = isDom ? `
+    <div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:20px">🔵</span>
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#fff">Rutina Dominical</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.75)">Los vehículos en taller este día están en mantenimiento preventivo de rutina — disponibles en pocas horas.</div>
+      </div>
+    </div>` : '';
   const histBanner=!isLast?`
     <div style="background:var(--amber-lt);border:1.5px solid var(--amber);border-radius:8px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:center;gap:9px">
       <span style="font-size:16px">🔒</span>
@@ -1327,6 +1323,7 @@ function renderDay(){
     </div>`:'';
 
   document.getElementById('day-view').innerHTML=`
+    ${domBanner}
     ${histBanner}
     <div class="kgrid k5">
       <div class="kpi k-bl"><div class="kpi-lbl">Total</div><div class="kpi-val">${d.total}</div><div class="kpi-sub">asignados</div></div>
@@ -1365,7 +1362,7 @@ function renderDay(){
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;gap:8px;flex-wrap:wrap">
       <div>
         <h2 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800">${fmtF(d.fecha)}</h2>
-        <p style="font-size:10px;color:var(--slate)">${isLast?'Día activo':'Registro histórico'}</p>
+        <p style="font-size:10px;color:${isDom?'#7c3aed':'var(--slate)'}">${isDom?'🔵 Rutina dominical':isLast?'Día activo — en edición':'Registro histórico'}</p>
       </div>
       <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap">
         <button class="btn bo btn-sm" onclick="selectDay(${curIdx},true)" title="Ver informe de este día">📊 Informe</button>
@@ -1558,12 +1555,14 @@ function delVeh(idx){
 function retornar(idx){
   if(!isEditor){showPinModal();return;}
   const d=D(),p=d.placasEnTaller[idx];
-  const rep=prompt(`✅ Retorno de ${p.placa}\nReparación realizada:`,p.novedad||'');
+  const rep=prompt('✅ Retorno de '+p.placa+'\nReparación realizada:',p.novedad||'');
   if(rep===null)return;
   p.retornado=true;
   d.retornados.push({placa:p.placa,fechaIngreso:p.fechaIngreso,reparacion:rep,taller:p.taller,fechaEntrega:d.fecha});
   save(curIdx);renderDay();switchTab('r');
-  toast(`${p.placa} retornado — disp. ${d.snapshot.disp}/${d.total}`,'✅');
+  toast(p.placa+' retornado — disp. '+(d.snapshot?d.snapshot.disp:d.total-1)+'/'+d.total,'✅');
+  // Enviar correo de retorno automático
+  sendRetornoEmail(p.placa, rep, p.taller, p.fechaIngreso, d.fecha, p.diasEnTaller);
 }
 
 // ╔══════════════════════════════════════════════╗
@@ -1995,13 +1994,8 @@ function runAn(){
   const diasOPgt=dwOP.filter(i=>i.op>i.disp).length;
 
   const pm={};
-  days.forEach(d=>d.placasEnTaller.forEach(p=>{
-    const key=p.placa+'|'+p.fechaIngreso;
-    if(!pm[key]||p.diasEnTaller>pm[key].dias) pm[key]={placa:p.placa,dias:p.diasEnTaller};
-  }));
-  const pmFinal={};
-  Object.values(pm).forEach(({placa,dias})=>{ pmFinal[placa]=(pmFinal[placa]||0)+dias; });
-  const topP=Object.entries(pmFinal).sort((a,b)=>b[1]-a[1]).slice(0,5);const maxPD=topP[0]?.[1]||1;
+  days.forEach(d=>d.placasEnTaller.forEach(p=>{pm[p.placa]=(pm[p.placa]||0)+p.diasEnTaller}));
+  const topP=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);const maxPD=topP[0]?.[1]||1;
 
   const sm={};
   days.forEach(d=>d.placasEnTaller.forEach(p=>{const s=getSist(p.novedad,p.sistema);sm[s]=(sm[s]||0)+1}));
@@ -2186,15 +2180,9 @@ function renderGest(filtroMes=null, filtroAnio=null){
     }));
     const topSist = Object.entries(sistemas).sort((a,b)=>b[1]-a[1]);
     const placasDias = {};
-    const placaEventos = {};
     m.dias.forEach(d=>d.placasEnTaller.forEach(p=>{
-      const key=p.placa+'|'+p.fechaIngreso;
-      if(!placaEventos[key]||p.diasEnTaller>placaEventos[key]) placaEventos[key]=p.diasEnTaller;
+      placasDias[p.placa]=(placasDias[p.placa]||0)+p.diasEnTaller;
     }));
-    Object.entries(placaEventos).forEach(([key,dias])=>{
-      const placa=key.split('|')[0];
-      placasDias[placa]=(placasDias[placa]||0)+dias;
-    });
     const topPlacas = Object.entries(placasDias).sort((a,b)=>b[1]-a[1]).slice(0,8);
     const totalRetornados = m.dias.reduce((a,d)=>a+d.retornados.length,0);
     return {avgPct,avgTaller,diasMeta,topSist,topPlacas,totalRetornados,totalDias:m.dias.length};
@@ -2698,15 +2686,20 @@ function renderCal(){
         // Color based on BOTH: pct AND meta
         const dayBg = !metaOk ? '#fef2f2' : info.pct>=90 ? '#ecfdf5' : info.pct>=85 ? '#fffbeb' : '#fff7ed';
         const dayBorder = !metaOk ? '#dc2626' : info.pct>=90 ? '#059669' : info.pct>=85 ? '#d97706' : '#ea580c';
+        const isDomCal = new Date(dateStr+'T12:00:00').getDay()===0;
+        const finalBg = isDomCal ? '#f5f3ff' : dayBg;
+        const finalBorder = isDomCal ? '#7c3aed' : dayBorder;
         cells+=`<div class="cal-day${isToday?' cd-today':''}" 
-          style="background:${dayBg};border-color:${dayBorder};border-width:2px;border-style:solid"
+          style="background:${finalBg};border-color:${finalBorder};border-width:2px;border-style:solid"
           onclick="calDayClick('${dateStr}')" 
-          title="${dateStr}: ${info.pct}% disp · ${info.enTaller} en taller${!metaOk?' ⚠️ SOBRE META':''}">
+          title="${dateStr}: ${isDomCal?'Rutina dominical · ':''}${info.pct}% disp · ${info.enTaller} en taller${!metaOk&&!isDomCal?' ⚠️ SOBRE META':''}">
           <div class="cal-dn">${d}</div>
-          <div class="cal-pct" style="color:${col}">${info.pct}%</div>
+          <div class="cal-pct" style="color:${isDomCal?'#7c3aed':col}">${isDomCal?'🔵':info.pct+'%'}</div>
           <div style="display:flex;align-items:center;justify-content:center;gap:3px;margin-top:2px">
-            <span style="font-size:9px;font-family:monospace;font-weight:700;color:${!metaOk?'var(--red)':'var(--slate)'}">${info.enTaller}🚛</span>
-            ${!metaOk?`<span style="font-size:8px;color:var(--red);font-weight:700">⚠️</span>`:`<span style="font-size:8px;color:var(--green)">✓</span>`}
+            ${isDomCal
+              ? `<span style="font-size:8px;color:#7c3aed;font-weight:700">RD</span>`
+              : `<span style="font-size:9px;font-family:monospace;font-weight:700;color:${!metaOk?'var(--red)':'var(--slate)'}">${info.enTaller}🚛</span>
+                 ${!metaOk?'<span style="font-size:8px;color:var(--red);font-weight:700">⚠️</span>':'<span style="font-size:8px;color:var(--green)">✓</span>'}`}
           </div>
         </div>`;
       } else {
@@ -2762,8 +2755,9 @@ function renderCal(){
         <div class="cal-legend">
           <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#ecfdf5;border:2px solid #059669"></div>≥90% · en meta</div>
           <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#fffbeb;border:2px solid #d97706"></div>85-89% · en meta</div>
-          <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#fef2f2;border:2px solid #dc2626"></div>⚠️ Sobre meta (>4 taller)</div>
-          <div class="cal-leg-item"><span style="font-size:10px;font-family:monospace;font-weight:700">3🚛</span> = vehículos en taller ese día</div>
+          <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#fef2f2;border:2px solid #dc2626"></div>⚠️ Sobre meta</div>
+          <div class="cal-leg-item"><div class="cal-leg-dot" style="background:#f5f3ff;border:2px solid #7c3aed"></div>🔵 Rutina dominical</div>
+          <div class="cal-leg-item"><span style="font-size:10px;font-family:monospace;font-weight:700">3🚛</span> = vehículos en taller</div>
         </div>
       </div>`;
   } else {
@@ -3410,6 +3404,63 @@ async function enviarAlertasAhora(){
     toast('Error al enviar — revisa la configuración','❌');
   }
 }
+
+// ╔══════════════════════════════════════════════╗
+//  CORREO DE RETORNO / RECUPERACIÓN
+// ╚══════════════════════════════════════════════╝
+async function sendRetornoEmail(placa, reparacion, taller, fechaIngreso, fechaRetorno, diasEnTaller){
+  if(!EMAIL_CFG.enabled || EMAIL_CFG.publicKey==='TU_PUBLIC_KEY'){
+    console.log('[Email simulado] Retorno de '+placa);
+    return;
+  }
+  const diasStr = diasEnTaller || dias(fechaIngreso, fechaRetorno);
+  const retornoHTML = '<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;background:#f8fafc;padding:20px">'
+    + '<div style="background:#0f1e3d;border-radius:12px 12px 0 0;padding:24px;text-align:center">'
+    + '<div style="font-size:32px;margin-bottom:8px">🚛</div>'
+    + '<div style="color:#fff;font-size:20px;font-weight:900">Flota UC Girardota</div>'
+    + '<div style="color:#94a3b8;font-size:13px;margin-top:4px">Notificación de recuperación de vehículo</div>'
+    + '</div>'
+    + '<div style="background:#ecfdf5;border-left:4px solid #059669;padding:20px 24px">'
+    + '<div style="color:#059669;font-size:18px;font-weight:800;margin-bottom:8px">✅ Vehículo recuperado — pendiente aprobación</div>'
+    + '<div style="font-size:28px;font-weight:900;font-family:monospace;background:#dcfce7;display:inline-block;padding:4px 16px;border-radius:8px;color:#0f172a;margin-bottom:12px">'
+    + placa + '</div>'
+    + '</div>'
+    + '<div style="background:#fff;padding:20px;border:1px solid #e2e8f0">'
+    + '<table style="width:100%;font-size:13px;font-family:Arial,sans-serif;border-collapse:collapse">'
+    + '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:10px 8px;color:#64748b;font-weight:600;width:40%">🔧 Reparación realizada</td><td style="padding:10px 8px;font-weight:700">' + (reparacion||'Sin descripción') + '</td></tr>'
+    + '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:10px 8px;color:#64748b;font-weight:600">🏭 Taller</td><td style="padding:10px 8px">' + (taller||'Sin taller') + '</td></tr>'
+    + '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:10px 8px;color:#64748b;font-weight:600">📅 Ingresó al taller</td><td style="padding:10px 8px">' + fmtF(fechaIngreso) + '</td></tr>'
+    + '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:10px 8px;color:#64748b;font-weight:600">📅 Fecha de retorno</td><td style="padding:10px 8px;font-weight:700;color:#059669">' + fmtF(fechaRetorno) + '</td></tr>'
+    + '<tr><td style="padding:10px 8px;color:#64748b;font-weight:600">⏱ Días en taller</td><td style="padding:10px 8px;font-weight:700;color:#d97706">' + diasStr + ' días</td></tr>'
+    + '</table>'
+    + '</div>'
+    + '<div style="background:#fffbeb;border:1px solid #fde68a;padding:14px 20px;text-align:center">'
+    + '<div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:6px">⚠️ Se requiere su aprobación</div>'
+    + '<div style="font-size:12px;color:#78350f">Por favor confirme que el vehículo <strong>' + placa + '</strong> está en condiciones de operar y autorícelo para salir a ruta.</div>'
+    + '</div>'
+    + '<div style="background:#f1f5f9;border-radius:0 0 12px 12px;padding:16px 20px;text-align:center">'
+    + '<a href="' + (EMAIL_CFG.appUrl||window.location.href) + '" style="display:inline-block;background:#059669;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Ver en la app →</a>'
+    + '<div style="color:#94a3b8;font-size:11px;margin-top:12px">Sistema de Control de Flota · UC Girardota · ' + fmtF(today()) + '</div>'
+    + '</div></div>';
+
+  const asunto = '✅ RETORNO — ' + placa + ' recuperado el ' + fmtF(fechaRetorno) + ' — Pendiente aprobación';
+
+  try{
+    await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, {
+      to_email:     '',
+      subject:      asunto,
+      asunto:       asunto,
+      message_html: retornoHTML,
+      message:      retornoHTML,
+      from_name:    'Flota UC Girardota',
+      reply_to:     '',
+    });
+    toast('📨 Correo de retorno enviado al supervisor','✅');
+    console.log('✅ Email retorno enviado para '+placa);
+  }catch(e){
+    console.error('Error email retorno:', e);
+  }
+}
 // ╔══════════════════════════════════════════════╗
 //  BACKUP / RESTORE
 // ╚══════════════════════════════════════════════╝
@@ -3701,22 +3752,9 @@ function updateEmailPreview(){
 }
 
 async function testEmailCfg(){
-  // Save first (updates EMAIL_CFG object)
-  const pk  = document.getElementById('ecfg-pk')?.value.trim();
-  const sid = document.getElementById('ecfg-sid')?.value.trim();
-  const tid = document.getElementById('ecfg-tid')?.value.trim();
-  const dest= document.getElementById('ecfg-dest')?.value.trim();
-  if(!pk||!sid||!tid||!dest){ alert('Completa todos los campos antes de probar'); return; }
-  
-  // Update config and re-init EmailJS with the NEW key
-  EMAIL_CFG.publicKey=pk; EMAIL_CFG.serviceId=sid;
-  EMAIL_CFG.templateId=tid; EMAIL_CFG.destEmail=dest;
-  EMAIL_CFG.enabled=true;
-  
-  try { emailjs.init({ publicKey: pk }); } catch(e) {}
-  
+  saveEmailCfg();
+  if(!EMAIL_CFG.enabled){ alert('Primero guarda la configuración con tus claves reales'); return; }
   toast('Enviando correo de prueba…','📧');
-  // ... resto del código del try/catch que ya tienes
   // Build a mock table for test
   const mockTabla = `<table style="width:100%;border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif"><thead><tr style="background:#0f1e3d;color:#fff"><th style="padding:10px 12px;text-align:left">Placa</th><th style="padding:10px 12px;text-align:left">Novedad</th><th style="padding:10px 12px;text-align:left">Taller</th><th style="padding:10px 12px;text-align:left">Ingreso</th><th style="padding:10px 12px;text-align:left">Días</th></tr></thead><tbody><tr><td style="padding:8px 12px;font-weight:700;font-family:monospace;background:#dbeafe">TMV000</td><td style="padding:8px 12px;color:#475569">Correo de prueba — sistema OK</td><td style="padding:8px 12px;color:#475569">ELECTROCLUTCH</td><td style="padding:8px 12px;color:#475569">${fmtF(today())}</td><td style="padding:8px 12px;font-weight:800;color:#d97706">5 días</td></tr></tbody></table>`;
   try{
@@ -3758,7 +3796,6 @@ loadEmailCfg();
 renderSidebar();
 if(state.days.length)selectDay(state.days.length-1);
 initFirebase();
-document.getElementById('ecfg-dias').value = ALERT_DIAS;
 initEmailJS();
 // Check alerts on load for current day
 setTimeout(()=>{ if(state.days.length) checkAlertBadge(); }, 2000);
@@ -3925,7 +3962,7 @@ window.addEventListener('resize', updateMobNav);
     </div>
     <div class="fg g2" style="margin-bottom:14px">
       <div><label>⏰ Alertar cuando un vehículo lleva más de X días</label>
-        <input id="ecfg-dias" type="number" min="1" max="30"  inputmode="numeric"/>
+        <input id="ecfg-dias" type="number" min="1" max="30" value="${ALERT_DIAS}" inputmode="numeric"/>
       </div>
       <div style="display:flex;flex-direction:column;justify-content:flex-end">
         <button class="btn bp" onclick="saveEmailCfg()" style="width:100%">💾 Guardar configuración</button>
