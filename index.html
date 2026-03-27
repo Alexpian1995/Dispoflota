@@ -1993,9 +1993,14 @@ function runAn(){
   const avgOP=dwOP.length?Math.round(dwOP.reduce((a,i)=>a+i.op,0)/dwOP.length):null;
   const diasOPgt=dwOP.filter(i=>i.op>i.disp).length;
 
-  const pm={};
-  days.forEach(d=>d.placasEnTaller.forEach(p=>{pm[p.placa]=(pm[p.placa]||0)+p.diasEnTaller}));
-  const topP=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);const maxPD=topP[0]?.[1]||1;
+const pm={};
+  days.forEach(d=>d.placasEnTaller.forEach(p=>{
+    const key=p.placa+'|'+(p.fechaIngreso||'');
+    if(!pm[key]||p.diasEnTaller>pm[key].dias) pm[key]={placa:p.placa,dias:p.diasEnTaller};
+  }));
+  const pmAgg={};
+  Object.values(pm).forEach(v=>{pmAgg[v.placa]=(pmAgg[v.placa]||0)+v.dias});
+  const topP=Object.entries(pmAgg).sort((a,b)=>b[1]-a[1]).slice(0,5);const maxPD=topP[0]?.[1]||1;
 
   const sm={};
   days.forEach(d=>d.placasEnTaller.forEach(p=>{const s=getSist(p.novedad,p.sistema);sm[s]=(sm[s]||0)+1}));
@@ -2179,10 +2184,13 @@ function renderGest(filtroMes=null, filtroAnio=null){
       const s=getSist(p.novedad,p.sistema); sistemas[s]=(sistemas[s]||0)+1;
     }));
     const topSist = Object.entries(sistemas).sort((a,b)=>b[1]-a[1]);
-    const placasDias = {};
+   const placasEvt = {};
     m.dias.forEach(d=>d.placasEnTaller.forEach(p=>{
-      placasDias[p.placa]=(placasDias[p.placa]||0)+p.diasEnTaller;
+      const key=p.placa+'|'+(p.fechaIngreso||'');
+      if(!placasEvt[key]||p.diasEnTaller>placasEvt[key].dias) placasEvt[key]={placa:p.placa,dias:p.diasEnTaller};
     }));
+    const placasDias = {};
+    Object.values(placasEvt).forEach(v=>{placasDias[v.placa]=(placasDias[v.placa]||0)+v.dias});
     const topPlacas = Object.entries(placasDias).sort((a,b)=>b[1]-a[1]).slice(0,8);
     const totalRetornados = m.dias.reduce((a,d)=>a+d.retornados.length,0);
     return {avgPct,avgTaller,diasMeta,topSist,topPlacas,totalRetornados,totalDias:m.dias.length};
