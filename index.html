@@ -1029,7 +1029,8 @@ function calcSnap(d){
   return{disp,enTaller,restriccion,pct:Math.round(disp/d.total*100)};
 }
 function isRestriccion(s){
-  return s&&s.toUpperCase().includes('RESTRICCI');
+  const u = s&&s.toUpperCase();
+  return u && (u.includes('RESTRICCI') || u.includes('BLOQUEADO'));
 }
 function esDomingo(fecha){ if(!fecha)return false; const dt=new Date(fecha+'T12:00:00'); return dt.getDay()===0; }
 
