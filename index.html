@@ -1029,8 +1029,7 @@ function calcSnap(d){
   return{disp,enTaller,restriccion,pct:Math.round(disp/d.total*100)};
 }
 function isRestriccion(s){
-  const u = s&&s.toUpperCase();
-  return u && (u.includes('RESTRICCI') || u.includes('BLOQUEADO'));
+  return s&&s.toUpperCase().includes('RESTRICCI');
 }
 function esDomingo(fecha){ if(!fecha)return false; const dt=new Date(fecha+'T12:00:00'); return dt.getDay()===0; }
 
@@ -1908,6 +1907,59 @@ function showPlacaDetail(placa){
   openM('m-placa');
 }
 
+
+function showSistemaDetalle(sistema){
+  // Recopilar novedades de este sistema en los días filtrados
+  const days = filterDays();
+  const novedades = {};
+  const placasAfectadas = new Set();
+  days.forEach(d=>d.placasEnTaller.forEach(p=>{
+    if(getSist(p.novedad,p.sistema)===sistema){
+      placasAfectadas.add(p.placa);
+      if(p.novedad){
+        const k=p.novedad.trim();
+        novedades[k]=(novedades[k]||0)+1;
+      }
+    }
+  }));
+  const topN = Object.entries(novedades).sort((a,b)=>b[1]-a[1]);
+  const maxN = topN[0]?.[1]||1;
+
+  const rows = topN.length===0
+    ? `<tr><td colspan="2"><div class="nodata"><p>Sin novedades registradas para este sistema</p></div></td></tr>`
+    : topN.map(([nov,cnt],i)=>{
+        const pct = Math.round(cnt/maxN*100);
+        return `<tr>
+          <td style="max-width:320px">
+            <div style="font-size:12px;font-weight:600;margin-bottom:3px">${esc(nov)}</div>
+            <div style="height:5px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:4px">
+              <div style="height:100%;width:${pct}%;background:var(--orange);border-radius:99px;transition:width .4s"></div>
+            </div>
+          </td>
+          <td style="text-align:right;padding-left:12px">
+            <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:800;color:var(--orange)">${cnt}</span>
+            <span style="font-size:9px;color:var(--slate);display:block">${cnt===1?'vez':'veces'}</span>
+          </td>
+        </tr>`;
+      }).join('');
+
+  const placasList = [...placasAfectadas].map(p=>`<span class="placa" style="font-size:10px;margin:2px">${p}</span>`).join('');
+
+  document.getElementById('m-placa-title').textContent = '⚙️ '+sistema;
+  document.getElementById('m-placa-sub').textContent = `${topN.length} novedad${topN.length!==1?'es':''} distintas · ${placasAfectadas.size} placa${placasAfectadas.size!==1?'s':''}`;
+  document.getElementById('m-placa-body').innerHTML = `
+    <tr><td colspan="2" style="padding:10px 0 6px">
+      <div style="font-size:11px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Novedades más frecuentes</div>
+    </td></tr>
+    ${rows}
+    ${placasAfectadas.size>0?`
+    <tr><td colspan="2" style="padding-top:14px;border-top:1px solid var(--border)">
+      <div style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px">Placas afectadas</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">${placasList}</div>
+    </td></tr>`:''}`;
+  openM('m-placa');
+}
+
 // ╔══════════════════════════════════════════════╗
 //  ANALYTICS
 // ╚══════════════════════════════════════════════╝
@@ -1994,7 +2046,7 @@ function runAn(){
   const avgOP=dwOP.length?Math.round(dwOP.reduce((a,i)=>a+i.op,0)/dwOP.length):null;
   const diasOPgt=dwOP.filter(i=>i.op>i.disp).length;
 
-const pm={};
+  const pm={};
   days.forEach(d=>d.placasEnTaller.forEach(p=>{
     const key=p.placa+'|'+(p.fechaIngreso||'');
     if(!pm[key]||p.diasEnTaller>pm[key].dias) pm[key]={placa:p.placa,dias:p.diasEnTaller};
@@ -2003,9 +2055,23 @@ const pm={};
   Object.values(pm).forEach(v=>{pmAgg[v.placa]=(pmAgg[v.placa]||0)+v.dias});
   const topP=Object.entries(pmAgg).sort((a,b)=>b[1]-a[1]).slice(0,5);const maxPD=topP[0]?.[1]||1;
 
+  // Bloque sm procesado correctamente
   const sm={};
-  days.forEach(d=>d.placasEnTaller.forEach(p=>{const s=getSist(p.novedad,p.sistema);sm[s]=(sm[s]||0)+1}));
-  const topS=Object.entries(sm).sort((a,b)=>b[1]-a[1]).slice(0,7);const maxS=topS[0]?.[1]||1;
+  const smNovedades={};
+  days.forEach(d=>d.placasEnTaller.forEach(p=>{
+    const s=getSist(p.novedad,p.sistema);
+    sm[s]=(sm[s]||0)+1;
+    if(!smNovedades[s]) smNovedades[s]={};
+    if(p.novedad){
+      const k=p.novedad.toUpperCase().trim();
+      smNovedades[s][k]=(smNovedades[s][k]||0)+1;
+    }
+  }));
+
+  // === LAS LÍNEAS COMODÍN QUE FALTABAN PARA SOLUCIONAR EL ERROR ===
+  const topS = Object.entries(sm).sort((a,b) => b[1] - a[1]).slice(0, 5);
+  const maxS = topS[0]?.[1] || 1;
+  // ===============================================================
 
   const nv={};
   days.forEach(d=>d.placasEnTaller.forEach(p=>{if(p.novedad){const k=p.novedad.toUpperCase().trim();nv[k]=(nv[k]||0)+1}}));
@@ -2068,10 +2134,12 @@ const pm={};
       <div class="sc">
         <div class="sc-title">⚙️ Sistemas afectados</div>
         ${topS.length===0?`<div class="nodata"><p>Sin datos</p></div>`:
-          topS.map(([s,n],i)=>`<div class="ri">
+          topS.map(([s,n],i)=>`<div class="ri ri-click" onclick="showSistemaDetalle('${esc(s)}')">
             <div class="rpos ${i<3?'rg'+(i+1):''}">${i+1}</div>
-            <div class="rbw"><div class="rlbl">${s}</div>
-              <div class="rbar"><div class="rfill" style="width:${Math.round(n/maxS*100)}%;background:var(--orange)"></div></div></div>
+            <div class="rbw">
+              <div class="rlbl">${s} <span style="font-size:9px;color:var(--blue);font-weight:700">→ ver novedades</span></div>
+              <div class="rbar"><div class="rfill" style="width:${Math.round(n/maxS*100)}%;background:var(--orange)"></div></div>
+            </div>
             <div class="rval">${n}</div>
           </div>`).join('')}
       </div>
@@ -2110,7 +2178,6 @@ const pm={};
       </div>
     </div>`;
 }
-
 
 // ╔══════════════════════════════════════════════╗
 //  GESTIÓN — DASHBOARD COMPLETO
