@@ -29,7 +29,7 @@ header{background:var(--navy);color:#fff;padding:0 16px;height:var(--header-h);d
 .nbtn{padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:inherit;background:transparent;color:#94a3b8;transition:all .15s;white-space:nowrap}
 .nbtn:hover{background:rgba(255,255,255,.08);color:#fff}
 .nbtn.on{background:var(--blue);color:#fff}
-.h-act{display:flex;gap:6px;align-items:center}
+.h-act{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;transition:background .3s}
 .sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite}
 .sync-dot.offline{background:var(--red)}
@@ -274,7 +274,6 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
 .comp-lbl{font-weight:600;color:var(--text2)}
 .comp-val{font-family:'DM Mono',monospace;font-weight:700;text-align:center}
 @media(max-width:768px){.mob-nav{display:flex}.app{grid-template-columns:1fr}aside{display:none}.pg{padding:14px 14px calc(var(--bottomnav-h) + 14px);min-height:calc(100vh - var(--header-h))}.h-nav{display:none}.h-act .bg-h:not(.mob-keep){display:none}.h-sub{display:none}.kgrid.k5{grid-template-columns:repeat(2,1fr)}.kgrid.k4{grid-template-columns:repeat(2,1fr)}.kgrid.k5 .kpi:nth-child(5){grid-column:span 2}.meta-marks{display:none}.agrid{grid-template-columns:1fr}.fg.g4{grid-template-columns:1fr 1fr}.fg.g3{grid-template-columns:1fr 1fr}.hide-mob{display:none}.modal{border-radius:16px 16px 0 0;max-height:92vh}.btn-lbl{display:none}.dash-grid{grid-template-columns:1fr}.dash-card-full{grid-column:span 1}.bar-row{grid-template-columns:80px 1fr 36px}.veh-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}}
-/* ═══ PANTALLA SELECCIÓN EMPRESA ═══ */
 #empresa-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0f1e3d 0%,#1e3a5f 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;padding:20px}
 .emp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:720px;width:100%}
 .emp-card{background:#fff;border:none;border-radius:16px;padding:28px 20px;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 10px 40px rgba(0,0,0,.3);text-align:center}
@@ -282,23 +281,43 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
 .emp-card.lis:hover{box-shadow:0 14px 50px rgba(37,99,235,.4)}
 .emp-card.surti:hover{box-shadow:0 14px 50px rgba(5,150,105,.4)}
 .emp-card.rg:hover{box-shadow:0 14px 50px rgba(234,88,12,.4)}
+.emp-card.admin:hover{box-shadow:0 14px 50px rgba(124,58,237,.5)}
 .emp-ico{font-size:42px;margin-bottom:10px}
 .emp-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#0f1e3d;margin-bottom:6px}
 .emp-count{font-size:12px;color:#64748b}
+.admin-entry{margin-top:10px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.admin-btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;box-shadow:0 8px 24px rgba(124,58,237,.4);display:flex;align-items:center;gap:8px}
+.admin-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(124,58,237,.5)}
+.admin-hint{font-size:10px;color:rgba(255,255,255,.5)}
 @media(max-width:600px){.emp-grid{grid-template-columns:1fr}}
+.emp-badge{font-size:9px;padding:2px 6px;border-radius:10px;font-weight:700;margin-left:4px}
+.emp-badge-lis{background:var(--blue-lt);color:var(--blue)}
+.emp-badge-surti{background:var(--green-lt);color:var(--green)}
+.emp-badge-rg{background:var(--orange-lt);color:var(--orange)}
+.admin-filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center;padding:8px 12px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
+.admin-filter-btn{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:var(--card);color:var(--slate);transition:all .15s}
+.admin-filter-btn.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.admin-filter-btn:hover{border-color:var(--blue)}
+.admin-filter-btn.on:hover{color:#fff}
 </style>
 </head>
 <body>
 
-<!-- ═══ PANTALLA SELECCIÓN DE EMPRESA ═══ -->
 <div id="empresa-screen">
-  <div style="text-align:center;margin-bottom:12px">
-    <div style="font-size:56px;margin-bottom:10px">🚛</div>
-    <h1 style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:6px">Flota UC Girardota</h1>
-    <p style="font-size:14px;color:#94a3b8">Selecciona la empresa para ingresar</p>
-  </div>
-  <div class="emp-grid" id="emp-grid"></div>
-  <p style="font-size:11px;color:rgba(255,255,255,.4);margin-top:12px">Control de disponibilidad · UC Girardota</p>
+<div style="text-align:center;margin-bottom:12px">
+<div style="font-size:56px;margin-bottom:10px">🚛</div>
+<h1 style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:6px">Flota UC Girardota</h1>
+<p style="font-size:14px;color:#94a3b8">Selecciona la empresa para ingresar</p>
+</div>
+<div class="emp-grid" id="emp-grid"></div>
+<div class="admin-entry">
+<button class="admin-btn" onclick="selectEmpresa('ADMIN')">
+<span style="font-size:20px">👑</span>
+<span>Acceso Administrador</span>
+</button>
+<span class="admin-hint">Acceso completo a todas las empresas · PIN: 9999</span>
+</div>
+<p style="font-size:11px;color:rgba(255,255,255,.4);margin-top:12px">Control de disponibilidad · UC Girardota</p>
 </div>
 
 <header>
@@ -306,7 +325,7 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
 <div class="h-logo">🚛</div>
 <div>
 <div class="h-title">Flota UC Girardota</div>
-<div class="h-sub">Control de disponibilidad</div>
+<div class="h-sub" id="h-sub">Control de disponibilidad</div>
 </div>
 </div>
 <div class="h-nav">
@@ -466,9 +485,9 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,9
 <button class="btn bo" onclick="hidePinModal();entrarSinPin()" style="font-size:10px">👁 Entrar sin PIN (solo lectura)</button>
 </div>
 <div style="font-size:10px;color:var(--slate);margin-top:14px;padding-top:10px;border-top:1px solid var(--border)">
-💡 <strong>PINs:</strong> Admin: <code style="background:var(--bg);padding:1px 5px;border-radius:3px">9999</code> · 
-LIS: <code style="background:var(--bg);padding:1px 5px;border-radius:3px">1234</code> · 
-SURTICERVEZA: <code style="background:var(--bg);padding:1px 5px;border-radius:3px">5678</code> · 
+💡 <strong>PINs:</strong> Admin: <code style="background:var(--bg);padding:1px 5px;border-radius:3px">9999</code> ·
+LIS: <code style="background:var(--bg);padding:1px 5px;border-radius:3px">1234</code> ·
+SURTICERVEZA: <code style="background:var(--bg);padding:1px 5px;border-radius:3px">5678</code> ·
 R&G: <code style="background:var(--bg);padding:1px 5px;border-radius:3px">3456</code>
 </div>
 </div>
@@ -547,35 +566,15 @@ R&G: <code style="background:var(--bg);padding:1px 5px;border-radius:3px">3456</
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 // ╔══════════════════════════════════════════════╗
-//  EMPRESAS — Catálogo de placas por empresa
+//  EMPRESAS
 // ╚══════════════════════════════════════════════╝
 const EMPRESAS = {
-  LIS: [
-    'EYX466','GUQ633','GUQ642','GUQ646','GUR182','LCO252','LGU377','LGU484',
-    'PSX834','PSX838','PSX839','PSX938','PSX939','PSX989',
-    'QJX393','QJX415','QJX708','QJX762','QJX763','QJX801','QJX802',
-    'TMV723','TMV725','TMV730','TMV733','TMV790','TMV880','TMV882','TMV958',
-    'TMW056','TMW240','TMW767','TMW770','TMW771','TMW774','TMW775',
-    'TMX036','TMX037','TMX038','TMX041','TMX042','TMX331','TMX332','TMX666',
-    'VCM259','VEI379','VEI387','VEJ193','VEK250','VEK263','VEL949','VEM355','VEM383','VEN027','VEP916',
-    'WNZ755','QZY208','QZY209'
-  ],
-  SURTICERVEZA: [
-    'LJT727','LJT729','LJT736','LJT742',
-    'LJV510','LJV511','LJV512',
-    'PRZ254','VEI377','WNZ753'
-  ],
-  'R&G': [
-    'JTX912','LCN251','LCO265','LJT735','PRZ362',
-    'TMW835','UYX129','UYX742','QZY207'
-  ]
+  LIS: ['EYX466','GUQ633','GUQ642','GUQ646','GUR182','LCO252','LGU377','LGU484','PSX834','PSX838','PSX839','PSX938','PSX939','PSX989','QJX393','QJX415','QJX708','QJX762','QJX763','QJX801','QJX802','TMV723','TMV725','TMV730','TMV733','TMV790','TMV880','TMV882','TMV958','TMW056','TMW240','TMW767','TMW770','TMW771','TMW774','TMW775','TMX036','TMX037','TMX038','TMX041','TMX042','TMX331','TMX332','TMX666','VCM259','VEI379','VEI387','VEJ193','VEK250','VEK263','VEL949','VEM355','VEM383','VEN027','VEP916','WNZ755','QZY208','QZY209'],
+  SURTICERVEZA: ['LJT727','LJT729','LJT736','LJT742','LJV510','LJV511','LJV512','PRZ254','VEI377','WNZ753'],
+  'R&G': ['JTX912','LCN251','LCO265','LJT735','PRZ362','TMW835','UYX129','UYX742','QZY207']
 };
-
 const PLACAS = [...EMPRESAS.LIS, ...EMPRESAS.SURTICERVEZA, ...EMPRESAS['R&G']];
 
-// ╔══════════════════════════════════════════════╗
-//  FIREBASE CONFIG
-// ╚══════════════════════════════════════════════╝
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBApPjwA2KQWS0y-hmk-6oMDGGHDPFVwUo",
   authDomain: "flota-uc-girardota-913b5.firebaseapp.com",
@@ -585,18 +584,9 @@ const FIREBASE_CONFIG = {
   appId: "1:972409566015:web:7b8e112c6bde58f5e1998a"
 };
 
-// ╔══════════════════════════════════════════════╗
-//  PINs — Admin + por empresa
-// ╚══════════════════════════════════════════════╝
 const ADMIN_PIN = '9999';
-const PINS_EMPRESA = {
-  LIS: '1234',
-  SURTICERVEZA: '5678',
-  'R&G': '3456'
-};
-
+const PINS_EMPRESA = { LIS: '1234', SURTICERVEZA: '5678', 'R&G': '3456' };
 const META_TALLER = 4;
-const SISTEMAS_LIST = ['MOTOR','FRENOS','EMBRAGUE','TRANSMISIÓN','DIFERENCIAL','DIRECCIÓN','SUSPENSIÓN','ELÉCTRICO','CARROCERÍA','SAFETY/BLOQUEADO','AIRE/COMPRESOR','ACEITE/FUGAS','LLANTAS','VIDRIOS/CARPA','OTRO'];
 const SISTEMAS_AUTO = [
   {k:'MOTOR',t:['MOTOR','POTENCIA','ENCENDIDO','ARRANQUE','INYECCION','TURBO','LLAVE']},
   {k:'FRENOS',t:['FRENO','CAMPANA','SECADORA','VALVULA','PARQUEO','BANDA','ABS']},
@@ -622,12 +612,9 @@ function getSist(novedad, sistema){
 }
 
 const EMAIL_CFG = {
-  publicKey:'k9zybAl5CzQJt7wAq',
-  serviceId:'service_4qxf68s',
-  templateId:'template_ovdhmr3',
-  destEmail:'correo@empresa.com',
-  appUrl:window.location.href,
-  enabled:true
+  publicKey:'k9zybAl5CzQJt7wAq', serviceId:'service_4qxf68s',
+  templateId:'template_ovdhmr3', destEmail:'correo@empresa.com',
+  appUrl:window.location.href, enabled:true
 };
 const ALERT_DIAS = 5;
 const ALERT_SENT_KEY = 'flota_alerts_sent';
@@ -642,13 +629,14 @@ let empresaSeleccionada = null;
 let esAdmin = false;
 const EMPRESA_KEY = 'flota_empresa_activa_v2';
 
+// Filtro de empresa para admin (TODAS, LIS, SURTICERVEZA, R&G)
+let adminEmpresaFilter = 'TODAS';
+
 function getFirebaseCollection(){
-  // El admin ve la colección de la empresa seleccionada, NO una colección "ADMIN"
   if(!empresaActual) return 'flota_uc_girardota_ADMIN';
   return 'flota_uc_girardota_' + empresaActual;
 }
 function getLocalKey(){
-  // El admin usa la clave local de la empresa seleccionada
   if(!empresaActual) return 'flota_uc_v5_ADMIN';
   return 'flota_uc_v5_' + empresaActual;
 }
@@ -664,7 +652,7 @@ function getPlacasActivas(){
 }
 
 // ╔══════════════════════════════════════════════╗
-//  AUTH — ROLES CON PIN
+//  AUTH
 // ╚══════════════════════════════════════════════╝
 let isEditor = false;
 let _actTimer = null;
@@ -677,7 +665,6 @@ function checkAuth(){
     const inactive = (Date.now() - lastActivity) > SESSION_MS;
     if(inactive){ localStorage.removeItem(getAuthKey()); return false; }
     if(role === 'admin') return pin === ADMIN_PIN;
-    if(role === empresaActual) return pin === (PINS_EMPRESA[empresaActual] || '0000');
     return pin === (PINS_EMPRESA[empresaActual] || '0000');
   }catch(e){ return false; }
 }
@@ -691,8 +678,7 @@ function touchActivity(){
   clearTimeout(_actTimer);
   _actTimer = setTimeout(()=>{
     if(isEditor){
-      isEditor = false;
-      setEditorMode(false);
+      isEditor = false; setEditorMode(false);
       showPinModal(`Sesión expirada por ${SESSION_MIN} min de inactividad.`);
     }
   }, SESSION_MS);
@@ -718,13 +704,10 @@ function toggleAuth(){
   if(isEditor){
     if(confirm('¿Cerrar sesión?')){
       localStorage.removeItem(getAuthKey());
-      isEditor = false;
-      setEditorMode(false);
+      isEditor = false; setEditorMode(false);
       toast('Sesión cerrada','👁');
     }
-  } else {
-    showPinModal();
-  }
+  } else { showPinModal(); }
 }
 
 function showPinModal(msg=''){
@@ -733,9 +716,12 @@ function showPinModal(msg=''){
   const title = document.getElementById('auth-title');
   const desc = document.getElementById('auth-desc');
   if(title){
-    if(empresaSeleccionada){
+    if(empresaSeleccionada === 'ADMIN'){
+      title.textContent = '👑 Acceso Administrador';
+      desc.innerHTML = 'Ingresa el PIN de administrador para ver <strong>todas las empresas</strong>.';
+    } else if(empresaSeleccionada){
       title.textContent = `🔐 Acceso — ${empresaSeleccionada}`;
-      desc.innerHTML = msg || `Ingresa el PIN de <strong>${empresaSeleccionada}</strong> o el PIN de administrador.<br><br><small style="color:var(--slate)">💡 Admin: 9999 · LIS: 1234 · SURTICERVEZA: 5678 · R&G: 3456</small>`;
+      desc.innerHTML = msg || `Ingresa el PIN de <strong>${empresaSeleccionada}</strong> o el PIN de administrador (9999).<br><br><small style="color:var(--slate)">💡 Admin: 9999 · LIS: 1234 · SURTICERVEZA: 5678 · R&G: 3456</small>`;
     } else {
       title.textContent = 'Acceso de editor';
       desc.innerHTML = 'Ingresa el PIN para editar registros.<br>Sin PIN puedes consultar todo normalmente.';
@@ -756,24 +742,31 @@ function submitPin(){
   // 1) ¿Es admin?
   if(pin === ADMIN_PIN){
     esAdmin = true;
-    empresaActual = empresaSeleccionada;
-    localStorage.setItem(EMPRESA_KEY, empresaActual || '');
+    if(empresaSeleccionada === 'ADMIN'){
+      empresaActual = null;
+    } else {
+      empresaActual = empresaSeleccionada;
+    }
+    localStorage.setItem(EMPRESA_KEY, empresaActual || 'ADMIN');
     localStorage.setItem(getAuthKey(), JSON.stringify({pin, lastActivity: Date.now(), role:'admin'}));
     hidePinModal();
     document.getElementById('empresa-screen').style.display = 'none';
     const badge = document.getElementById('empresa-badge');
     if(badge) badge.textContent = '👑 Admin';
+    const sub = document.getElementById('h-sub');
+    if(sub) sub.textContent = 'Modo Administrador · Todas las empresas';
     isEditor = true;
     setEditorMode(true);
     touchActivity();
     state = loadLocal();
     curIdx = null;
-    cargarDatosEmpresa();
+    // ✅ CAMBIO: llamar initFirebase() en lugar de cargarDatosEmpresa()
+    initFirebase();
     toast('👑 Modo Administrador — puedes ver todas las empresas','👑');
     return;
   }
   // 2) ¿Es PIN de la empresa seleccionada?
-  if(empresaSeleccionada){
+  if(empresaSeleccionada && empresaSeleccionada !== 'ADMIN'){
     const pinEmpresa = PINS_EMPRESA[empresaSeleccionada] || '0000';
     if(pin === pinEmpresa){
       esAdmin = false;
@@ -784,12 +777,15 @@ function submitPin(){
       document.getElementById('empresa-screen').style.display = 'none';
       const badge = document.getElementById('empresa-badge');
       if(badge) badge.textContent = '🏢 ' + empresaActual;
+      const sub = document.getElementById('h-sub');
+      if(sub) sub.textContent = 'Empresa: ' + empresaActual;
       isEditor = true;
       setEditorMode(true);
       touchActivity();
       state = loadLocal();
       curIdx = null;
-      cargarDatosEmpresa();
+      // ✅ CAMBIO: llamar initFirebase()
+      initFirebase();
       toast('✏️ Editor de ' + empresaActual,'✏️');
       return;
     }
@@ -802,28 +798,39 @@ function submitPin(){
 
 function entrarSinPin(){
   esAdmin = false;
-  empresaActual = empresaSeleccionada;
+  empresaActual = empresaSeleccionada === 'ADMIN' ? null : empresaSeleccionada;
   if(empresaActual){
     localStorage.setItem(EMPRESA_KEY, empresaActual);
   }
   hidePinModal();
   document.getElementById('empresa-screen').style.display = 'none';
   const badge = document.getElementById('empresa-badge');
-  if(badge) badge.textContent = empresaActual ? '🏢 ' + empresaActual : '👁 Solo lectura';
+  if(badge) badge.textContent = empresaActual ? '🏢 ' + empresaActual : '👁 Admin (lectura)';
+  const sub = document.getElementById('h-sub');
+  if(sub) sub.textContent = empresaActual ? 'Empresa: ' + empresaActual : 'Modo Administrador (lectura)';
   isEditor = false;
   setEditorMode(false);
   state = loadLocal();
   curIdx = null;
-  cargarDatosEmpresa();
+  // ✅ CAMBIO: llamar initFirebase()
+  initFirebase();
   toast('👁 Modo consulta — ' + (empresaActual || 'todas las empresas'),'👁');
 }
 
 // ╔══════════════════════════════════════════════╗
-//  FIREBASE INIT
+//  FIREBASE
 // ╚══════════════════════════════════════════════╝
 let db = null;
 let fbOnline = false;
 let unsubscribe = null;
+let adminUnsubscribers = [];
+
+// Datos consolidados del admin (por empresa)
+let adminData = {
+  LIS: [],
+  SURTICERVEZA: [],
+  'R&G': []
+};
 
 function initFirebase(){
   try {
@@ -838,8 +845,54 @@ function initFirebase(){
 }
 
 function cargarDatosEmpresa(){
-  if(!db){ initFirebase(); return; }
+  // ✅ Guard: si db no está listo, inicializar primero
+  if(!db){
+    console.log('⚠️ db no inicializado, llamando initFirebase()');
+    initFirebase();
+    return;
+  }
+  // Cancelar suscripciones anteriores
+  adminUnsubscribers.forEach(u => u && u());
+  adminUnsubscribers = [];
   if(unsubscribe) unsubscribe();
+
+  // Si es ADMIN, cargar las 3 colecciones
+  if(esAdmin){
+    const empresas = ['LIS', 'SURTICERVEZA', 'R&G'];
+    let loaded = 0;
+
+    empresas.forEach(emp => {
+      const col = 'flota_uc_girardota_' + emp;
+      const unsub = db.collection(col).orderBy('fecha').onSnapshot(snap => {
+        const days = snap.docs.map(d => d.data());
+        days.forEach(d=>{
+          if(!d.snapshot) d.snapshot = calcSnap(d);
+          if(!Array.isArray(d.retornados)) d.retornados=[];
+          if(!Array.isArray(d.pendientes)) d.pendientes=[];
+          if(!Array.isArray(d.novedadesConductores)) d.novedadesConductores=[];
+          if(d.op===undefined) d.op=null;
+          d._empresa = emp;
+        });
+        adminData[emp] = days;
+        loaded++;
+
+        if(loaded === 3){
+          consolidarAdminData();
+        }
+
+        fbOnline = true;
+        setSyncStatus('ok', `Admin · ${days.length} días en ${emp}`);
+      }, err => {
+        console.error('Firebase error:', err);
+        setSyncStatus('offline','Sin conexión — datos locales');
+        fbOnline = false;
+      });
+      adminUnsubscribers.push(unsub);
+    });
+    return;
+  }
+
+  // Si NO es admin, cargar solo la empresa actual
   const col = getFirebaseCollection();
   setSyncStatus('syncing','Cargando ' + col + '…');
   unsubscribe = db.collection(col).orderBy('fecha').onSnapshot(snap => {
@@ -851,6 +904,7 @@ function cargarDatosEmpresa(){
         if(!Array.isArray(d.pendientes)) d.pendientes=[];
         if(!Array.isArray(d.novedadesConductores)) d.novedadesConductores=[];
         if(d.op===undefined) d.op=null;
+        d._empresa = empresaActual;
       });
       state.days = days;
       saveLocal();
@@ -858,6 +912,9 @@ function cargarDatosEmpresa(){
       renderSidebar();
       if(state.days.length) selectDay(state.days.length-1);
       if(curPage==='an') renderAn();
+      if(curPage==='gest') renderGest(null,null);
+      if(curPage==='cal') renderCal();
+      if(curPage==='cos') renderCos();
     } else {
       state.days = [];
       saveLocal();
@@ -875,6 +932,34 @@ function cargarDatosEmpresa(){
   });
 }
 
+function consolidarAdminData(){
+  // Unir todos los días de las 3 empresas, filtrando por adminEmpresaFilter
+  let todosLosDias = [];
+  if(adminEmpresaFilter === 'TODAS'){
+    todosLosDias = [
+      ...adminData.LIS,
+      ...adminData.SURTICERVEZA,
+      ...adminData['R&G']
+    ];
+  } else {
+    todosLosDias = adminData[adminEmpresaFilter] || [];
+  }
+  todosLosDias.sort((a,b) => a.fecha.localeCompare(b.fecha));
+
+  state.days = todosLosDias;
+  saveLocal();
+  curIdx = null;
+  renderSidebar();
+
+  if(curPage==='an') renderAn();
+  if(curPage==='gest') renderGest(null,null);
+  if(curPage==='cal') renderCal();
+  if(curPage==='cos') renderCos();
+
+  const total = todosLosDias.length;
+  setSyncStatus('ok', `Admin · ${total} días totales`);
+}
+
 function setSyncStatus(type, msg){
   const dot = document.getElementById('sync-dot');
   const lbl = document.getElementById('sync-lbl');
@@ -888,24 +973,35 @@ async function saveToFirebase(day){
   if(!db || !fbOnline) return;
   try {
     setSyncStatus('syncing','Guardando…');
-    await db.collection(getFirebaseCollection()).doc(day.fecha).set(day);
-    setSyncStatus('ok', `${getFirebaseCollection()} · ${state.days.length} días`);
+    // Si es admin, guardar en la colección de la empresa del día
+    const emp = day._empresa || empresaActual;
+    const col = emp ? 'flota_uc_girardota_' + emp : getFirebaseCollection();
+    await db.collection(col).doc(day.fecha).set(day);
+    setSyncStatus('ok', `${col} · ${state.days.length} días`);
   } catch(e){ console.error('Save error:', e); setSyncStatus('offline','Error al guardar'); }
 }
 async function deleteFromFirebase(fecha){
   if(!db || !fbOnline) return;
-  try { await db.collection(getFirebaseCollection()).doc(fecha).delete(); }
-  catch(e){ console.error('Delete error:', e) }
+  try {
+    const day = state.days.find(d => d.fecha === fecha);
+    const emp = day?._empresa || empresaActual;
+    const col = emp ? 'flota_uc_girardota_' + emp : getFirebaseCollection();
+    await db.collection(col).doc(fecha).delete();
+  } catch(e){ console.error('Delete error:', e) }
 }
 async function pushAllToFirebase(){
   if(!db || !fbOnline) return;
   setSyncStatus('syncing','Sincronizando…');
   try {
     const batch = db.batch();
-    const col = getFirebaseCollection();
-    state.days.forEach(d=>{ const ref = db.collection(col).doc(d.fecha); batch.set(ref, d); });
+    state.days.forEach(d=>{
+      const emp = d._empresa || empresaActual;
+      const col = emp ? 'flota_uc_girardota_' + emp : getFirebaseCollection();
+      const ref = db.collection(col).doc(d.fecha);
+      batch.set(ref, d);
+    });
     await batch.commit();
-    setSyncStatus('ok', `${col} · ${state.days.length} días`);
+    setSyncStatus('ok', `Sincronizado`);
     toast('Datos sincronizados con Firebase','☁️');
   } catch(e){ console.error('Push error:', e); setSyncStatus('offline','Error al sincronizar'); }
 }
@@ -914,15 +1010,13 @@ async function pushAllToFirebase(){
 //  ESTADO LOCAL
 // ╚══════════════════════════════════════════════╝
 const SK_LEGACY = 'flota_uc_v5';
-
 function loadLocal(){
   const key = getLocalKey();
   try{
     const raw = localStorage.getItem(key);
     if(raw){ const p = JSON.parse(raw); if(p.days && p.days.length>0) return p; }
   }catch(e){}
-  // El admin TAMBIÉN puede leer los datos legacy de LIS
-  if(empresaActual === 'LIS'){
+  if(empresaActual === 'LIS' && !esAdmin){
     try{
       const raw = localStorage.getItem(SK_LEGACY);
       if(raw){ const p = JSON.parse(raw); if(p.days && p.days.length>0) return p; }
@@ -990,6 +1084,13 @@ function toast(msg,e='✅'){
   setTimeout(()=>el.classList.remove('show'),3000);
 }
 
+function empresaBadge(emp){
+  if(!emp) return '';
+  const cls = emp === 'LIS' ? 'emp-badge-lis' : emp === 'SURTICERVEZA' ? 'emp-badge-surti' : 'emp-badge-rg';
+  const ico = emp === 'LIS' ? '🏢' : emp === 'SURTICERVEZA' ? '🍺' : '🚚';
+  return `<span class="emp-badge ${cls}">${ico} ${emp}</span>`;
+}
+
 function setPage(p){
   curPage=p;
   ['reg','an','gest','cal','cos'].forEach(x=>{ document.getElementById('pg-'+x)?.classList.toggle('on',p===x); });
@@ -1026,7 +1127,7 @@ function renderDrawer(){
     const i=state.days.indexOf(d);
     const info=getDispInfo(d);const meta=info.enTaller<=META_TALLER;
     return`<div class="di ${i===curIdx?'on':''}" onclick="selectDay(${i});closeDrawer()">
-      <div><div class="di-lbl">${fmtF(d.fecha)}</div><div class="di-meta">${info.disp}/${d.total} · ${info.enTaller} taller</div></div>
+      <div><div class="di-lbl">${fmtF(d.fecha)} ${esAdmin?empresaBadge(d._empresa):''}</div><div class="di-meta">${info.disp}/${d.total} · ${info.enTaller} taller</div></div>
       <div class="di-right"><span class="pct-pill ${pcCls(info.pct)}">${info.pct}%</span><div class="meta-dot ${meta?'dot-ok':'dot-bad'}"></div></div>
     </div>`;
   }).join('');
@@ -1055,7 +1156,7 @@ function crearDia(){
     const last=state.days[state.days.length-1];
     placasEnTaller=last.placasEnTaller.filter(p=>!p.retornado).map(p=>({...p,diasEnTaller:dias(p.fechaIngreso,fecha),retornado:false}));
   }
-  const newDay={fecha,total,op,placasEnTaller,retornados:[],pendientes:[],novedadesConductores:[]};
+  const newDay={fecha,total,op,placasEnTaller,retornados:[],pendientes:[],novedadesConductores:[], _empresa: empresaActual};
   newDay.snapshot=calcSnap(newDay);
   state.days.push(newDay);
   state.days.sort((a,b)=>a.fecha.localeCompare(b.fecha));
@@ -1100,9 +1201,10 @@ function renderSidebar(filter=''){
   const html=filtered.map(d=>{
     const i=state.days.indexOf(d);
     const info=getDispInfo(d);const meta=info.enTaller<=META_TALLER;
+    const empBadge = esAdmin ? empresaBadge(d._empresa) : '';
     return`<div class="di ${i===curIdx?'on':''}" onclick="selectDay(${i})">
       <div style="min-width:0;flex:1">
-        <div class="di-lbl">${fmtF(d.fecha)}</div>
+        <div class="di-lbl">${fmtF(d.fecha)} ${empBadge}</div>
         <div class="di-meta">${esDomingo(d.fecha)?'🔵 Rutina dom. · ':''} ${info.disp}/${d.total} disp · ${info.enTaller} taller${d.op!=null?' · OP '+d.op:''}</div>
       </div>
       <div class="di-right">
@@ -1161,12 +1263,13 @@ function renderDay(){
   const opTxt=op!=null?(op>disp?`<span style="color:var(--red);font-size:10px;font-weight:700">▲ ${op-disp} sin vehículo</span>`:op<disp?`<span style="color:var(--green);font-size:10px;font-weight:700">✅ ${disp-op} libres</span>`:`<span style="color:var(--slate);font-size:10px;font-weight:700">= Exacto</span>`):`<span style="color:var(--slate);font-size:10px">Sin registro</span>`;
   const metaC=enN<=META_TALLER?'var(--green)':enN<=META_TALLER+2?'var(--amber)':'var(--red)';
   const isDom = esDomingo(d.fecha);
+  const empBadge = esAdmin ? empresaBadge(d._empresa) : '';
   const domBanner = isDom ? `<div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px"><span style="font-size:20px">🔵</span><div><div style="font-size:12px;font-weight:800;color:#fff">Rutina Dominical</div><div style="font-size:10px;color:rgba(255,255,255,.75)">Los vehículos en taller este día están en mantenimiento preventivo de rutina — disponibles en pocas horas.</div></div></div>` : '';
   const histBanner=!isLast?`<div style="background:var(--amber-lt);border:1.5px solid var(--amber);border-radius:8px;padding:9px 12px;margin-bottom:12px;display:flex;align-items:center;gap:9px"><span style="font-size:16px">🔒</span><div><div style="font-size:11px;font-weight:700;color:var(--amber)">Día histórico — solo lectura</div><div style="font-size:10px;color:var(--text2)">Los números de este día ya están cerrados.</div></div></div>`:'';
   document.getElementById('day-view').innerHTML=`
     ${domBanner}${histBanner}
     <div class="kgrid k5">
-      <div class="kpi k-bl"><div class="kpi-lbl">Total</div><div class="kpi-val">${d.total}</div><div class="kpi-sub">asignados</div></div>
+      <div class="kpi k-bl"><div class="kpi-lbl">Total</div><div class="kpi-val">${d.total}</div><div class="kpi-sub">asignados ${empBadge}</div></div>
       <div class="kpi k-gr"><div class="kpi-lbl">Disponibles</div><div class="kpi-val">${disp}</div><div class="kpi-sub">${pct}%</div><div class="prog"><div class="prog-fill" style="width:${pct}%;background:${pc(+pct)}"></div></div></div>
       <div class="kpi k-or"><div class="kpi-lbl">En taller</div><div class="kpi-val">${enN}</div><div class="kpi-sub">${metaBadge(enN)}</div></div>
       <div class="kpi k-am"><div class="kpi-lbl">Retornados</div><div class="kpi-val">${d.retornados.length}</div><div class="kpi-sub">hoy</div></div>
@@ -1180,7 +1283,7 @@ function renderDay(){
       </div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;gap:8px;flex-wrap:wrap">
-      <div><h2 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800">${fmtF(d.fecha)}</h2><p style="font-size:10px;color:${isDom?'#7c3aed':'var(--slate)'}">${isDom?'🔵 Rutina dominical':isLast?'Día activo — en edición':'Registro histórico'}</p></div>
+      <div><h2 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800">${fmtF(d.fecha)} ${empBadge}</h2><p style="font-size:10px;color:${isDom?'#7c3aed':'var(--slate)'}">${isDom?'🔵 Rutina dominical':isLast?'Día activo — en edición':'Registro histórico'}</p></div>
       <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap">
         <button class="btn bo btn-sm" onclick="selectDay(${curIdx},true)" title="Ver informe de este día">📊 Informe</button>
         <button class="btn bo btn-sm" onclick="exportImagen()" title="Exportar como imagen">📸 Imagen</button>
@@ -1258,7 +1361,7 @@ function bldTaller(){
     </tr>`;
   }).join('');
   return`<div class="panel">
-    <div class="panel-hd"><div class="ptitle">🔧 En taller — ${fmtF(d.fecha)}</div>${isLast&&isEditor?`<button class="btn bp btn-sm" onclick="showAddVeh()">＋ Agregar</button>`:''}</div>
+    <div class="panel-hd"><div class="ptitle">🔧 En taller — ${fmtF(d.fecha)} ${esAdmin?empresaBadge(d._empresa):''}</div>${isLast&&isEditor?`<button class="btn bp btn-sm" onclick="showAddVeh()">＋ Agregar</button>`:''}</div>
     <div id="av-c"></div>
     <div class="twrap"><table><thead><tr><th>Placa</th><th class="hide-mob">Ingreso</th><th>Novedad</th><th class="hide-mob">Status</th><th class="hide-mob">Taller</th><th>Días</th><th>Acc.</th></tr></thead><tbody>${rows}</tbody></table></div>
   </div>`;
@@ -1433,19 +1536,19 @@ function showPlacaDetail(placa){
     d.placasEnTaller.forEach(p=>{
       if(p.placa === placa){
         const retorno = d.retornados.find(r=>r.placa===placa && r.fechaEntrega===d.fecha);
-        registros.push({fecha:d.fecha,fechaIngreso:p.fechaIngreso,novedad:p.novedad,status:p.status,taller:p.taller,diasEnTaller:p.diasEnTaller,retornado:p.retornado,reparacion:retorno?retorno.reparacion:null,fechaEntrega:retorno?retorno.fechaEntrega:null});
+        registros.push({fecha:d.fecha,fechaIngreso:p.fechaIngreso,novedad:p.novedad,status:p.status,taller:p.taller,diasEnTaller:p.diasEnTaller,retornado:p.retornado,reparacion:retorno?retorno.reparacion:null,fechaEntrega:retorno?retorno.fechaEntrega:null, _empresa: d._empresa});
       }
     });
     d.retornados.forEach(r=>{
       if(r.placa===placa && !registros.find(x=>x.fechaEntrega===r.fechaEntrega && x.fechaIngreso===r.fechaIngreso)){
-        registros.push({fecha:d.fecha,fechaIngreso:r.fechaIngreso,novedad:'—',status:'RETORNADO',taller:r.taller,diasEnTaller:null,retornado:true,reparacion:r.reparacion,fechaEntrega:r.fechaEntrega});
+        registros.push({fecha:d.fecha,fechaIngreso:r.fechaIngreso,novedad:'—',status:'RETORNADO',taller:r.taller,diasEnTaller:null,retornado:true,reparacion:r.reparacion,fechaEntrega:r.fechaEntrega, _empresa: d._empresa});
       }
     });
   });
   const eventos = {};
   registros.forEach(r=>{
     const key = r.fechaIngreso || r.fecha;
-    if(!eventos[key]){eventos[key]={fechaIngreso:r.fechaIngreso||r.fecha,novedades:new Set(),talleres:new Set(),statuses:new Set(),diasMax:0,fechaEntrega:null,reparacion:null,dias:[]};}
+    if(!eventos[key]){eventos[key]={fechaIngreso:r.fechaIngreso||r.fecha,novedades:new Set(),talleres:new Set(),statuses:new Set(),diasMax:0,fechaEntrega:null,reparacion:null,dias:[], _empresa: r._empresa};}
     const ev = eventos[key];
     if(r.novedad && r.novedad!=='—') ev.novedades.add(r.novedad);
     if(r.taller) ev.talleres.add(r.taller);
@@ -1456,13 +1559,14 @@ function showPlacaDetail(placa){
   });
   const evList = Object.values(eventos).sort((a,b)=>b.fechaIngreso.localeCompare(a.fechaIngreso));
   const totalDias = evList.reduce((s,e)=>s+e.diasMax,0);
-  const rows = evList.length===0?`<tr><td colspan="6"><div class="nodata"><p>Sin registros para esta placa</p></div></td></tr>`:evList.map((ev,i)=>{
+  const rows = evList.length===0?`<tr><td colspan="7"><div class="nodata"><p>Sin registros para esta placa</p></div></td></tr>`:evList.map((ev,i)=>{
     const novs = [...ev.novedades].join(', ') || '—';
     const talls = [...ev.talleres].join(', ') || '—';
     const sta = ev.statuses.has('BLOQUEADO')?`<span class="badge b-bl">⛔ BLOQUEADO</span>`:ev.statuses.has('INOPERATIVO')?`<span class="badge b-in">🔴 INOPERATIVO</span>`:`<span class="badge b-re">🟣 RESTRICCIÓN</span>`;
     const entrega = ev.fechaEntrega?`<span style="color:var(--green);font-weight:700">✅ ${fmtF(ev.fechaEntrega)}</span>`:`<span style="color:var(--orange);font-weight:600">⏳ En taller</span>`;
     const rep = ev.reparacion?`<div style="font-size:10px;color:var(--slate);margin-top:3px;font-style:italic">"${esc(ev.reparacion)}"</div>`:'';
-    return`<tr><td style="font-weight:700;color:var(--navy)">#${evList.length-i}</td><td style="font-family:'DM Mono',monospace;font-size:11px;white-space:nowrap">${fmtF(ev.fechaIngreso)}</td><td style="max-width:200px">${esc(novs)}${rep}</td><td>${sta}</td><td style="font-size:11px">${esc(talls)}</td><td style="text-align:center">${ev.diasMax>0?`<span class="dp ${ev.diasMax>=10?'hi':''}">${ev.diasMax}d</span>`:'—'}</td><td>${entrega}</td></tr>`;
+    const empBadge = esAdmin ? empresaBadge(ev._empresa) : '';
+    return`<tr><td style="font-weight:700;color:var(--navy)">#${evList.length-i}</td><td style="font-family:'DM Mono',monospace;font-size:11px;white-space:nowrap">${fmtF(ev.fechaIngreso)}</td><td style="max-width:200px">${esc(novs)}${rep}</td><td>${sta}</td><td style="font-size:11px">${esc(talls)}</td><td style="text-align:center">${ev.diasMax>0?`<span class="dp ${ev.diasMax>=10?'hi':''}">${ev.diasMax}d</span>`:'—'}</td><td>${entrega} ${empBadge}</td></tr>`;
   }).join('');
   document.getElementById('m-placa-title').textContent = placa;
   document.getElementById('m-placa-sub').textContent = `${evList.length} ingreso${evList.length!==1?'s':''} al taller · ${totalDias} días acumulados`;
@@ -1497,7 +1601,7 @@ function renderAn(){
   const meses=[...new Set(state.days.map(d=>d.fecha.slice(0,7)))];
   const semanas=[...new Set(state.days.map(d=>{const dt=new Date(d.fecha);const jan4=new Date(dt.getFullYear(),0,4);const dow=jan4.getDay()||7;const w1=new Date(jan4.getTime()-(dow-1)*864e5);const wk=Math.floor((dt-w1)/(7*864e5))+1;return`${dt.getFullYear()}-W${String(wk).padStart(2,'0')}`;}))];
   const anios=[...new Set(state.days.map(d=>d.fecha.slice(0,4)))];
-  av.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;flex-wrap:wrap"><div><h2 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800">📊 Informe</h2><p style="font-size:10px;color:var(--slate)">UC Girardota · ${empresaActual?'Empresa: '+empresaActual+' · ':''}Meta ≤${META_TALLER} en taller</p></div><button class="btn bs btn-sm" onclick="doExcel()">⬇ Excel</button></div><div class="fbar"><div><label>Período</label><select id="an-t" onchange="updateFUI()"><option value="todos">Todos los días</option><option value="dia">Día específico</option><option value="semana">Semana</option><option value="mes">Mes</option><option value="año">Año</option></select></div><div id="an-vw"></div><button class="btn bp btn-sm" style="align-self:flex-end" onclick="runAn()">Aplicar</button><button class="btn bo btn-sm" style="align-self:flex-end" id="an-clear-btn" onclick="clearAnFilter()" style="display:none">✕ Limpiar</button></div><div id="an-c"></div>`;
+  av.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;flex-wrap:wrap"><div><h2 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800">📊 Informe</h2><p style="font-size:10px;color:var(--slate)">UC Girardota · ${esAdmin?'Modo Admin · ':''}${empresaActual?'Empresa: '+empresaActual+' · ':''}Meta ≤${META_TALLER} en taller</p></div><button class="btn bs btn-sm" onclick="doExcel()">⬇ Excel</button></div>${esAdmin?`<div class="admin-filter-bar"><span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;margin-right:4px">Filtrar por empresa:</span><button class="admin-filter-btn ${adminEmpresaFilter==='TODAS'?'on':''}" onclick="adminEmpresaFilter='TODAS';cargarDatosEmpresa();setTimeout(()=>renderAn(),100)">🌐 Todas</button><button class="admin-filter-btn ${adminEmpresaFilter==='LIS'?'on':''}" onclick="adminEmpresaFilter='LIS';cargarDatosEmpresa();setTimeout(()=>renderAn(),100)">🏢 LIS</button><button class="admin-filter-btn ${adminEmpresaFilter==='SURTICERVEZA'?'on':''}" onclick="adminEmpresaFilter='SURTICERVEZA';cargarDatosEmpresa();setTimeout(()=>renderAn(),100)">🍺 Surticerveza</button><button class="admin-filter-btn ${adminEmpresaFilter==='R&G'?'on':''}" onclick="adminEmpresaFilter='R&G';cargarDatosEmpresa();setTimeout(()=>renderAn(),100)">🚚 R&G</button></div>`:''}<div class="fbar"><div><label>Período</label><select id="an-t" onchange="updateFUI()"><option value="todos">Todos los días</option><option value="dia">Día específico</option><option value="semana">Semana</option><option value="mes">Mes</option><option value="año">Año</option></select></div><div id="an-vw"></div><button class="btn bp btn-sm" style="align-self:flex-end" onclick="runAn()">Aplicar</button><button class="btn bo btn-sm" style="align-self:flex-end" id="an-clear-btn" onclick="clearAnFilter()" style="display:none">✕ Limpiar</button></div><div id="an-c"></div>`;
   av._m=meses;av._s=semanas;av._a=anios;
   runAn();
 }
@@ -1527,7 +1631,7 @@ function filterDays(){
 function runAn(){
   const days=filterDays();const el=document.getElementById('an-c');
   if(!days.length){el.innerHTML=`<div class="nodata" style="padding:50px"><div style="font-size:30px">📭</div><p>Sin datos para este período</p></div>`;return;}
-  const iL=days.map(d=>({...getDispInfo(d),fecha:d.fecha,op:d.op,total:d.total}));
+  const iL=days.map(d=>({...getDispInfo(d),fecha:d.fecha,op:d.op,total:d.total, _empresa: d._empresa}));
   const avgPct=iL.reduce((a,i)=>a+i.pct,0)/iL.length;
   const avgT=iL.reduce((a,i)=>a+i.enTaller,0)/iL.length;
   const diasM=iL.filter(i=>i.enTaller<=META_TALLER).length;
@@ -1536,7 +1640,7 @@ function runAn(){
   const avgOP=dwOP.length?Math.round(dwOP.reduce((a,i)=>a+i.op,0)/dwOP.length):null;
   const diasOPgt=dwOP.filter(i=>i.op>i.disp).length;
   const pm={};
-  days.forEach(d=>d.placasEnTaller.forEach(p=>{const key=p.placa+'|'+(p.fechaIngreso||'');if(!pm[key]||p.diasEnTaller>pm[key].dias) pm[key]={placa:p.placa,dias:p.diasEnTaller};}));
+  days.forEach(d=>d.placasEnTaller.forEach(p=>{const key=p.placa+'|'+(p.fechaIngreso||'');if(!pm[key]||p.diasEnTaller>pm[key].dias) pm[key]={placa:p.placa,dias:p.diasEnTaller, _empresa: d._empresa};}));
   const pmAgg={};
   Object.values(pm).forEach(v=>{pmAgg[v.placa]=(pmAgg[v.placa]||0)+v.dias});
   const topP=Object.entries(pmAgg).sort((a,b)=>b[1]-a[1]).slice(0,5);const maxPD=topP[0]?.[1]||1;
@@ -1547,7 +1651,7 @@ function runAn(){
   const nv={};
   days.forEach(d=>d.placasEnTaller.forEach(p=>{if(p.novedad){const k=p.novedad.toUpperCase().trim();nv[k]=(nv[k]||0)+1}}));
   const topN=Object.entries(nv).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  el.innerHTML=`<div class="kgrid k5" style="margin-bottom:12px"><div class="kpi k-bl"><div class="kpi-lbl">Días</div><div class="kpi-val">${iL.length}</div><div class="kpi-sub">analizados</div></div><div class="kpi k-gr"><div class="kpi-lbl">% Disp.</div><div class="kpi-val" style="color:${pc(avgPct)}">${avgPct.toFixed(1)}%</div><div class="kpi-sub">promedio</div></div><div class="kpi k-or"><div class="kpi-lbl">Prom. taller</div><div class="kpi-val">${avgT.toFixed(1)}</div><div class="kpi-sub">vs meta ${META_TALLER}</div></div><div class="kpi k-am"><div class="kpi-lbl">En meta</div><div class="kpi-val" style="color:${pctM>=80?'var(--green)':pctM>=60?'var(--amber)':'var(--red)'}">${diasM}/${iL.length}</div><div class="kpi-sub">${pctM}% cumpl.</div></div><div class="kpi k-pu"><div class="kpi-lbl">OP prom.</div><div class="kpi-val">${avgOP!=null?avgOP:'—'}</div><div class="kpi-sub">${diasOPgt>0?`⚠️ ${diasOPgt}d`:avgOP!=null?'✅':'sin datos'}</div></div></div><div class="agrid" style="margin-bottom:12px"><div class="sc"><div class="sc-title">📅 Disponibilidad por día</div><div style="display:flex;flex-direction:column;gap:3px;max-height:260px;overflow-y:auto">${iL.map(r=>{const opTxt=r.op!=null?`<span style="color:${r.op>r.disp?'var(--red)':'var(--slate)'}">OP:${r.op}</span>`:'';return`<div class="ac-row"><span class="ac-date">${fmtF(r.fecha)}</span><div class="ac-bw"><div class="ac-bf" style="width:${r.pct}%;background:${pc(r.pct)}"></div></div><span class="ac-pct" style="color:${pc(r.pct)}">${r.pct}%</span><span style="font-size:9px;text-align:right">${opTxt}</span></div>`}).join('')}</div></div><div class="sc"><div class="sc-title">🎯 Cumplimiento meta (≤${META_TALLER})</div><div style="display:flex;flex-direction:column;gap:3px;max-height:260px;overflow-y:auto">${iL.map(r=>{const bp=Math.min(100,Math.round(r.enTaller/8*100));const lp=Math.round(META_TALLER/8*100);const ok=r.enTaller<=META_TALLER;const clr=ok?'var(--green)':r.enTaller<=META_TALLER+2?'var(--amber)':'var(--red)';return`<div class="meta-chart-row"><span class="mcr-date">${fmtF(r.fecha)}</span><div class="mcr-bar"><div class="mcr-fill" style="width:${bp}%;background:${clr}"></div><div class="mcr-limit" style="left:${lp}%"></div></div><span class="mcr-val" style="color:${clr}">${r.enTaller}</span><span style="font-size:9px;padding:1px 5px;border-radius:20px;background:${ok?'var(--green-lt)':r.enTaller<=META_TALLER+2?'var(--amber-lt)':'var(--red-lt)'};color:${clr}">${ok?'✅':r.enTaller<=META_TALLER+2?'⚠️':'🚨'}</span></div>`}).join('')}</div></div></div><div class="agrid" style="margin-bottom:12px"><div class="sc"><div class="sc-title">🚛 Top placas en taller</div>${topP.length===0?`<div class="nodata"><p>Sin datos</p></div>`:topP.map(([p,d],i)=>`<div class="ri" onclick="showPlacaDetail('${p}')" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--blue-lt)'" onmouseout="this.style.background=''"><div class="rpos ${i<3?'rg'+(i+1):''}">${i+1}</div><div class="rbw"><div class="rlbl"><span class="placa">${p}</span> <span style="font-size:9px;color:var(--blue)">→ ver historial</span></div><div class="rbar"><div class="rfill" style="width:${Math.round(d/maxPD*100)}%"></div></div></div><div class="rval">${d}d</div></div>`).join('')}</div><div class="sc"><div class="sc-title">⚙️ Sistemas afectados</div>${topS.length===0?`<div class="nodata"><p>Sin datos</p></div>`:topS.map(([s,n],i)=>`<div class="ri ri-click" onclick="showSistemaDetalle('${esc(s)}')"><div class="rpos ${i<3?'rg'+(i+1):''}">${i+1}</div><div class="rbw"><div class="rlbl">${s} <span style="font-size:9px;color:var(--blue);font-weight:700">→ ver novedades</span></div><div class="rbar"><div class="rfill" style="width:${Math.round(n/maxS*100)}%;background:var(--orange)"></div></div></div><div class="rval">${n}</div></div>`).join('')}</div></div><div class="sc" style="margin-bottom:12px"><div class="sc-title">🔍 Novedades frecuentes</div>${topN.length===0?`<div class="nodata"><p>Sin datos</p></div>`:`<div style="display:flex;flex-wrap:wrap;margin-top:3px">${topN.map(([n,c])=>`<div class="chip">${n}<span>${c}</span></div>`).join('')}</div>`}</div><div class="sc"><div class="sc-title">📋 Detalle por día</div><div class="twrap"><table><thead><tr><th>Fecha</th><th>Total</th><th>Disp.</th><th>Taller</th><th>Meta</th><th>%</th><th>OP</th><th class="hide-mob">OP vs D.</th><th>Ret.</th></tr></thead><tbody>${days.map((d,i)=>{const info=iL[i];const meta=info.enTaller<=META_TALLER;const op=info.op;let opD='—',opC='var(--slate)';if(op!=null){const diff=op-info.disp;opD=diff>0?`+${diff}`:diff<0?`${diff}`:'=';opC=diff>0?'var(--red)':diff<0?'var(--green)':'var(--slate)'}return`<tr><td style="font-family:'DM Mono',monospace;font-size:10px;white-space:nowrap">${fmtF(d.fecha)}</td><td>${d.total}</td><td style="color:var(--green);font-weight:700">${info.disp}</td><td style="color:var(--orange);font-weight:700">${info.enTaller}</td><td>${meta?`<span class="badge b-op" style="font-size:9px">✅</span>`:`<span class="badge b-in" style="font-size:9px">⚠️+${info.enTaller-META_TALLER}</span>`}</td><td style="font-family:'DM Mono',monospace;font-weight:700;color:${pc(info.pct)}">${info.pct}%</td><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--purple)">${op!=null?op:'—'}</td><td class="hide-mob" style="font-weight:700;color:${opC};font-size:10px">${opD}</td><td>${d.retornados.length}</td></tr>`}).join('')}</tbody></table></div></div>`;
+  el.innerHTML=`<div class="kgrid k5" style="margin-bottom:12px"><div class="kpi k-bl"><div class="kpi-lbl">Días</div><div class="kpi-val">${iL.length}</div><div class="kpi-sub">analizados</div></div><div class="kpi k-gr"><div class="kpi-lbl">% Disp.</div><div class="kpi-val" style="color:${pc(avgPct)}">${avgPct.toFixed(1)}%</div><div class="kpi-sub">promedio</div></div><div class="kpi k-or"><div class="kpi-lbl">Prom. taller</div><div class="kpi-val">${avgT.toFixed(1)}</div><div class="kpi-sub">vs meta ${META_TALLER}</div></div><div class="kpi k-am"><div class="kpi-lbl">En meta</div><div class="kpi-val" style="color:${pctM>=80?'var(--green)':pctM>=60?'var(--amber)':'var(--red)'}">${diasM}/${iL.length}</div><div class="kpi-sub">${pctM}% cumpl.</div></div><div class="kpi k-pu"><div class="kpi-lbl">OP prom.</div><div class="kpi-val">${avgOP!=null?avgOP:'—'}</div><div class="kpi-sub">${diasOPgt>0?`⚠️ ${diasOPgt}d`:avgOP!=null?'✅':'sin datos'}</div></div></div><div class="agrid" style="margin-bottom:12px"><div class="sc"><div class="sc-title">📅 Disponibilidad por día</div><div style="display:flex;flex-direction:column;gap:3px;max-height:260px;overflow-y:auto">${iL.map(r=>{const opTxt=r.op!=null?`<span style="color:${r.op>r.disp?'var(--red)':'var(--slate)'}">OP:${r.op}</span>`:'';const empB = esAdmin?empresaBadge(r._empresa):'';return`<div class="ac-row"><span class="ac-date">${fmtF(r.fecha)} ${empB}</span><div class="ac-bw"><div class="ac-bf" style="width:${r.pct}%;background:${pc(r.pct)}"></div></div><span class="ac-pct" style="color:${pc(r.pct)}">${r.pct}%</span><span style="font-size:9px;text-align:right">${opTxt}</span></div>`;}).join('')}</div></div><div class="sc"><div class="sc-title">🎯 Cumplimiento meta (≤${META_TALLER})</div><div style="display:flex;flex-direction:column;gap:3px;max-height:260px;overflow-y:auto">${iL.map(r=>{const bp=Math.min(100,Math.round(r.enTaller/8*100));const lp=Math.round(META_TALLER/8*100);const ok=r.enTaller<=META_TALLER;const clr=ok?'var(--green)':r.enTaller<=META_TALLER+2?'var(--amber)':'var(--red)';return`<div class="meta-chart-row"><span class="mcr-date">${fmtF(r.fecha)}</span><div class="mcr-bar"><div class="mcr-fill" style="width:${bp}%;background:${clr}"></div><div class="mcr-limit" style="left:${lp}%"></div></div><span class="mcr-val" style="color:${clr}">${r.enTaller}</span><span style="font-size:9px;padding:1px 5px;border-radius:20px;background:${ok?'var(--green-lt)':r.enTaller<=META_TALLER+2?'var(--amber-lt)':'var(--red-lt)'};color:${clr}">${ok?'✅':r.enTaller<=META_TALLER+2?'⚠️':'🚨'}</span></div>`;}).join('')}</div></div></div><div class="agrid" style="margin-bottom:12px"><div class="sc"><div class="sc-title">🚛 Top placas en taller</div>${topP.length===0?`<div class="nodata"><p>Sin datos</p></div>`:topP.map(([p,d],i)=>`<div class="ri" onclick="showPlacaDetail('${p}')" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--blue-lt)'" onmouseout="this.style.background=''"><div class="rpos ${i<3?'rg'+(i+1):''}">${i+1}</div><div class="rbw"><div class="rlbl"><span class="placa">${p}</span> <span style="font-size:9px;color:var(--blue)">→ ver historial</span></div><div class="rbar"><div class="rfill" style="width:${Math.round(d/maxPD*100)}%"></div></div></div><div class="rval">${d}d</div></div>`).join('')}</div><div class="sc"><div class="sc-title">⚙️ Sistemas afectados</div>${topS.length===0?`<div class="nodata"><p>Sin datos</p></div>`:topS.map(([s,n],i)=>`<div class="ri ri-click" onclick="showSistemaDetalle('${esc(s)}')"><div class="rpos ${i<3?'rg'+(i+1):''}">${i+1}</div><div class="rbw"><div class="rlbl">${s} <span style="font-size:9px;color:var(--blue);font-weight:700">→ ver novedades</span></div><div class="rbar"><div class="rfill" style="width:${Math.round(n/maxS*100)}%;background:var(--orange)"></div></div></div><div class="rval">${n}</div></div>`).join('')}</div></div><div class="sc" style="margin-bottom:12px"><div class="sc-title">🔍 Novedades frecuentes</div>${topN.length===0?`<div class="nodata"><p>Sin datos</p></div>`:`<div style="display:flex;flex-wrap:wrap;margin-top:3px">${topN.map(([n,c])=>`<div class="chip">${n}<span>${c}</span></div>`).join('')}</div>`}</div><div class="sc"><div class="sc-title">📋 Detalle por día</div><div class="twrap"><table><thead><tr><th>Fecha</th><th>Empresa</th><th>Total</th><th>Disp.</th><th>Taller</th><th>Meta</th><th>%</th><th>OP</th><th class="hide-mob">OP vs D.</th><th>Ret.</th></tr></thead><tbody>${days.map((d,i)=>{const info=iL[i];const meta=info.enTaller<=META_TALLER;const op=info.op;let opD='—',opC='var(--slate)';if(op!=null){const diff=op-info.disp;opD=diff>0?`+${diff}`:diff<0?`${diff}`:'=';opC=diff>0?'var(--red)':diff<0?'var(--green)':'var(--slate)'}const empB = esAdmin?empresaBadge(d._empresa):'';return`<tr><td style="font-family:'DM Mono',monospace;font-size:10px;white-space:nowrap">${fmtF(d.fecha)}</td><td>${empB}</td><td>${d.total}</td><td style="color:var(--green);font-weight:700">${info.disp}</td><td style="color:var(--orange);font-weight:700">${info.enTaller}</td><td>${meta?`<span class="badge b-op" style="font-size:9px">✅</span>`:`<span class="badge b-in" style="font-size:9px">⚠️+${info.enTaller-META_TALLER}</span>`}</td><td style="font-family:'DM Mono',monospace;font-weight:700;color:${pc(info.pct)}">${info.pct}%</td><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--purple)">${op!=null?op:'—'}</td><td class="hide-mob" style="font-weight:700;color:${opC};font-size:10px">${opD}</td><td>${d.retornados.length}</td></tr>`;}).join('')}</tbody></table></div></div>`;
 }
 
 const PLANES_KEY = 'flota_planes_v1';
@@ -1570,8 +1674,8 @@ function renderGest(filtroMes=null, filtroAnio=null){
   const lastDay = state.days[state.days.length-1];
   const alertas = [];
   const enTallerActivos = lastDay.placasEnTaller.filter(p=>!p.retornado);
-  enTallerActivos.forEach(p=>{if(p.diasEnTaller>=10 && !isRestriccion(p.status)){alertas.push({nivel:'red', icon:'🚨', titulo:`${p.placa} lleva ${p.diasEnTaller} días en taller`, sub:`${p.novedad||'Sin novedad'} · ${p.taller||'Sin taller'} · Ingresó ${fmtF(p.fechaIngreso)}`});} else if(p.diasEnTaller>=5 && !isRestriccion(p.status)){alertas.push({nivel:'amber', icon:'⚠️', titulo:`${p.placa} lleva ${p.diasEnTaller} días en taller`, sub:`${p.novedad||'Sin novedad'} · ${p.taller||'Sin taller'}`});}});
-  if(enTallerActivos.filter(p=>!isRestriccion(p.status)).length > META_TALLER){const sobre = enTallerActivos.filter(p=>!isRestriccion(p.status)).length - META_TALLER;alertas.unshift({nivel:'red', icon:'🎯', titulo:`Meta incumplida: ${sobre} vehículo${sobre>1?'s':''} sobre el límite de ${META_TALLER}`, sub:`Hoy hay ${enTallerActivos.filter(p=>!isRestriccion(p.status)).length} vehículos inoperativos en taller`});}
+  enTallerActivos.forEach(p=>{if(p.diasEnTaller>=10 && !isRestriccion(p.status)){alertas.push({nivel:'red', icon:'🚨', titulo:`${p.placa} lleva ${p.diasEnTaller} días en taller`, sub:`${p.novedad||'Sin novedad'} · ${p.taller||'Sin taller'} · Ingresó ${fmtF(p.fechaIngreso)} ${esAdmin?empresaBadge(lastDay._empresa):''}`});} else if(p.diasEnTaller>=5 && !isRestriccion(p.status)){alertas.push({nivel:'amber', icon:'⚠️', titulo:`${p.placa} lleva ${p.diasEnTaller} días en taller`, sub:`${p.novedad||'Sin novedad'} · ${p.taller||'Sin taller'} ${esAdmin?empresaBadge(lastDay._empresa):''}`});}});
+  if(enTallerActivos.filter(p=>!isRestriccion(p.status)).length > META_TALLER){const sobre = enTallerActivos.filter(p=>!isRestriccion(p.status)).length - META_TALLER;alertas.unshift({nivel:'red', icon:'🎯', titulo:`Meta incumplida: ${sobre} vehículo${sobre>1?'s':''} sobre el límite de ${META_TALLER}`, sub:`Hoy hay ${enTallerActivos.filter(p=>!isRestriccion(p.status)).length} vehículos inoperativos en taller ${esAdmin?empresaBadge(lastDay._empresa):''}`});}
   const stActual = mesStats(mesActual);
   if(stActual.topSist.length>0 && stActual.topSist[0][1]>=3){alertas.push({nivel:'amber', icon:'⚙️', titulo:`Sistema más afectado: ${stActual.topSist[0][0]}`, sub:`${stActual.topSist[0][1]} ingresos este mes · Considera un mantenimiento preventivo`});}
   if(stActual.avgPct < 88){alertas.push({nivel:'red', icon:'📉', titulo:`Disponibilidad bajo el 88% este mes`, sub:`Promedio: ${stActual.avgPct.toFixed(1)}% · Meta sugerida: ≥90%`});} else if(stActual.avgPct >= 92){alertas.push({nivel:'green', icon:'🌟', titulo:`Excelente disponibilidad este mes`, sub:`Promedio: ${stActual.avgPct.toFixed(1)}% · Por encima de la meta ≥90%`});}
@@ -1595,7 +1699,7 @@ function renderGest(filtroMes=null, filtroAnio=null){
   const anioTabs = anios.map(a=>`<button class="mtab ${a===filtroAnio?'on':''}" onclick="renderGest(null,'${a}')" style="font-size:12px;padding:5px 14px">${a}</button>`).join('');
   const mesTabs = mesesDelAnio.map(m=>{const [y,mo]=m.key.split('-');const isActive = filtroMes===m.key;return`<button class="mtab ${isActive?'on':''}" onclick="renderGest('${m.key}',null)" style="font-size:11px">${nomMeses[+mo]}</button>`;}).join('');
   const periodoLabel = filtroAnio?filtroAnio:filtroMes?mesActual.label:mesActual.label + ' (actual)';
-  document.getElementById('gest-view').innerHTML = `<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div><h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">🚨 Gestión y Alertas</h2><p style="font-size:11px;color:var(--slate)">UC Girardota · ${empresaActual?'Empresa: '+empresaActual+' · ':''}Período: <strong>${periodoLabel}</strong></p></div><button class="btn bo btn-sm" onclick="window._gestFiltroMes=null;window._gestFiltroAnio=null;renderGest(null,null)">↺ Mes actual</button></div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;align-items:center"><span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-right:4px">Año</span>${anioTabs}</div><div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center"><span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-right:4px">Mes</span>${mesTabs}${filtroAnio?`<span style="font-size:10px;color:var(--slate);margin-left:4px">← todos los meses del año</span>`:''}</div></div><div class="dash-card" style="margin-bottom:16px"><div class="dash-title">🔔 Alertas activas — ${fmtF(lastDay.fecha)}</div>${alertas.map(a=>`<div class="alert-item a-${a.nivel}"><span class="alert-icon">${a.icon}</span><div class="alert-txt"><div class="alert-title">${a.titulo}</div><div class="alert-sub">${a.sub}</div></div></div>`).join('')}</div><div class="dash-card" style="margin-bottom:16px"><div class="dash-title">🚗 Vehículos en taller ahora<span style="font-size:10px;font-weight:400;color:var(--slate);margin-left:4px">clic para ver historial</span></div><div class="veh-grid">${enTallerActivos.length===0?'<div class="nodata"><p>✅ Todos los vehículos disponibles</p></div>':enTallerActivos.map(p=>{const cls = p.diasEnTaller>=10?'vc-bad':p.diasEnTaller>=5?'vc-warn':'vc-ok';const emoji = isRestriccion(p.status)?'🟡':p.diasEnTaller>=10?'🔴':p.diasEnTaller>=5?'🟠':'🟢';return`<div class="veh-card ${cls}" onclick="showPlacaDetail('${p.placa}')"><span class="veh-car">🚛</span><div>${emoji}</div><div class="veh-placa">${p.placa}</div><div class="veh-dias" style="color:${p.diasEnTaller>=10?'var(--red)':p.diasEnTaller>=5?'var(--amber)':'var(--green)'}">${p.diasEnTaller}d</div><div class="veh-sist">${getSist(p.novedad,p.sistema)}</div></div>`}).join('')}</div></div><div class="dash-grid"><div class="dash-card"><div class="dash-title">📈 Tendencia de disponibilidad</div>${trendData.length<2?'<div class="nodata"><p>Se necesitan al menos 2 meses</p></div>':`<svg class="trend-svg" viewBox="0 0 ${svgW} ${svgH}" style="width:100%;height:auto"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2563eb" stop-opacity=".25"/><stop offset="100%" stop-color="#2563eb" stop-opacity="0"/></linearGradient></defs>${[0,.25,.5,.75,1].map(f=>{const y=padT+(svgH-padT-padB)*f;const v=(maxPct-f*(maxPct-minPct)).toFixed(0);return`<line x1="${padL}" y1="${y}" x2="${svgW-padR}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/><text x="${padL-4}" y="${y+4}" font-size="9" fill="#94a3b8" text-anchor="end">${v}%</text>`}).join('')}<polygon points="${areaPoints}" fill="url(#tg)"/><polyline points="${points}" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${trendData.map((t,i)=>{const x=padL+i*xStep, y=yScale(+t.pct);const clr=+t.pct>=90?'#059669':+t.pct>=85?'#d97706':'#dc2626';return`<circle cx="${x}" cy="${y}" r="5" fill="${clr}" stroke="#fff" stroke-width="2"/><text x="${x}" y="${svgH-padB+14}" font-size="9" fill="#64748b" text-anchor="middle">${t.label}</text><text x="${x}" y="${y-9}" font-size="9" fill="${clr}" text-anchor="middle" font-weight="700">${t.pct}%</text>`}).join('')}</svg>`}</div><div class="dash-card"><div class="dash-title">📊 Comparativo mensual</div>${compHTML}</div><div class="dash-card"><div class="dash-title">⚙️ Sistemas afectados — ${mesActual.label}</div><div class="bar-chart">${stA.topSist.slice(0,7).map(([s,n])=>`<div class="bar-row"><span class="bar-lbl">${s}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxSist*100)}%;background:var(--orange)"></div></div><span class="bar-val" style="color:var(--orange)">${n}</span></div>`).join('')||'<div class="nodata"><p>Sin datos</p></div>'}</div></div><div class="dash-card"><div class="dash-title">🚛 Top placas — ${mesActual.label}<span style="font-size:10px;font-weight:400;color:var(--blue);cursor:pointer" onclick="showPlacaDetail('${stA.topPlacas[0]?.[0]||''}')">ver historial →</span></div><div class="bar-chart">${stA.topPlacas.map(([p,d],i)=>{const colors=['#2563eb','#7c3aed','#059669','#d97706','#dc2626','#0891b2','#64748b','#1d4ed8'];return`<div class="bar-row" onclick="showPlacaDetail('${p}')" style="cursor:pointer"><span class="placa" style="font-size:10px">${p}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(d/maxPlaca*100)}%;background:${colors[i%colors.length]}"></div></div><span class="bar-val" style="color:${colors[i%colors.length]}">${d}d</span></div>`}).join('')||'<div class="nodata"><p>Sin datos</p></div>'}</div></div><div class="dash-card dash-card-full"><div class="dash-title" style="justify-content:space-between"><span>📋 Planes de acción</span>${isEditor?`<button class="btn bp btn-sm" onclick="showAddPlan()">＋ Agregar plan</button>`:''}</div><div id="planes-list">${renderPlanesHTML()}</div></div></div>`;
+  document.getElementById('gest-view').innerHTML = `<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div><h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">🚨 Gestión y Alertas</h2><p style="font-size:11px;color:var(--slate)">UC Girardota · ${esAdmin?'Modo Admin · ':''}${empresaActual?'Empresa: '+empresaActual+' · ':''}Período: <strong>${periodoLabel}</strong></p></div><button class="btn bo btn-sm" onclick="window._gestFiltroMes=null;window._gestFiltroAnio=null;renderGest(null,null)">↺ Mes actual</button></div>${esAdmin?`<div class="admin-filter-bar"><span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;margin-right:4px">Filtrar por empresa:</span><button class="admin-filter-btn ${adminEmpresaFilter==='TODAS'?'on':''}" onclick="adminEmpresaFilter='TODAS';cargarDatosEmpresa();setTimeout(()=>renderGest(null,null),100)">🌐 Todas</button><button class="admin-filter-btn ${adminEmpresaFilter==='LIS'?'on':''}" onclick="adminEmpresaFilter='LIS';cargarDatosEmpresa();setTimeout(()=>renderGest(null,null),100)">🏢 LIS</button><button class="admin-filter-btn ${adminEmpresaFilter==='SURTICERVEZA'?'on':''}" onclick="adminEmpresaFilter='SURTICERVEZA';cargarDatosEmpresa();setTimeout(()=>renderGest(null,null),100)">🍺 Surticerveza</button><button class="admin-filter-btn ${adminEmpresaFilter==='R&G'?'on':''}" onclick="adminEmpresaFilter='R&G';cargarDatosEmpresa();setTimeout(()=>renderGest(null,null),100)">🚚 R&G</button></div>`:''}<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;align-items:center"><span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-right:4px">Año</span>${anioTabs}</div><div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center"><span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-right:4px">Mes</span>${mesTabs}${filtroAnio?`<span style="font-size:10px;color:var(--slate);margin-left:4px">← todos los meses del año</span>`:''}</div></div><div class="dash-card" style="margin-bottom:16px"><div class="dash-title">🔔 Alertas activas — ${fmtF(lastDay.fecha)} ${esAdmin?empresaBadge(lastDay._empresa):''}</div>${alertas.map(a=>`<div class="alert-item a-${a.nivel}"><span class="alert-icon">${a.icon}</span><div class="alert-txt"><div class="alert-title">${a.titulo}</div><div class="alert-sub">${a.sub}</div></div></div>`).join('')}</div><div class="dash-card" style="margin-bottom:16px"><div class="dash-title">🚗 Vehículos en taller ahora<span style="font-size:10px;font-weight:400;color:var(--slate);margin-left:4px">clic para ver historial</span></div><div class="veh-grid">${enTallerActivos.length===0?'<div class="nodata"><p>✅ Todos los vehículos disponibles</p></div>':enTallerActivos.map(p=>{const cls = p.diasEnTaller>=10?'vc-bad':p.diasEnTaller>=5?'vc-warn':'vc-ok';const emoji = isRestriccion(p.status)?'🟡':p.diasEnTaller>=10?'🔴':p.diasEnTaller>=5?'🟠':'🟢';return`<div class="veh-card ${cls}" onclick="showPlacaDetail('${p.placa}')"><span class="veh-car">🚛</span><div>${emoji}</div><div class="veh-placa">${p.placa}</div><div class="veh-dias" style="color:${p.diasEnTaller>=10?'var(--red)':p.diasEnTaller>=5?'var(--amber)':'var(--green)'}">${p.diasEnTaller}d</div><div class="veh-sist">${getSist(p.novedad,p.sistema)}</div>${esAdmin?`<div style="font-size:9px;color:var(--slate);margin-top:2px">${empresaBadge(lastDay._empresa)}</div>`:''}</div>`;}).join('')}</div></div><div class="dash-grid"><div class="dash-card"><div class="dash-title">📈 Tendencia de disponibilidad</div>${trendData.length<2?'<div class="nodata"><p>Se necesitan al menos 2 meses</p></div>':`<svg class="trend-svg" viewBox="0 0 ${svgW} ${svgH}" style="width:100%;height:auto"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2563eb" stop-opacity=".25"/><stop offset="100%" stop-color="#2563eb" stop-opacity="0"/></linearGradient></defs>${[0,.25,.5,.75,1].map(f=>{const y=padT+(svgH-padT-padB)*f;const v=(maxPct-f*(maxPct-minPct)).toFixed(0);return`<line x1="${padL}" y1="${y}" x2="${svgW-padR}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/><text x="${padL-4}" y="${y+4}" font-size="9" fill="#94a3b8" text-anchor="end">${v}%</text>`}).join('')}<polygon points="${areaPoints}" fill="url(#tg)"/><polyline points="${points}" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${trendData.map((t,i)=>{const x=padL+i*xStep, y=yScale(+t.pct);const clr=+t.pct>=90?'#059669':+t.pct>=85?'#d97706':'#dc2626';return`<circle cx="${x}" cy="${y}" r="5" fill="${clr}" stroke="#fff" stroke-width="2"/><text x="${x}" y="${svgH-padB+14}" font-size="9" fill="#64748b" text-anchor="middle">${t.label}</text><text x="${x}" y="${y-9}" font-size="9" fill="${clr}" text-anchor="middle" font-weight="700">${t.pct}%</text>`}).join('')}</svg>`}</div><div class="dash-card"><div class="dash-title">📊 Comparativo mensual</div>${compHTML}</div><div class="dash-card"><div class="dash-title">⚙️ Sistemas afectados — ${mesActual.label}</div><div class="bar-chart">${stA.topSist.slice(0,7).map(([s,n])=>`<div class="bar-row"><span class="bar-lbl">${s}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxSist*100)}%;background:var(--orange)"></div></div><span class="bar-val" style="color:var(--orange)">${n}</span></div>`).join('')||'<div class="nodata"><p>Sin datos</p></div>'}</div></div><div class="dash-card"><div class="dash-title">🚛 Top placas — ${mesActual.label}<span style="font-size:10px;font-weight:400;color:var(--blue);cursor:pointer" onclick="showPlacaDetail('${stA.topPlacas[0]?.[0]||''}')">ver historial →</span></div><div class="bar-chart">${stA.topPlacas.map(([p,d],i)=>{const colors=['#2563eb','#7c3aed','#059669','#d97706','#dc2626','#0891b2','#64748b','#1d4ed8'];return`<div class="bar-row" onclick="showPlacaDetail('${p}')" style="cursor:pointer"><span class="placa" style="font-size:10px">${p}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(d/maxPlaca*100)}%;background:${colors[i%colors.length]}"></div></div><span class="bar-val" style="color:${colors[i%colors.length]}">${d}d</span></div>`}).join('')||'<div class="nodata"><p>Sin datos</p></div>'}</div></div><div class="dash-card dash-card-full"><div class="dash-title" style="justify-content:space-between"><span>📋 Planes de acción</span>${isEditor?`<button class="btn bp btn-sm" onclick="showAddPlan()">＋ Agregar plan</button>`:''}</div><div id="planes-list">${renderPlanesHTML()}</div></div></div>`;
 }
 function renderPlanesHTML(){
   if(!planes.length) return `<div class="nodata"><p>Sin planes de acción registrados.<br>${isEditor?'Agrega el primero con el botón de arriba.':'Solo los editores pueden agregar planes.'}</p></div>`;
@@ -1726,7 +1830,8 @@ function renderCal(){
         const isDomCal = new Date(dateStr+'T12:00:00').getDay()===0;
         const finalBg = isDomCal ? '#f5f3ff' : dayBg;
         const finalBorder = isDomCal ? '#7c3aed' : dayBorder;
-        cells+=`<div class="cal-day${isToday?' cd-today':''}" style="background:${finalBg};border-color:${finalBorder};border-width:2px;border-style:solid" onclick="calDayClick('${dateStr}')" title="${dateStr}: ${isDomCal?'Rutina dominical · ':''}${info.pct}% disp · ${info.enTaller} en taller${!metaOk&&!isDomCal?' ⚠️ SOBRE META':''}"><div class="cal-dn">${d}</div><div class="cal-pct" style="color:${isDomCal?'#7c3aed':col}">${isDomCal?'🔵':info.pct+'%'}</div><div style="display:flex;align-items:center;justify-content:center;gap:3px;margin-top:2px">${isDomCal?`<span style="font-size:8px;color:#7c3aed;font-weight:700">RD</span>`:`<span style="font-size:9px;font-family:monospace;font-weight:700;color:${!metaOk?'var(--red)':'var(--slate)'}">${info.enTaller}🚛</span>${!metaOk?'<span style="font-size:8px;color:var(--red);font-weight:700">⚠️</span>':'<span style="font-size:8px;color:var(--green)">✓</span>'}`}</div></div>`;
+        const empBadge = esAdmin ? empresaBadge(dayData._empresa) : '';
+        cells+=`<div class="cal-day${isToday?' cd-today':''}" style="background:${finalBg};border-color:${finalBorder};border-width:2px;border-style:solid" onclick="calDayClick('${dateStr}')" title="${dateStr}: ${isDomCal?'Rutina dominical · ':''}${info.pct}% disp · ${info.enTaller} en taller${!metaOk&&!isDomCal?' ⚠️ SOBRE META':''}"><div class="cal-dn">${d}</div><div class="cal-pct" style="color:${isDomCal?'#7c3aed':col}">${isDomCal?'🔵':info.pct+'%'}</div><div style="display:flex;align-items:center;justify-content:center;gap:3px;margin-top:2px">${isDomCal?`<span style="font-size:8px;color:#7c3aed;font-weight:700">RD</span>`:`<span style="font-size:9px;font-family:monospace;font-weight:700;color:${!metaOk?'var(--red)':'var(--slate)'}">${info.enTaller}🚛</span>${!metaOk?'<span style="font-size:8px;color:var(--red);font-weight:700">⚠️</span>':'<span style="font-size:8px;color:var(--green)">✓</span>'}`}</div>${empBadge?`<div style="font-size:8px;margin-top:2px">${empBadge}</div>`:''}</div>`;
       } else {
         cells+=`<div class="cal-day" style="background:var(--bg);opacity:.4${isToday?';box-shadow:0 0 0 2px var(--blue)':''}" title="${dateStr}: sin registro"><div class="cal-dn" style="color:var(--slate)">${d}</div></div>`;
       }
@@ -1753,7 +1858,7 @@ function renderCal(){
     }
     mainContent = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px">${monthCards}</div>`;
   }
-  el.innerHTML = `<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div><h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">📅 Calendario de Disponibilidad</h2><p style="font-size:11px;color:var(--slate)">UC Girardota · ${empresaActual?'Empresa: '+empresaActual+' · ':''}Haz clic en un día para ver el detalle</p></div><button class="pdf-btn" onclick="generarPDF()">📄 Generar informe PDF</button></div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;align-items:center"><span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;margin-right:4px">Año</span>${yearOpts}</div></div>${mainContent}`;
+  el.innerHTML = `<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div><h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">📅 Calendario de Disponibilidad</h2><p style="font-size:11px;color:var(--slate)">UC Girardota · ${esAdmin?'Modo Admin · ':''}${empresaActual?'Empresa: '+empresaActual+' · ':''}Haz clic en un día para ver el detalle</p></div><button class="pdf-btn" onclick="generarPDF()">📄 Generar informe PDF</button></div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;align-items:center"><span style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;margin-right:4px">Año</span>${yearOpts}</div></div>${mainContent}`;
 }
 function calDayClick(fecha){const idx = state.days.findIndex(d=>d.fecha===fecha);if(idx>=0) selectDay(idx);}
 function calPrevMonth(){_calMonth--;if(_calMonth<0){_calMonth=11;_calYear--;}renderCal();}
@@ -1771,7 +1876,7 @@ function renderCos(){
   state.days.forEach(d=>{
     d.placasEnTaller.forEach(p=>{
       const key = p.placa+'|'+p.fechaIngreso;
-      if(!eventMap[key]){eventMap[key]={placa:p.placa, fechaIngreso:p.fechaIngreso,novedad:p.novedad, sistema:getSist(p.novedad,p.sistema),taller:p.taller, maxDias:0, retornado:false,fechaEntrega:null, reparacion:null};}
+      if(!eventMap[key]){eventMap[key]={placa:p.placa, fechaIngreso:p.fechaIngreso,novedad:p.novedad, sistema:getSist(p.novedad,p.sistema),taller:p.taller, maxDias:0, retornado:false,fechaEntrega:null, reparacion:null, _empresa: d._empresa};}
       if(p.diasEnTaller > eventMap[key].maxDias) eventMap[key].maxDias=p.diasEnTaller;
       if(p.retornado) eventMap[key].retornado=true;
     });
@@ -1793,7 +1898,7 @@ function renderCos(){
   const sistemas = Object.values(sistMap).sort((a,b)=>b.dias-a.dias).slice(0,6);
   const maxSisDias = sistemas[0]?.dias||1;
   function fmt(n){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(n) }
-  el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px"><div><h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">💰 Módulo de Costos</h2><p style="font-size:11px;color:var(--slate)">UC Girardota · ${empresaActual?'Empresa: '+empresaActual+' · ':''}Análisis financiero de flota</p></div><button class="pdf-btn" onclick="generarPDF()">📄 Generar PDF</button></div><div class="cos-input-row"><div><label>💵 Costo de inactividad por día/vehículo</label><input type="number" id="cos-xdia" value="${costoXdia}" min="0" inputmode="numeric" oninput="cosState.costoXdia=+this.value||0;saveCostos(cosState);renderCos()" style="font-size:16px;font-weight:700;font-family:'DM Mono',monospace"/><div style="font-size:10px;color:var(--slate);margin-top:3px">COP por vehículo inactivo por día</div></div><div><label>📊 Total ingresos al taller</label><div style="font-size:28px;font-weight:900;font-family:'DM Mono',monospace;color:var(--orange);margin-top:6px">${eventos.length}</div><div style="font-size:10px;color:var(--slate)">${totalDias} días acumulados en taller</div></div><div><label>📅 Período analizado</label><div style="font-size:14px;font-weight:700;color:var(--navy);margin-top:6px">${state.days.length?fmtF(state.days[0].fecha)+' → '+fmtF(state.days[state.days.length-1].fecha):'Sin datos'}</div><div style="font-size:10px;color:var(--slate)">${state.days.length} días registrados</div></div></div><div class="kgrid k4" style="margin-bottom:16px"><div class="big-kpi" style="border-top:3px solid var(--red)"><div class="big-kpi-lbl">Costo por inactividad</div><div class="big-kpi-val" style="color:var(--red);font-size:22px">${fmt(totalInac)}</div><div class="big-kpi-sub">${totalDias} días × ${fmt(costoXdia)}/día</div></div><div class="big-kpi" style="border-top:3px solid var(--orange)"><div class="big-kpi-lbl">Costo de reparaciones</div><div class="big-kpi-val" style="color:var(--orange);font-size:22px">${fmt(totalRep)}</div><div class="big-kpi-sub">Ingresado manualmente</div></div><div class="big-kpi" style="border-top:3px solid var(--purple)"><div class="big-kpi-lbl">Costo total estimado</div><div class="big-kpi-val" style="color:var(--purple);font-size:22px">${fmt(totalCost)}</div><div class="big-kpi-sub">Inactividad + reparaciones</div></div><div class="big-kpi" style="border-top:3px solid var(--amber)"><div class="big-kpi-lbl">Costo promedio por evento</div><div class="big-kpi-val" style="color:var(--amber);font-size:22px">${eventos.length?fmt(Math.round(totalCost/eventos.length)):fmt(0)}</div><div class="big-kpi-sub">Por ingreso al taller</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px"><div class="dash-card"><div class="dash-title">🏭 Costo por taller</div>${talleres.slice(0,6).map((t,i)=>{const maxC = talleres[0].costoRep||1;return`<div class="taller-rank"><div class="rpos ${i<3?'rg'+(i+1):''}">${i+1}</div><div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:700">${esc(t.nombre)}</div><div style="font-size:10px;color:var(--slate)">${t.ingresos} ingresos · ${t.dias} días</div><div style="height:4px;background:var(--border);border-radius:99px;margin-top:3px;overflow:hidden"><div style="height:100%;background:var(--orange);border-radius:99px;width:${t.costoRep?Math.round(t.costoRep/maxC*100):20}%"></div></div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--orange)">${fmt(t.costoRep)}</div><div style="font-size:9px;color:var(--slate)">rep.</div></div></div>`}).join('') || '<div class="nodata"><p>Ingresa costos de reparación en la tabla</p></div>'}</div><div class="dash-card"><div class="dash-title">⚙️ Días perdidos por sistema</div><div class="bar-chart">${sistemas.map(s=>`<div class="bar-row"><span class="bar-lbl" style="font-size:10px">${s.nombre}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.dias/maxSisDias*100)}%;background:var(--red)"></div></div><span class="bar-val" style="color:var(--red)">${s.dias}d</span></div>`).join('')||'<div class="nodata"><p>Sin datos</p></div>'}</div></div></div><div class="dash-card"><div class="dash-title">📋 Detalle de ingresos — ingresa el costo de cada reparación</div><div class="twrap" style="max-height:420px;overflow-y:auto"><table><thead><tr><th>Placa</th><th>Ingreso</th><th>Novedad</th><th>Sistema</th><th>Taller</th><th>Días</th><th>Costo rep. (COP)</th><th>Inactividad</th><th>Total</th></tr></thead><tbody>${eventosConCosto.slice(0,50).map(ev=>`<tr><td><span class="placa">${ev.placa}</span></td><td style="font-size:10px;color:var(--slate);white-space:nowrap">${fmtF(ev.fechaIngreso)}</td><td style="font-size:11px;max-width:140px">${esc(ev.novedad)||'—'}</td><td style="font-size:10px;color:var(--blue);font-weight:600">${ev.sistema}</td><td style="font-size:11px">${esc(ev.taller)||'—'}</td><td><span class="dp ${ev.maxDias>=10?'hi':''}">${ev.maxDias}d</span></td><td>${isEditor?`<input type="number" min="0" placeholder="0" value="${ev.costoRep||''}" style="width:110px;font-size:11px;padding:4px 6px;font-family:'DM Mono',monospace" onchange="setCostoRep('${ev.placa}','${ev.fechaIngreso}',+this.value)"/>`:`<span style="font-family:'DM Mono',monospace;font-size:11px">${ev.costoRep?fmt(ev.costoRep):'—'}</span>`}</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)">${fmt(ev.costoInac)}</td><td style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--purple)">${fmt(ev.costoTotal)}</td></tr>`).join('')}</tbody></table></div>${eventosConCosto.length>50?`<div style="font-size:11px;color:var(--slate);padding:8px 14px">Mostrando 50 de ${eventosConCosto.length} eventos</div>`:''}</div>`;
+  el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px"><div><h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">💰 Módulo de Costos</h2><p style="font-size:11px;color:var(--slate)">UC Girardota · ${esAdmin?'Modo Admin · ':''}${empresaActual?'Empresa: '+empresaActual+' · ':''}Análisis financiero de flota</p></div><button class="pdf-btn" onclick="generarPDF()">📄 Generar PDF</button></div><div class="cos-input-row"><div><label>💵 Costo de inactividad por día/vehículo</label><input type="number" id="cos-xdia" value="${costoXdia}" min="0" inputmode="numeric" oninput="cosState.costoXdia=+this.value||0;saveCostos(cosState);renderCos()" style="font-size:16px;font-weight:700;font-family:'DM Mono',monospace"/><div style="font-size:10px;color:var(--slate);margin-top:3px">COP por vehículo inactivo por día</div></div><div><label>📊 Total ingresos al taller</label><div style="font-size:28px;font-weight:900;font-family:'DM Mono',monospace;color:var(--orange);margin-top:6px">${eventos.length}</div><div style="font-size:10px;color:var(--slate)">${totalDias} días acumulados en taller</div></div><div><label>📅 Período analizado</label><div style="font-size:14px;font-weight:700;color:var(--navy);margin-top:6px">${state.days.length?fmtF(state.days[0].fecha)+' → '+fmtF(state.days[state.days.length-1].fecha):'Sin datos'}</div><div style="font-size:10px;color:var(--slate)">${state.days.length} días registrados</div></div></div><div class="kgrid k4" style="margin-bottom:16px"><div class="big-kpi" style="border-top:3px solid var(--red)"><div class="big-kpi-lbl">Costo por inactividad</div><div class="big-kpi-val" style="color:var(--red);font-size:22px">${fmt(totalInac)}</div><div class="big-kpi-sub">${totalDias} días × ${fmt(costoXdia)}/día</div></div><div class="big-kpi" style="border-top:3px solid var(--orange)"><div class="big-kpi-lbl">Costo de reparaciones</div><div class="big-kpi-val" style="color:var(--orange);font-size:22px">${fmt(totalRep)}</div><div class="big-kpi-sub">Ingresado manualmente</div></div><div class="big-kpi" style="border-top:3px solid var(--purple)"><div class="big-kpi-lbl">Costo total estimado</div><div class="big-kpi-val" style="color:var(--purple);font-size:22px">${fmt(totalCost)}</div><div class="big-kpi-sub">Inactividad + reparaciones</div></div><div class="big-kpi" style="border-top:3px solid var(--amber)"><div class="big-kpi-lbl">Costo promedio por evento</div><div class="big-kpi-val" style="color:var(--amber);font-size:22px">${eventos.length?fmt(Math.round(totalCost/eventos.length)):fmt(0)}</div><div class="big-kpi-sub">Por ingreso al taller</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px"><div class="dash-card"><div class="dash-title">🏭 Costo por taller</div>${talleres.slice(0,6).map((t,i)=>{const maxC = talleres[0].costoRep||1;return`<div class="taller-rank"><div class="rpos ${i<3?'rg'+(i+1):''}">${i+1}</div><div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:700">${esc(t.nombre)}</div><div style="font-size:10px;color:var(--slate)">${t.ingresos} ingresos · ${t.dias} días</div><div style="height:4px;background:var(--border);border-radius:99px;margin-top:3px;overflow:hidden"><div style="height:100%;background:var(--orange);border-radius:99px;width:${t.costoRep?Math.round(t.costoRep/maxC*100):20}%"></div></div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--orange)">${fmt(t.costoRep)}</div><div style="font-size:9px;color:var(--slate)">rep.</div></div></div>`}).join('') || '<div class="nodata"><p>Ingresa costos de reparación en la tabla</p></div>'}</div><div class="dash-card"><div class="dash-title">⚙️ Días perdidos por sistema</div><div class="bar-chart">${sistemas.map(s=>`<div class="bar-row"><span class="bar-lbl" style="font-size:10px">${s.nombre}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.dias/maxSisDias*100)}%;background:var(--red)"></div></div><span class="bar-val" style="color:var(--red)">${s.dias}d</span></div>`).join('')||'<div class="nodata"><p>Sin datos</p></div>'}</div></div></div><div class="dash-card"><div class="dash-title">📋 Detalle de ingresos — ingresa el costo de cada reparación</div><div class="twrap" style="max-height:420px;overflow-y:auto"><table><thead><tr><th>Placa</th><th>Empresa</th><th>Ingreso</th><th>Novedad</th><th>Sistema</th><th>Taller</th><th>Días</th><th>Costo rep. (COP)</th><th>Inactividad</th><th>Total</th></tr></thead><tbody>${eventosConCosto.slice(0,50).map(ev=>`<tr><td><span class="placa">${ev.placa}</span></td><td>${esAdmin?empresaBadge(ev._empresa):''}</td><td style="font-size:10px;color:var(--slate);white-space:nowrap">${fmtF(ev.fechaIngreso)}</td><td style="font-size:11px;max-width:140px">${esc(ev.novedad)||'—'}</td><td style="font-size:10px;color:var(--blue);font-weight:600">${ev.sistema}</td><td style="font-size:11px">${esc(ev.taller)||'—'}</td><td><span class="dp ${ev.maxDias>=10?'hi':''}">${ev.maxDias}d</span></td><td>${isEditor?`<input type="number" min="0" placeholder="0" value="${ev.costoRep||''}" style="width:110px;font-size:11px;padding:4px 6px;font-family:'DM Mono',monospace" onchange="setCostoRep('${ev.placa}','${ev.fechaIngreso}',+this.value)"/>`:`<span style="font-family:'DM Mono',monospace;font-size:11px">${ev.costoRep?fmt(ev.costoRep):'—'}</span>`}</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red)">${fmt(ev.costoInac)}</td><td style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--purple)">${fmt(ev.costoTotal)}</td></tr>`).join('')}</tbody></table></div>${eventosConCosto.length>50?`<div style="font-size:11px;color:var(--slate);padding:8px 14px">Mostrando 50 de ${eventosConCosto.length} eventos</div>`:''}</div>`;
 }
 function setCostoRep(placa, fechaIngreso, costo){if(!isEditor){showPinModal();return;}if(!cosState.ingresos) cosState.ingresos=[];const existing = cosState.ingresos.find(c=>c.placa===placa&&c.fechaIngreso===fechaIngreso);if(existing){ existing.costoReparacion=costo; }else { cosState.ingresos.push({placa,fechaIngreso,costoReparacion:costo}); }saveCostos(cosState);renderCos();}
 
@@ -1829,7 +1934,7 @@ async function generarPDF(){
   const colorMeta = pctMeta>=80?'#059669':pctMeta>=60?'#d97706':'#dc2626';
   const div = document.createElement('div');
   div.style.cssText='position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:Arial,sans-serif;font-size:12px;color:#0f172a;padding:32px';
-  div.innerHTML = `<div style="background:#0f1e3d;color:#fff;padding:24px 28px;border-radius:12px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:24px;font-weight:900;margin-bottom:4px">🚛 Flota UC Girardota</div><div style="font-size:14px;color:#94a3b8">Informe Ejecutivo de Disponibilidad</div><div style="font-size:16px;font-weight:700;color:#60a5fa;margin-top:6px">${periodoLabel}${empresaActual?' · '+empresaActual:''}</div></div><div style="text-align:right"><div style="font-size:11px;color:#94a3b8">Generado el</div><div style="font-size:13px;font-weight:700">${fmtF(today())}</div><div style="font-size:11px;color:#94a3b8;margin-top:4px">${days.length} días analizados</div></div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px"><div style="background:#ecfdf5;border-radius:10px;padding:14px;border-top:3px solid #059669;text-align:center"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Disponibilidad promedio</div><div style="font-size:32px;font-weight:900;color:${colorDisp};font-family:monospace">${avgPct}%</div><div style="font-size:10px;color:#64748b">Meta: ≥90%</div></div><div style="background:#eff6ff;border-radius:10px;padding:14px;border-top:3px solid #2563eb;text-align:center"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Días en meta (≤${META_TALLER} taller)</div><div style="font-size:32px;font-weight:900;color:${colorMeta};font-family:monospace">${pctMeta}%</div><div style="font-size:10px;color:#64748b">${diasMeta}/${days.length} días</div></div><div style="background:#fff7ed;border-radius:10px;padding:14px;border-top:3px solid #ea580c;text-align:center"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Promedio en taller</div><div style="font-size:32px;font-weight:900;color:#ea580c;font-family:monospace">${avgTaller}</div><div style="font-size:10px;color:#64748b">vehículos/día</div></div><div style="background:#fef2f2;border-radius:10px;padding:14px;border-top:3px solid #dc2626;text-align:center"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Costo de inactividad</div><div style="font-size:18px;font-weight:900;color:#dc2626;font-family:monospace;margin-top:4px">${fmtCOP(costoInac)}</div><div style="font-size:10px;color:#64748b">${totalDiasTaller} días × ${fmtCOP(costoXdia)}</div></div></div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:18px"><div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:10px">📋 Estado actual — ${fmtF(lastDay.fecha)}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><div style="font-size:11px;font-weight:700;margin-bottom:6px;color:#0f172a">Vehículos en taller (${lastDay.placasEnTaller.filter(p=>!p.retornado).length}):</div>${lastDay.placasEnTaller.filter(p=>!p.retornado).map(p=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:11px"><span style="font-weight:700;font-family:monospace;background:#dbeafe;padding:1px 5px;border-radius:3px">${p.placa}</span><span style="color:#64748b">${p.novedad||'—'}</span><span style="font-weight:700;color:${p.diasEnTaller>=10?'#dc2626':'#d97706'}">${p.diasEnTaller}d</span></div>`).join('')||'<div style="color:#059669;font-size:11px">✅ Sin vehículos en taller</div>'}</div><div><div style="font-size:11px;font-weight:700;margin-bottom:6px;color:#0f172a">Retornados hoy (${lastDay.retornados.length}):</div>${lastDay.retornados.map(r=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:11px"><span style="font-weight:700;font-family:monospace;background:#dcfce7;padding:1px 5px;border-radius:3px">${r.placa}</span><span style="color:#64748b;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.reparacion||'—'}</span></div>`).join('')||'<div style="color:#64748b;font-size:11px">Ninguno retornó hoy</div>'}</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px"><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px">⚙️ Sistemas más afectados</div>${topSist.map(([s,n],i)=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9"><div style="width:18px;height:18px;border-radius:50%;background:${i===0?'#f59e0b':i===1?'#94a3b8':'#b45309'};color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center">${i+1}</div><div style="flex:1;font-size:11px;font-weight:600">${s}</div><div style="font-family:monospace;font-size:11px;font-weight:800;color:#ea580c">${n}</div></div>`).join('')}</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px">🚛 Placas con más días en taller</div>${topPlacas.map(([p,d],i)=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9"><div style="width:18px;height:18px;border-radius:50%;background:${i===0?'#f59e0b':i===1?'#94a3b8':'#b45309'};color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center">${i+1}</div><div style="flex:1;font-family:monospace;font-size:11px;font-weight:700;background:#dbeafe;padding:1px 6px;border-radius:3px;display:inline-block">${p}</div><div style="font-family:monospace;font-size:11px;font-weight:800;color:${d>=10?'#dc2626':'#d97706'}">${d}d</div></div>`).join('')}</div></div>${planesMes.length?`<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:18px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px">📋 Planes de acción</div>${planesMes.map(pl=>`<div style="padding:8px 10px;background:#fff;border-radius:8px;border-left:3px solid ${pl.estado==='En proceso'?'#d97706':'#059669'};margin-bottom:6px"><div style="font-size:11px;font-weight:700">⚙️ ${esc(pl.falla)}</div><div style="font-size:10px;color:#475569;margin-top:3px">📋 ${esc(pl.accion)}</div>${pl.resultado?`<div style="font-size:10px;color:#059669;margin-top:3px;font-weight:600">✅ ${esc(pl.resultado)}</div>`:''}<div style="font-size:9px;color:#94a3b8;margin-top:3px">${pl.estado} · ${pl.mes}</div></div>`).join('')}</div>`:''}<div style="border-top:2px solid #e2e8f0;padding-top:12px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:10px;color:#94a3b8">Flota UC Girardota · Control de disponibilidad</div><div style="font-size:10px;color:#94a3b8">Generado automáticamente · ${fmtF(today())}</div></div>`;
+  div.innerHTML = `<div style="background:#0f1e3d;color:#fff;padding:24px 28px;border-radius:12px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:24px;font-weight:900;margin-bottom:4px">🚛 Flota UC Girardota</div><div style="font-size:14px;color:#94a3b8">Informe Ejecutivo de Disponibilidad</div><div style="font-size:16px;font-weight:700;color:#60a5fa;margin-top:6px">${periodoLabel}${empresaActual?' · '+empresaActual:esAdmin?' · ADMIN (Todas)':''}</div></div><div style="text-align:right"><div style="font-size:11px;color:#94a3b8">Generado el</div><div style="font-size:13px;font-weight:700">${fmtF(today())}</div><div style="font-size:11px;color:#94a3b8;margin-top:4px">${days.length} días analizados</div></div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px"><div style="background:#ecfdf5;border-radius:10px;padding:14px;border-top:3px solid #059669;text-align:center"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Disponibilidad promedio</div><div style="font-size:32px;font-weight:900;color:${colorDisp};font-family:monospace">${avgPct}%</div><div style="font-size:10px;color:#64748b">Meta: ≥90%</div></div><div style="background:#eff6ff;border-radius:10px;padding:14px;border-top:3px solid #2563eb;text-align:center"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Días en meta (≤${META_TALLER} taller)</div><div style="font-size:32px;font-weight:900;color:${colorMeta};font-family:monospace">${pctMeta}%</div><div style="font-size:10px;color:#64748b">${diasMeta}/${days.length} días</div></div><div style="background:#fff7ed;border-radius:10px;padding:14px;border-top:3px solid #ea580c;text-align:center"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Promedio en taller</div><div style="font-size:32px;font-weight:900;color:#ea580c;font-family:monospace">${avgTaller}</div><div style="font-size:10px;color:#64748b">vehículos/día</div></div><div style="background:#fef2f2;border-radius:10px;padding:14px;border-top:3px solid #dc2626;text-align:center"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Costo de inactividad</div><div style="font-size:18px;font-weight:900;color:#dc2626;font-family:monospace;margin-top:4px">${fmtCOP(costoInac)}</div><div style="font-size:10px;color:#64748b">${totalDiasTaller} días × ${fmtCOP(costoXdia)}</div></div></div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:18px"><div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:10px">📋 Estado actual — ${fmtF(lastDay.fecha)}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><div style="font-size:11px;font-weight:700;margin-bottom:6px;color:#0f172a">Vehículos en taller (${lastDay.placasEnTaller.filter(p=>!p.retornado).length}):</div>${lastDay.placasEnTaller.filter(p=>!p.retornado).map(p=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:11px"><span style="font-weight:700;font-family:monospace;background:#dbeafe;padding:1px 5px;border-radius:3px">${p.placa}</span><span style="color:#64748b">${p.novedad||'—'}</span><span style="font-weight:700;color:${p.diasEnTaller>=10?'#dc2626':'#d97706'}">${p.diasEnTaller}d</span></div>`).join('')||'<div style="color:#059669;font-size:11px">✅ Sin vehículos en taller</div>'}</div><div><div style="font-size:11px;font-weight:700;margin-bottom:6px;color:#0f172a">Retornados hoy (${lastDay.retornados.length}):</div>${lastDay.retornados.map(r=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:11px"><span style="font-weight:700;font-family:monospace;background:#dcfce7;padding:1px 5px;border-radius:3px">${r.placa}</span><span style="color:#64748b;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.reparacion||'—'}</span></div>`).join('')||'<div style="color:#64748b;font-size:11px">Ninguno retornó hoy</div>'}</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px"><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px">⚙️ Sistemas más afectados</div>${topSist.map(([s,n],i)=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9"><div style="width:18px;height:18px;border-radius:50%;background:${i===0?'#f59e0b':i===1?'#94a3b8':'#b45309'};color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center">${i+1}</div><div style="flex:1;font-size:11px;font-weight:600">${s}</div><div style="font-family:monospace;font-size:11px;font-weight:800;color:#ea580c">${n}</div></div>`).join('')}</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px">🚛 Placas con más días en taller</div>${topPlacas.map(([p,d],i)=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9"><div style="width:18px;height:18px;border-radius:50%;background:${i===0?'#f59e0b':i===1?'#94a3b8':'#b45309'};color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center">${i+1}</div><div style="flex:1;font-family:monospace;font-size:11px;font-weight:700;background:#dbeafe;padding:1px 6px;border-radius:3px;display:inline-block">${p}</div><div style="font-family:monospace;font-size:11px;font-weight:800;color:${d>=10?'#dc2626':'#d97706'}">${d}d</div></div>`).join('')}</div></div>${planesMes.length?`<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:18px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:8px">📋 Planes de acción</div>${planesMes.map(pl=>`<div style="padding:8px 10px;background:#fff;border-radius:8px;border-left:3px solid ${pl.estado==='En proceso'?'#d97706':'#059669'};margin-bottom:6px"><div style="font-size:11px;font-weight:700">⚙️ ${esc(pl.falla)}</div><div style="font-size:10px;color:#475569;margin-top:3px">📋 ${esc(pl.accion)}</div>${pl.resultado?`<div style="font-size:10px;color:#059669;margin-top:3px;font-weight:600">✅ ${esc(pl.resultado)}</div>`:''}<div style="font-size:9px;color:#94a3b8;margin-top:3px">${pl.estado} · ${pl.mes}</div></div>`).join('')}</div>`:''}<div style="border-top:2px solid #e2e8f0;padding-top:12px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:10px;color:#94a3b8">Flota UC Girardota · Control de disponibilidad</div><div style="font-size:10px;color:#94a3b8">Generado automáticamente · ${fmtF(today())}</div></div>`;
   document.body.appendChild(div);
   try {
     const canvas = await html2canvas(div, {scale:2, useCORS:true, backgroundColor:'#fff', width:794, windowWidth:794});
@@ -1841,7 +1946,7 @@ async function generarPDF(){
     const imgH = (canvas.height * pdfW) / canvas.width;
     let y = 0;
     while(y < imgH){if(y>0) pdf.addPage();pdf.addImage(imgData,'JPEG',0,-y,pdfW,imgH);y += pdfH;}
-    pdf.save(`INFORME_FLOTA_UC_${periodoLabel.replace(' ','_')}${empresaActual?'_'+empresaActual:''}.pdf`);
+    pdf.save(`INFORME_FLOTA_UC_${periodoLabel.replace(' ','_')}${empresaActual?'_'+empresaActual:esAdmin?'_ADMIN':''}.pdf`);
     toast('PDF descargado ✅','📄');
   } catch(e){console.error(e);toast('Error generando PDF','❌');} finally {document.body.removeChild(div);}
 }
@@ -1861,7 +1966,7 @@ async function checkAndSendAlerts(dayData){
   if(sent[batchKey]){console.log('Alerta batch ya enviada hoy');return 0;}
   const filas = enAlerta.map(p=>`<tr><td style="padding:8px 12px;font-weight:700;font-family:monospace;background:#dbeafe;border-radius:4px">${p.placa}</td><td style="padding:8px 12px;color:#475569">${p.novedad||'Sin novedad'}</td><td style="padding:8px 12px;color:#475569">${p.taller||'Sin taller'}</td><td style="padding:8px 12px;color:#475569">${fmtF(p.fechaIngreso)}</td><td style="padding:8px 12px;font-weight:800;font-family:monospace;color:${p.diasEnTaller>=10?'#dc2626':'#d97706'}">${p.diasEnTaller} días</td></tr>`).join('');
   const tablaHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;font-family:Arial,sans-serif"><thead><tr style="background:#0f1e3d;color:#fff"><th style="padding:10px 12px;text-align:left">Placa</th><th style="padding:10px 12px;text-align:left">Novedad</th><th style="padding:10px 12px;text-align:left">Taller</th><th style="padding:10px 12px;text-align:left">Ingreso</th><th style="padding:10px 12px;text-align:left">Días</th></tr></thead><tbody>${filas}</tbody></table>`;
-  const asunto = `🚨 Alerta Flota UC Girardota${empresaActual?' - '+empresaActual:''} — ${enAlerta.length} vehículo${enAlerta.length>1?'s':''} con +${ALERT_DIAS} días en taller (${fmtF(today())})`;
+  const asunto = `🚨 Alerta Flota UC Girardota${empresaActual?' - '+empresaActual:esAdmin?' - ADMIN':''} — ${enAlerta.length} vehículo${enAlerta.length>1?'s':''} con +${ALERT_DIAS} días en taller (${fmtF(today())})`;
   const resumen = `${enAlerta.length} vehículo${enAlerta.length>1?'s':''} llevan más de ${ALERT_DIAS} días en taller. Disponibilidad del día: ${info.pct}% (${info.disp}/${dayData.total} vehículos).`;
   try{
     const n = enAlerta.length;
@@ -1897,7 +2002,7 @@ async function sendRetornoEmail(placa, reparacion, taller, fechaIngreso, fechaRe
   try{await emailjs.send(EMAIL_CFG.serviceId, EMAIL_CFG.templateId, {to_email:'',subject:asunto,asunto:asunto,message_html:retornoHTML,message:retornoHTML,from_name:'Flota UC Girardota',reply_to:''});toast('📨 Correo de retorno enviado al supervisor','✅');console.log('✅ Email retorno enviado para '+placa);}catch(e){console.error('Error email retorno:', e);}
 }
 
-function doBackup(){if(!state.days.length){toast('No hay datos','⚠️');return}const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`flota_backup_${empresaActual||'UC'}_${today()}.json`;a.click();URL.revokeObjectURL(a.href);toast('Respaldo guardado','💾');}
+function doBackup(){if(!state.days.length){toast('No hay datos','⚠️');return}const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`flota_backup_${empresaActual||'ADMIN'}_${today()}.json`;a.click();URL.revokeObjectURL(a.href);toast('Respaldo guardado','💾');}
 function doImport(e){
   if(!isEditor){toast('Solo editores pueden restaurar','🔒');return;}
   const file=e.target.files[0];if(!file)return;
@@ -1936,16 +2041,17 @@ async function exportImagen(){
   const restriccionCount = activos.filter(p=>isRestriccion(p.status)).length;
   const disp = d.total - enN;
   const pct = (disp/d.total*100).toFixed(1);
+  const empBadge = esAdmin ? empresaBadge(d._empresa) : '';
   const tallerRows = activos.map(p=>`<tr><td style="font-family:monospace;font-weight:700;color:#1e3a5f;background:#dbeafe;padding:6px 8px;border-radius:4px">${p.placa}</td><td style="padding:6px 8px;color:#666">${fmtF(p.fechaIngreso)}</td><td style="padding:6px 8px">${esc(p.novedad)||'—'}</td><td style="padding:6px 8px">${p.status&&p.status.includes('BLOQUEADO')?'⛔ BLOQUEADO':p.status&&p.status.includes('RESTRICCI')?'🟣 RESTRICCIÓN':'🔴 INOPERATIVO'}</td><td style="padding:6px 8px;color:#666">${esc(p.taller)||'—'}</td><td style="padding:6px 8px;font-weight:700;color:${p.diasEnTaller>=10?'#dc2626':'#d97706'}">${p.diasEnTaller}d</td></tr>`).join('');
   const retRows = d.retornados.length===0?'<tr><td colspan="4" style="padding:8px;color:#888;text-align:center">Ninguno retornó</td></tr>':d.retornados.map(r=>`<tr><td style="font-family:monospace;font-weight:700;color:#1e3a5f;background:#dbeafe;padding:6px 8px;border-radius:4px">${r.placa}</td><td style="padding:6px 8px;color:#666">${fmtF(r.fechaIngreso)}</td><td style="padding:6px 8px">${esc(r.reparacion)||'—'}</td><td style="padding:6px 8px;color:#059669;font-weight:700">${fmtF(r.fechaEntrega)}</td></tr>`).join('');
   const print_div = document.createElement('div');
   print_div.style.cssText = 'position:fixed;left:-9999px;top:0;width:900px;background:#fff;padding:28px;font-family:DM Sans,Arial,sans-serif;font-size:13px;color:#0f172a';
-  print_div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #0f1e3d"><div><div style="font-size:22px;font-weight:900;color:#0f1e3d">🚛 Flota UC Girardota${empresaActual?' - '+empresaActual:''}</div><div style="font-size:13px;color:#64748b;margin-top:2px">Disponibilidad del día · ${fmtF(d.fecha)}</div></div><div style="text-align:right;font-size:11px;color:#94a3b8">Generado: ${fmtF(today())}</div></div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px"><div style="background:#eff6ff;border-radius:10px;padding:12px;border-top:3px solid #2563eb"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Flota total</div><div style="font-size:28px;font-weight:900;color:#0f172a;font-family:monospace">${d.total}</div></div><div style="background:#ecfdf5;border-radius:10px;padding:12px;border-top:3px solid #059669"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Disponibles</div><div style="font-size:28px;font-weight:900;color:#059669;font-family:monospace">${disp}</div><div style="font-size:11px;color:#64748b">${pct}% operativo</div></div><div style="background:#fff7ed;border-radius:10px;padding:12px;border-top:3px solid #ea580c"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">En taller</div><div style="font-size:28px;font-weight:900;color:#ea580c;font-family:monospace">${enN}</div>${restriccionCount>0?`<div style="font-size:10px;color:#7c3aed">+${restriccionCount} restricción</div>`:''}</div><div style="background:#fffbeb;border-radius:10px;padding:12px;border-top:3px solid #d97706"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Retornados</div><div style="font-size:28px;font-weight:900;color:#d97706;font-family:monospace">${d.retornados.length}</div></div><div style="background:#f5f3ff;border-radius:10px;padding:12px;border-top:3px solid #7c3aed"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">OP Tripulación</div><div style="font-size:28px;font-weight:900;color:#7c3aed;font-family:monospace">${d.op!=null?d.op:'—'}</div></div></div><div style="margin-bottom:18px"><div style="font-size:12px;font-weight:800;color:#0f1e3d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🔧 Placas en taller (${activos.length})</div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#0f1e3d;color:#fff"><th style="padding:7px 8px;text-align:left;font-size:10px">Placa</th><th style="padding:7px 8px;text-align:left;font-size:10px">Ingreso</th><th style="padding:7px 8px;text-align:left;font-size:10px">Novedad</th><th style="padding:7px 8px;text-align:left;font-size:10px">Status</th><th style="padding:7px 8px;text-align:left;font-size:10px">Taller</th><th style="padding:7px 8px;text-align:left;font-size:10px">Días</th></tr></thead><tbody>${tallerRows}</tbody></table></div><div><div style="font-size:12px;font-weight:800;color:#0f1e3d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">✅ Retornados hoy (${d.retornados.length})</div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#059669;color:#fff"><th style="padding:7px 8px;text-align:left;font-size:10px">Placa</th><th style="padding:7px 8px;text-align:left;font-size:10px">Ingreso</th><th style="padding:7px 8px;text-align:left;font-size:10px">Reparación</th><th style="padding:7px 8px;text-align:left;font-size:10px">Fecha retorno</th></tr></thead><tbody>${retRows}</tbody></table></div>`;
+  print_div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #0f1e3d"><div><div style="font-size:22px;font-weight:900;color:#0f1e3d">🚛 Flota UC Girardota ${empBadge}</div><div style="font-size:13px;color:#64748b;margin-top:2px">Disponibilidad del día · ${fmtF(d.fecha)}</div></div><div style="text-align:right;font-size:11px;color:#94a3b8">Generado: ${fmtF(today())}</div></div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px"><div style="background:#eff6ff;border-radius:10px;padding:12px;border-top:3px solid #2563eb"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Flota total</div><div style="font-size:28px;font-weight:900;color:#0f172a;font-family:monospace">${d.total}</div></div><div style="background:#ecfdf5;border-radius:10px;padding:12px;border-top:3px solid #059669"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Disponibles</div><div style="font-size:28px;font-weight:900;color:#059669;font-family:monospace">${disp}</div><div style="font-size:11px;color:#64748b">${pct}% operativo</div></div><div style="background:#fff7ed;border-radius:10px;padding:12px;border-top:3px solid #ea580c"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">En taller</div><div style="font-size:28px;font-weight:900;color:#ea580c;font-family:monospace">${enN}</div>${restriccionCount>0?`<div style="font-size:10px;color:#7c3aed">+${restriccionCount} restricción</div>`:''}</div><div style="background:#fffbeb;border-radius:10px;padding:12px;border-top:3px solid #d97706"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Retornados</div><div style="font-size:28px;font-weight:900;color:#d97706;font-family:monospace">${d.retornados.length}</div></div><div style="background:#f5f3ff;border-radius:10px;padding:12px;border-top:3px solid #7c3aed"><div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px">OP Tripulación</div><div style="font-size:28px;font-weight:900;color:#7c3aed;font-family:monospace">${d.op!=null?d.op:'—'}</div></div></div><div style="margin-bottom:18px"><div style="font-size:12px;font-weight:800;color:#0f1e3d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🔧 Placas en taller (${activos.length})</div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#0f1e3d;color:#fff"><th style="padding:7px 8px;text-align:left;font-size:10px">Placa</th><th style="padding:7px 8px;text-align:left;font-size:10px">Ingreso</th><th style="padding:7px 8px;text-align:left;font-size:10px">Novedad</th><th style="padding:7px 8px;text-align:left;font-size:10px">Status</th><th style="padding:7px 8px;text-align:left;font-size:10px">Taller</th><th style="padding:7px 8px;text-align:left;font-size:10px">Días</th></tr></thead><tbody>${tallerRows}</tbody></table></div><div><div style="font-size:12px;font-weight:800;color:#0f1e3d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">✅ Retornados hoy (${d.retornados.length})</div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#059669;color:#fff"><th style="padding:7px 8px;text-align:left;font-size:10px">Placa</th><th style="padding:7px 8px;text-align:left;font-size:10px">Ingreso</th><th style="padding:7px 8px;text-align:left;font-size:10px">Reparación</th><th style="padding:7px 8px;text-align:left;font-size:10px">Fecha retorno</th></tr></thead><tbody>${retRows}</tbody></table></div>`;
   document.body.appendChild(print_div);
   try{
     const canvas = await html2canvas(print_div, {scale: 2, useCORS: true, backgroundColor: '#fff', width: 900, windowWidth: 900});
     const link = document.createElement('a');
-    link.download = `FLOTA_${empresaActual||'UC'}_${fmtF(d.fecha).replace(/\//g,'-')}.png`;
+    link.download = `FLOTA_${empresaActual||'ADMIN'}_${fmtF(d.fecha).replace(/\//g,'-')}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
     toast('Imagen guardada 📸','✅');
@@ -1956,21 +2062,21 @@ function doExcel(){
   const daysToExport = filterDays();
   if(!daysToExport.length){toast('No hay datos para el período seleccionado','⚠️');return}
   const wb=XLSX.utils.book_new();
-  const res=[['RESUMEN DISPONIBILIDAD DE FLOTA – UC GIRARDOTA'+(empresaActual?' - '+empresaActual:'')],[],['FECHA','TOTAL','DISPONIBLES','EN TALLER','META (≤'+META_TALLER+')','% OP','OP','OP vs DISP.','RETORNADOS','PLACAS EN TALLER']];
+  const res=[['RESUMEN DISPONIBILIDAD DE FLOTA – UC GIRARDOTA'+(empresaActual?' - '+empresaActual:esAdmin?' - ADMIN':'')],[],['FECHA','EMPRESA','TOTAL','DISPONIBLES','EN TALLER','META (≤'+META_TALLER+')','% OP','OP','OP vs DISP.','RETORNADOS','PLACAS EN TALLER']];
   daysToExport.forEach(d=>{
     const info=getDispInfo(d);
     const meta=info.enTaller<=META_TALLER?'✅ OK':`⚠️ +${info.enTaller-META_TALLER}`;
     const op=d.op!=null?d.op:'';
     const opD=d.op!=null?(d.op-info.disp>0?`+${d.op-info.disp}`:d.op-info.disp<0?`${d.op-info.disp}`:'Exacto'):'';
     const placasEnTaller = d.placasEnTaller.filter(p=>!p.retornado).map(p=>p.placa).join(', ');
-    res.push([fmtF(d.fecha),d.total,info.disp,info.enTaller,meta,info.pct+'%',op,opD,d.retornados.length,placasEnTaller]);
+    res.push([fmtF(d.fecha), d._empresa||empresaActual||'ADMIN', d.total, info.disp, info.enTaller, meta, info.pct+'%', op, opD, d.retornados.length, placasEnTaller]);
   });
   const wsr=XLSX.utils.aoa_to_sheet(res);
-  wsr['!cols']=[{wch:14},{wch:7},{wch:11},{wch:10},{wch:12},{wch:8},{wch:6},{wch:12},{wch:11},{wch:55}];
+  wsr['!cols']=[{wch:14},{wch:14},{wch:7},{wch:11},{wch:10},{wch:12},{wch:8},{wch:6},{wch:12},{wch:11},{wch:55}];
   XLSX.utils.book_append_sheet(wb,wsr,'RESUMEN');
   daysToExport.forEach(d=>{
     const info=getDispInfo(d);const act=d.placasEnTaller.filter(p=>!p.retornado);
-    const rows=[['DISPONIBILIDAD DE FLOTA – UC GIRARDOTA'+(empresaActual?' - '+empresaActual:'')],[],['FECHA',fmtF(d.fecha),'','TOTAL',d.total,'DISP',info.disp,'TALLER',info.enTaller,'OP',d.op!=null?d.op:'N/R','%',info.pct+'%'],[],['PLACAS EN TALLER'],['PLACA','INGRESO','NOVEDAD','STATUS','TALLER','DÍAS']];
+    const rows=[['DISPONIBILIDAD DE FLOTA – UC GIRARDOTA'+(empresaActual?' - '+empresaActual:esAdmin?' - ADMIN':'')],[],['FECHA',fmtF(d.fecha),'','EMPRESA',d._empresa||empresaActual||'ADMIN','TOTAL',d.total,'DISP',info.disp,'TALLER',info.enTaller,'OP',d.op!=null?d.op:'N/R','%',info.pct+'%'],[],['PLACAS EN TALLER'],['PLACA','INGRESO','NOVEDAD','STATUS','TALLER','DÍAS']];
     act.forEach(p=>rows.push([p.placa,fmtF(p.fechaIngreso),p.novedad,p.status,p.taller,p.diasEnTaller]));
     rows.push([],['RETORNADOS'],['PLACA','INGRESO','REPARACIÓN','TALLER','ENTREGA']);
     d.retornados.forEach(r=>rows.push([r.placa,fmtF(r.fechaIngreso),r.reparacion,r.taller,fmtF(r.fechaEntrega)]));
@@ -1987,7 +2093,7 @@ function doExcel(){
   else if(periodoSel==='año'){const v = document.getElementById('an-v')?.value || '';periodoLabel = '_ANIO_'+v;}
   else if(periodoSel==='semana'){const v = document.getElementById('an-v')?.value || '';periodoLabel = '_SEMANA_'+v;}
   else if(periodoSel==='dia'){const v = document.getElementById('an-v')?.value || '';periodoLabel = '_DIA_'+v;}
-  XLSX.writeFile(wb,`FLOTA_UC_GIRARDOTA${empresaActual?'_'+empresaActual:''}${periodoLabel}_${f}_${l}.xlsx`);
+  XLSX.writeFile(wb,`FLOTA_UC_GIRARDOTA${empresaActual?'_'+empresaActual:esAdmin?'_ADMIN':''}${periodoLabel}_${f}_${l}.xlsx`);
   toast(`Excel exportado — ${daysToExport.length} día${daysToExport.length>1?'s':''}`,'⬇');
 }
 
@@ -2013,13 +2119,18 @@ async function testEmailCfg(){
 // ═══════════════════════════════════════════════════════
 function selectEmpresa(emp){
   empresaSeleccionada = emp;
-  showPinModal(`Ingresa el PIN de ${emp} o el PIN de administrador (9999)`);
+  if(emp === 'ADMIN'){
+    showPinModal('Ingresa el PIN de administrador (9999) para ver todas las empresas');
+  } else {
+    showPinModal(`Ingresa el PIN de ${emp} o el PIN de administrador (9999)`);
+  }
 }
 
 function cambiarEmpresa(){
   empresaActual = null;
   esAdmin = false;
   empresaSeleccionada = null;
+  adminEmpresaFilter = 'TODAS';
   localStorage.removeItem(EMPRESA_KEY);
   localStorage.removeItem(getAuthKey());
   document.getElementById('empresa-screen').style.display = 'flex';
@@ -2047,9 +2158,9 @@ renderEmpresaScreen();
 
 (function initEmpresa(){
   const saved = localStorage.getItem(EMPRESA_KEY);
-  const authRaw = saved ? localStorage.getItem('flota_auth_' + saved + '_v1') || localStorage.getItem('flota_auth_admin_v1') : null;
+  const authRaw = saved ? (localStorage.getItem('flota_auth_' + saved + '_v1') || localStorage.getItem('flota_auth_admin_v1')) : null;
   
-  if(saved && EMPRESAS[saved] && authRaw){
+  if(saved && saved !== 'ADMIN' && EMPRESAS[saved] && authRaw){
     try{
       const auth = JSON.parse(authRaw);
       const inactive = (Date.now() - auth.lastActivity) > SESSION_MS;
@@ -2062,6 +2173,8 @@ renderEmpresaScreen();
         document.getElementById('empresa-screen').style.display = 'none';
         const badge = document.getElementById('empresa-badge');
         if(badge) badge.textContent = esAdmin ? '👑 Admin' : '🏢 ' + saved;
+        const sub = document.getElementById('h-sub');
+        if(sub) sub.textContent = esAdmin ? 'Modo Administrador' : 'Empresa: ' + saved;
         
         isEditor = true;
         setEditorMode(true);
@@ -2069,15 +2182,18 @@ renderEmpresaScreen();
         
         state = loadLocal();
         curIdx = null;
+        // ✅ Siempre inicializar Firebase
         initFirebase();
         return;
       }
     }catch(e){}
   }
   
+  // ✅ Si no hay sesión, igual inicializar Firebase para que esté listo
   empresaActual = null;
   esAdmin = false;
   state = loadLocal();
+  // No llamar initFirebase() aquí porque aún no sabemos qué empresa es
 })();
 
 loadEmailCfg();
