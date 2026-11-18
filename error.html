@@ -643,11 +643,13 @@ let esAdmin = false;
 const EMPRESA_KEY = 'flota_empresa_activa_v2';
 
 function getFirebaseCollection(){
-  if(esAdmin || !empresaActual) return 'flota_uc_girardota_ADMIN';
+  // El admin ve la colección de la empresa seleccionada, NO una colección "ADMIN"
+  if(!empresaActual) return 'flota_uc_girardota_ADMIN';
   return 'flota_uc_girardota_' + empresaActual;
 }
 function getLocalKey(){
-  if(esAdmin || !empresaActual) return 'flota_uc_v5_ADMIN';
+  // El admin usa la clave local de la empresa seleccionada
+  if(!empresaActual) return 'flota_uc_v5_ADMIN';
   return 'flota_uc_v5_' + empresaActual;
 }
 function getAuthKey(){
@@ -919,7 +921,8 @@ function loadLocal(){
     const raw = localStorage.getItem(key);
     if(raw){ const p = JSON.parse(raw); if(p.days && p.days.length>0) return p; }
   }catch(e){}
-  if(empresaActual === 'LIS' && !esAdmin){
+  // El admin TAMBIÉN puede leer los datos legacy de LIS
+  if(empresaActual === 'LIS'){
     try{
       const raw = localStorage.getItem(SK_LEGACY);
       if(raw){ const p = JSON.parse(raw); if(p.days && p.days.length>0) return p; }
